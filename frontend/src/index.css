@@ -1,0 +1,74 @@
+:root {
+  --color-primary-dark: #0B132B;
+  --color-accent-cyan: #00F5FF;
+  --color-accent-green: #39FF14;
+  --color-light: #F8F9FA;
+  
+  --font-heading: 'Arial', sans-serif;
+  --font-body: 'Arial', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-primary-dark);
+  color: var(--color-light);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); letter-spacing: -0.02em; }
+
+.glow-cyan { text-shadow: 0 0 10px rgba(0, 245, 255, 0.5); }
+.glow-green { text-shadow: 0 0 10px rgba(57, 255, 20, 0.5); }
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-green));
+  color: var(--color-primary-dark);
+  padding: 14px 28px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 245, 255, 0.2); width: 100%;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(57, 255, 20, 0.4); }
+
+.input-field {
+  width: 100%; padding: 14px; margin-bottom: 20px;
+  background: rgba(248, 249, 250, 0.05); color: var(--color-light);
+  border: 1px solid rgba(0, 245, 255, 0.2); border-radius: 8px; font-family: var(--font-body);
+}
+
+.input-field:focus { outline: none; border-color: var(--color-accent-cyan); box-shadow: 0 0 8px rgba(0,245,255,0.3); }
+
+/* Layout Grid para o App e Sidebar */
+.layout-container {
+  display: flex; min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px; background: rgba(0,0,0,0.3); border-right: 1px solid rgba(255,255,255,0.05);
+  padding: 24px; display: flex; flex-direction: column; gap: 10px;
+}
+
+.sidebar-logo {
+  font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 30px;
+}
+
+.menu-item {
+  color: rgba(248, 249, 250, 0.7); text-decoration: none; padding: 12px; border-radius: 8px;
+  display: flex; gap: 10px; align-items: center; transition: 0.2s; font-weight: 500;
+}
+.menu-item:hover, .menu-item.active { background: rgba(0,245,255,0.1); color: var(--color-accent-cyan); }
+
+.page-content { flex: 1; padding: 40px; }
+
+/* Box genérica das páginas */
+.card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 16px; padding: 24px; margin-top: 20px;
+}

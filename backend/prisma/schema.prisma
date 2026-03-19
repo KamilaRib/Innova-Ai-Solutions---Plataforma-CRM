@@ -1,0 +1,73 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Tenant {
+  id                           String     @id @default(uuid())
+  business_name                String
+  whatsapp_phone_number_id     String?
+  whatsapp_business_account_id String?
+  whatsapp_access_token        String?
+  whatsapp_verify_token        String?
+  evolution_webhook_url        String?
+  evolution_api_key            String?
+  evolution_instance_name      String?
+  created_at                   DateTime   @default(now())
+  users                        User[]
+  leads                        Lead[]
+  usages                       UsageLog[]
+}
+
+model UsageLog {
+  id          String   @id @default(uuid())
+  tenant_id   String
+  type        String // OPENAI | WHATSAPP
+  amount      Int // Número de Tokens ou 1 (para uma mensagem disparada)
+  description String?
+  created_at  DateTime @default(now())
+  tenant      Tenant   @relation(fields: [tenant_id], references: [id])
+}
+
+model User {
+  id            String    @id @default(uuid())
+  tenant_id     String?
+  name          String
+  email         String    @unique
+  password_hash String
+  role          String    @default("USER") // ADMIN, CLIENT_OWNER, USER
+  tenant        Tenant?   @relation(fields: [tenant_id], references: [id])
+  messages      Message[]
+}
+
+model Lead {
+  id                 String    @id @default(uuid())
+  tenant_id          String
+  name               String
+  phone              String
+  email              String?
+  source             String // WhatsApp | Website
+  pipeline_status    String    @default("Início de Atendimento") // Início de Atendimento, Conversando, Agendamento, Formulário Enviado, Follow Up
+  notes              String?
+  last_contacted_at  DateTime?
+  next_followup_date DateTime?
+  is_bot_paused      Boolean   @default(false)
+  tenant             Tenant    @relation(fields: [tenant_id], references: [id])
+  messages           Message[]
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  lead_id     String
+  user_id     String? // Id da secretária (User) que mandou a msg, se for de agente humano
+  sender_type String // client | agent | bot
+  content     String
+  created_at  DateTime @default(now())
+  lead        Lead     @relation(fields: [lead_id], references: [id])
+  user        User?    @relation(fields: [user_id], references: [id])
+}
