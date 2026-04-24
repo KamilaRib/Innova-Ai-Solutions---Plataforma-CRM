@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { mockLeads } from '../data/mockData';
-import { FileUp, Search, UserPlus, Mail } from 'lucide-react';
+import { FileUp, Search, UserPlus, Mail, Instagram, Facebook, Globe, MessageCircle, Star } from 'lucide-react';
 
 const BaseContatos = () => {
   const fileInputRef = useRef(null);
@@ -68,9 +68,12 @@ const BaseContatos = () => {
             <tr>
               <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>CLIENTE / EMPRESA</th>
               <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>REPRESENTANTE</th>
+              <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>ORIGEM</th>
               <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>WHATSAPP</th>
               <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>E-MAIL</th>
+              <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>ATENDIMENTO</th>
               <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>STATUS ATUAL</th>
+              <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem' }}>FEEDBACK CLIENTE</th>
               <th style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem', textAlign: 'right' }}>AÇÕES</th>
             </tr>
           </thead>
@@ -79,12 +82,51 @@ const BaseContatos = () => {
               <tr key={lead.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.2s' }}>
                 <td style={{ padding: '20px', color: 'var(--color-light)' }}><strong>{lead.name}</strong></td>
                 <td style={{ padding: '20px', opacity: 0.8 }}>{lead.contact}</td>
+                <td style={{ padding: '20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: lead.source === 'Instagram' ? '#E1306C' : lead.source === 'Facebook' ? '#1877F2' : 'var(--color-accent-green)' }}>
+                    {lead.source === 'Instagram' ? <Instagram size={16} /> : 
+                     lead.source === 'Facebook' ? <Facebook size={16} /> : 
+                     lead.source === 'Site' ? <Globe size={16} /> : <MessageCircle size={16} />}
+                    <span style={{ fontSize: '0.8rem', fontWeight: '500' }}>{lead.source || 'WhatsApp'}</span>
+                  </div>
+                </td>
                 <td style={{ padding: '20px', opacity: 0.8 }}>{lead.phone}</td>
-                <td style={{ padding: '20px', opacity: 0.8 }}>
-                  <a href={`mailto:${lead.email || 'contato@cliente.com'}`} style={{ color: 'var(--color-accent-green)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <td style={{ padding: '20px' }}>
+                  <a 
+                    href={`mailto:${lead.email || 'contato@cliente.com'}`} 
+                    style={{ 
+                      color: 'var(--color-accent-green)', 
+                      textDecoration: 'none', 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '8px',
+                      background: 'rgba(34, 197, 94, 0.08)',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.85rem',
+                      fontWeight: '500',
+                      border: '1px solid rgba(34, 197, 94, 0.2)',
+                      transition: '0.2s'
+                    }}
+                    onMouseOver={e => e.currentTarget.style.background = 'rgba(34, 197, 94, 0.15)'}
+                    onMouseOut={e => e.currentTarget.style.background = 'rgba(34, 197, 94, 0.08)'}
+                  >
                     <Mail size={14} />
                     {lead.email || 'Enviar E-mail'}
                   </a>
+                </td>
+                <td style={{ padding: '20px' }}>
+                  <div style={{ 
+                    display: 'flex', alignItems: 'center', gap: '6px', 
+                    color: lead.id % 2 === 0 ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.3)',
+                    fontSize: '0.75rem', fontWeight: 'bold'
+                  }}>
+                    <div style={{ 
+                      width: '8px', height: '8px', borderRadius: '50%', 
+                      background: lead.id % 2 === 0 ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.2)' 
+                    }}></div>
+                    {lead.id % 2 === 0 ? 'CONTATADO' : 'AGUARDANDO'}
+                  </div>
                 </td>
                 <td style={{ padding: '20px' }}>
                   <span style={{ 
@@ -94,6 +136,14 @@ const BaseContatos = () => {
                   }}>
                     {lead.status}
                   </span>
+                </td>
+                <td style={{ padding: '20px' }}>
+                  <div style={{ display: 'flex', gap: '3px', color: '#FFD700' }}>
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <Star key={star} size={14} fill={star <= (lead.id % 2 === 0 ? 5 : 4) ? '#FFD700' : 'transparent'} opacity={star <= (lead.id % 2 === 0 ? 5 : 4) ? 1 : 0.2} />
+                    ))}
+                  </div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.5, marginTop: '4px' }}>Excelente</div>
                 </td>
                 <td style={{ padding: '20px', textAlign: 'right' }}>
                   <button style={{ 

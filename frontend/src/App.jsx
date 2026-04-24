@@ -28,6 +28,7 @@ import Tasks from './pages/Tasks';
 import ContentCalendar from './pages/ContentCalendar';
 import ContentAutomationSettings from './pages/ContentAutomationSettings';
 import CreativeCatalog from './pages/CreativeCatalog';
+import ProductCatalog from './pages/ProductCatalog';
 import AISettings from './pages/AISettings';
 import UserManagement from './pages/UserManagement';
 import { SettingsProvider } from './context/SettingsContext';
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="tasks" element={<Tasks />} />
             <Route path="calendar" element={<ContentCalendar />} />
             <Route path="creatives" element={<CreativeCatalog />} />
+            <Route path="products" element={<ProductCatalog />} />
             <Route path="chats" element={<Chats />} />
             <Route path="leads" element={<BaseContatos />} />
             <Route path="social" element={<Navigate to="social/facebook" replace />} />

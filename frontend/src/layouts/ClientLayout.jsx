@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target } from 'lucide-react';
+import { LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 
 const TikTokIcon = ({ size = 16, color = "currentColor" }) => (
@@ -36,11 +36,16 @@ export default function ClientLayout() {
     <div className="layout-container">
       {/* MENU LATERAL */}
       <aside className="sidebar">
-        <div className="sidebar-logo">
+        <div className="sidebar-logo" style={{ color: '#fff', fontSize: '1.2rem' }}>
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt={settings.business_name || 'Logo'} style={{ maxHeight: '40px' }} />
           ) : (
-            <>{settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} <span style={{ color: 'var(--color-accent-cyan)' }}>{settings?.business_name ? settings.business_name.split(' ').slice(1).join(' ') : 'AI'}</span></>
+            <>
+              {settings?.business_name ? settings.business_name.split(' ')[0].toUpperCase() : 'INNOVA'} 
+              <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
+                {settings?.business_name ? settings.business_name.split(' ').slice(1).join(' ').toUpperCase() : 'AI SOLUTIONS'}
+              </span>
+            </>
           )}
         </div>
 
@@ -154,7 +159,12 @@ export default function ClientLayout() {
 
           <NavLink to="/app/creatives" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
             <Palette size={20} />
-            <span>Catálogo</span>
+            <span>Criativos</span>
+          </NavLink>
+
+          <NavLink to="/app/products" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+            <ShoppingBag size={20} />
+            <span>Produtos</span>
           </NavLink>
 
           <div className="nav-group">

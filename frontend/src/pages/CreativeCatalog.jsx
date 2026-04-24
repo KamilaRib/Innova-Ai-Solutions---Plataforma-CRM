@@ -1,13 +1,76 @@
 import React, { useState } from 'react';
-import { Image, Download, Plus, FileText, ExternalLink, Trash2 } from 'lucide-react';
+import { Image, Download, Plus, FileText, ExternalLink, Trash2, Eye, Video, Edit, X, Save } from 'lucide-react';
 
 const CreativeCatalog = () => {
   const [creatives, setCreatives] = useState([
-    { id: 0, title: 'LOGOMARCA OFICIAL', desc: 'Versões em PNG (fundo transparente), SVG e variações de cor (principal, branco e preto).', type: 'LOGOMARCA', size: '12MB' },
-    { id: 1, title: 'Banner Lançamento IA', desc: 'Banner principal para campanha de Google Ads e Site. Focado em conversão de leads frios.', type: 'BANNER', size: '2.5MB' },
-    { id: 2, title: 'Post Instagram - CRM', desc: 'Arte quadrada focada em explicar os benefícios do CRM. Para feed orgânico.', type: 'SOCIAL', size: '1.2MB' },
-    { id: 3, title: 'Story - Automação', desc: 'Vídeo curto de 15s para Reels e Stories sobre Evolution API.', type: 'VÍDEO', size: '45MB' },
+    { id: 0, title: 'Logomarca Oficial', desc: 'Versões em PNG (fundo transparente), SVG e variações de cor.', type: 'IDENTIDADE', size: '12MB', format: 'SVG/PNG', recommended: 'Vetor Original', url: '#' },
+    { id: 1, title: 'Capa para Facebook', desc: 'Capa institucional para a página oficial do Facebook.', type: 'BANNER', size: '850KB', format: '820 x 312 px', recommended: 'Ideal para Desktop/Mobile', url: '#' },
+    { id: 2, title: 'Reels - Apresentação IA', desc: 'Vídeo dinâmico mostrando o Robô virtual em ação.', type: 'VÍDEO', size: '15MB', format: '1080 x 1920 px', recommended: '9:16 (Vertical)', url: '#' },
+    { id: 3, title: 'Post Feed - Benefícios', desc: 'Arte estática com os 5 principais benefícios do CRM.', type: 'SOCIAL', size: '1.1MB', format: '1080 x 1080 px', recommended: '1:1 (Quadrado)', url: '#' },
+    { id: 4, title: 'Banner Site Principal', desc: 'Banner horizontal para o topo do site (Hero Section).', type: 'BANNER', size: '2.3MB', format: '1920 x 600 px', recommended: 'Ultra Wide', url: '#' },
   ]);
+
+  const [previewItem, setPreviewItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('Todos');
+  const [formData, setFormData] = useState({
+    title: '',
+    desc: '',
+    type: 'SOCIAL',
+    format: '',
+    size: '',
+    recommended: '',
+    url: ''
+  });
+
+  const handleOpenModal = (item = null) => {
+    if (item) {
+      setEditingItem(item);
+      setFormData(item);
+    } else {
+      setEditingItem(null);
+      setFormData({
+        title: '',
+        desc: '',
+        type: 'SOCIAL',
+        format: '',
+        size: '',
+        recommended: '',
+        url: ''
+      });
+    }
+    setShowModal(true);
+  };
+
+  const handleSave = () => {
+    if (!formData.title) {
+      alert('Por favor, preencha pelo menos o título.');
+      return;
+    }
+
+    if (editingItem) {
+      setCreatives(creatives.map(c => c.id === editingItem.id ? { ...formData, id: c.id } : c));
+    } else {
+      setCreatives([...creatives, { ...formData, id: Date.now() }]);
+    }
+    setShowModal(false);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Tem certeza que deseja excluir este ativo?")) {
+      setCreatives(creatives.filter(c => c.id !== id));
+    }
+  };
+
+  const filteredCreatives = creatives.filter(item => {
+    if (activeFilter === 'Todos') return true;
+    if (activeFilter === 'Identidade') return item.type === 'IDENTIDADE';
+    if (activeFilter === 'Social') return item.type === 'SOCIAL';
+    if (activeFilter === 'Vídeos') return item.type === 'VÍDEO';
+    if (activeFilter === 'Banners') return item.type === 'BANNER';
+    return true;
+  });
 
   const handleDownload = (title) => {
     alert(`Iniciando download de: ${title} ...`);
@@ -15,86 +78,201 @@ const CreativeCatalog = () => {
 
   return (
     <div style={{ padding: '30px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '35px' }}>
-        <div>
-          <h1 style={{ color: 'var(--color-accent-green)', marginBottom: '5px' }}>Catálogo de Ativos</h1>
-          <p style={{ opacity: 0.8 }}>Repositório oficial de artes e identidade visual.</p>
-        </div>
-        
-        <button 
-          onClick={() => alert('Abrindo seletor de arquivos...')}
-          style={{ 
-            background: 'var(--color-accent-green)', border: 'none', color: '#000', 
-            padding: '12px 24px', borderRadius: '10px', fontWeight: 'bold', 
-            display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer'
-          }}
-        >
-          <Plus size={20} />
-          ADICIONAR NOVO
-        </button>
-      </div>
-
-      {/* SEÇÃO LOGOMARCA (DESTAQUE) */}
-      <div className="card" style={{ 
-        background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.05), transparent)', 
-        borderLeft: '4px solid var(--color-accent-green)',
-        marginBottom: '30px', padding: '25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-      }}>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '12px' }}>
-            <Image size={32} color="var(--color-accent-green)" />
-          </div>
-          <div>
-            <h2 style={{ fontSize: '1.3rem', margin: '0 0 5px 0' }}>{creatives[0].title}</h2>
-            <p style={{ margin: 0, opacity: 0.6, fontSize: '0.9rem' }}>{creatives[0].desc}</p>
-          </div>
-        </div>
-        <button 
-          onClick={() => handleDownload(creatives[0].title)}
-          className="btn-primary" 
-          style={{ padding: '10px 25px', display: 'flex', alignItems: 'center', gap: '10px' }}
-        >
-          <Download size={18} />
-          BAIXAR PACOTE LOGO
-        </button>
-      </div>
-
-      <h3 style={{ fontSize: '1rem', opacity: 0.4, marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '1px' }}>Lista de Criativos</h3>
-
-      {/* LISTA DE CRIATIVOS */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        {creatives.slice(1).map(item => (
-          <div key={item.id} className="card" style={{ 
-            padding: '20px 25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            transition: '0.2s', cursor: 'pointer'
-          }} onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'} onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}>
-            
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flex: 1 }}>
-              <div style={{ width: '50px', height: '50px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FileText size={20} opacity={0.3} />
+      {/* MODAL DE PREVIEW */}
+      {previewItem && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.95)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '900px', textAlign: 'center' }}>
+            <button onClick={() => setPreviewItem(null)} style={{ position: 'absolute', top: '-60px', right: 0, color: '#fff', background: 'rgba(255,255,255,0.1)', border: 'none', width: '40px', height: '40px', borderRadius: '50%', fontSize: '1.2rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <X size={20} />
+            </button>
+            <div style={{ background: '#111', borderRadius: '24px', padding: '30px', boxShadow: '0 20px 60px rgba(0,0,0,0.8)' }}>
+              <h2 style={{ marginBottom: '25px', color: 'var(--color-accent-green)', letterSpacing: '-1px', fontSize: '1.8rem' }}>{previewItem.title}</h2>
+              <div style={{ width: '100%', height: '450px', background: 'linear-gradient(135deg, #1a1a1a, #0d0d0d)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.05)' }}>
+                {previewItem.type.includes('VÍDEO') ? <Video size={80} color="var(--color-accent-green)" /> : <Image size={80} opacity={0.2} />}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                  <strong style={{ fontSize: '1.05rem' }}>{item.title}</strong>
-                  <span style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', opacity: 0.5 }}>{item.type}</span>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '30px' }}>
+                <div>
+                  <small style={{ display: 'block', opacity: 0.4, textTransform: 'uppercase', fontSize: '0.65rem' }}>Formato</small>
+                  <strong>{previewItem.format}</strong>
                 </div>
-                <p style={{ margin: 0, opacity: 0.5, fontSize: '0.85rem' }}>{item.desc}</p>
+                <div>
+                  <small style={{ display: 'block', opacity: 0.4, textTransform: 'uppercase', fontSize: '0.65rem' }}>Indicação</small>
+                  <strong>{previewItem.recommended}</strong>
+                </div>
+                <div>
+                  <small style={{ display: 'block', opacity: 0.4, textTransform: 'uppercase', fontSize: '0.65rem' }}>Tamanho</small>
+                  <strong>{previewItem.size}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE CADASTRO / EDIÇÃO */}
+      {showModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)' }}>
+          <div className="card" style={{ width: '500px', padding: '40px', borderTop: '4px solid var(--color-accent-green)', background: '#0d1117', boxShadow: '0 30px 70px rgba(0,0,0,0.7)', borderRadius: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+              <h2 style={{ color: 'var(--color-accent-green)', fontSize: '1.8rem', fontWeight: '900' }}>
+                {editingItem ? 'Editar Ativo' : 'Novo Ativo'}
+              </h2>
+              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', opacity: 0.5 }}><X size={24} /></button>
+            </div>
+            
+            <div style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: '10px' }}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>TÍTULO DO ATIVO</label>
+                <input className="input-field" placeholder="Ex: Logomarca Principal" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>LINK DO ARQUIVO / ASSET</label>
+                <input className="input-field" placeholder="https://exemplo.com/arquivo.png" value={formData.url} onChange={e => setFormData({...formData, url: e.target.value})} />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>TIPO</label>
+                  <select className="input-field" value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}>
+                    <option value="IDENTIDADE">Identidade</option>
+                    <option value="SOCIAL">Social</option>
+                    <option value="VÍDEO">Vídeo</option>
+                    <option value="BANNER">Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>FORMATO</label>
+                  <input className="input-field" placeholder="Ex: 1080x1080px" value={formData.format} onChange={e => setFormData({...formData, format: e.target.value})} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>TAMANHO</label>
+                  <input className="input-field" placeholder="Ex: 1.5MB" value={formData.size} onChange={e => setFormData({...formData, size: e.target.value})} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>RECOMENDAÇÃO</label>
+                  <input className="input-field" placeholder="Ex: Feed Instagram" value={formData.recommended} onChange={e => setFormData({...formData, recommended: e.target.value})} />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '30px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>DESCRIÇÃO</label>
+                <textarea className="input-field" style={{ height: '80px', resize: 'none' }} placeholder="Descreva o propósito deste ativo..." value={formData.desc} onChange={e => setFormData({...formData, desc: e.target.value})} />
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
-              <span style={{ fontSize: '0.8rem', opacity: 0.3, fontWeight: 'bold' }}>{item.size}</span>
-              <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
+              <button className="btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} onClick={handleSave}>
+                <Save size={18} /> SALVAR ATIVO
+              </button>
+              <button className="btn-primary" style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: '#fff' }} onClick={() => setShowModal(false)}>
+                CANCELAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+        <div>
+          <h1 style={{ color: 'var(--color-accent-green)', fontSize: '2.2rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '8px' }}>Biblioteca de Ativos</h1>
+          <p style={{ opacity: 0.6, fontSize: '0.95rem' }}>Gerenciamento centralizado de criativos, logos e manuais de marca.</p>
+        </div>
+        
+        <button 
+          onClick={() => handleOpenModal()}
+          className="btn-primary"
+          style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+        >
+          <Plus size={20} />
+          NOVO ATIVO
+        </button>
+      </div>
+
+      {/* FILTROS RÁPIDOS */}
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '40px' }}>
+        {['Todos', 'Identidade', 'Social', 'Vídeos', 'Banners'].map((filter) => (
+          <button 
+            key={filter} 
+            onClick={() => setActiveFilter(filter)}
+            style={{ 
+              background: activeFilter === filter ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.03)', 
+              border: 'none', 
+              color: activeFilter === filter ? '#000' : '#fff', 
+              padding: '8px 20px', 
+              borderRadius: '100px', 
+              fontSize: '0.8rem', 
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      {/* GRID DE GALERIA */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '25px' }}>
+        {filteredCreatives.map(item => (
+          <div key={item.id} className="card" style={{ padding: 0, overflow: 'hidden', border: 'none', background: '#12151a', transition: 'transform 0.3s ease' }}>
+            {/* ÁREA DE PREVIEW DO CARD */}
+            <div style={{ 
+              height: '200px', background: 'linear-gradient(45deg, #1a1b1f, #12151a)', 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
+              borderBottom: '1px solid rgba(255,255,255,0.05)'
+            }}>
+              {item.type.includes('VÍDEO') ? <Video size={32} color="var(--color-accent-green)" /> : <Image size={32} opacity={0.2} />}
+              <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold', color: 'var(--color-accent-green)', textTransform: 'uppercase' }}>
+                {item.type}
+              </div>
+              
+              {/* BOTÕES DE EDIÇÃO RÁPIDA (HOVER) */}
+              <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '8px' }}>
                 <button 
-                  onClick={() => handleDownload(item.title)}
-                  style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem' }}
+                  onClick={() => handleOpenModal(item)}
+                  style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(5px)', border: 'none', color: '#fff', width: '30px', height: '30px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  title="Editar"
                 >
-                  <Download size={14} />
-                  Download
+                  <Edit size={14} />
+                </button>
+                <button 
+                  onClick={() => handleDelete(item.id)}
+                  style={{ background: 'rgba(239, 68, 68, 0.2)', backdropFilter: 'blur(5px)', border: 'none', color: '#ff4d4d', width: '30px', height: '30px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  title="Excluir"
+                >
+                  <Trash2 size={14} />
                 </button>
               </div>
             </div>
 
+            {/* INFO DO CARD */}
+            <div style={{ padding: '20px' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '6px', color: '#fff' }}>{item.title}</h3>
+              <p style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '20px', height: '36px', overflow: 'hidden' }}>{item.desc}</p>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>{item.format}</span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={() => setPreviewItem(item)}
+                    style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: '#fff', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Eye size={16} />
+                  </button>
+                  <button 
+                    onClick={() => handleDownload(item.title)}
+                    style={{ background: 'var(--color-accent-green)', border: 'none', color: '#000', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '800' }}
+                  >
+                    <Download size={14} style={{ marginRight: '6px' }} />
+                    BAIXAR
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -103,3 +281,4 @@ const CreativeCatalog = () => {
 };
 
 export default CreativeCatalog;
+

@@ -6,7 +6,7 @@ import {
 import { 
   Instagram, Facebook, MessageCircle, MessageSquare, Clock, Users, 
   CheckCircle, XCircle, Target, Filter, TrendingUp, AlertCircle,
-  MoreVertical, Calendar
+  MoreVertical, Calendar, ShoppingBag
 } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 
@@ -30,7 +30,7 @@ const processedData = [
 
 const Dashboard = () => {
   const { settings } = useContext(SettingsContext);
-  const accentColor = settings?.primary_color || '#00F5FF';
+  const accentColor = settings?.primary_color || '#22C55E';
 
   return (
     <div style={{ paddingBottom: '40px' }}>
@@ -119,6 +119,16 @@ const Dashboard = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
             <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Lead: João Silva</span>
             <MoreVertical size={16} opacity={0.3} />
+          </div>
+        </div>
+
+        {/* NOVO: CARD PRODUTOS VENDIDOS */}
+        <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid var(--color-accent-green)' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Produtos Vendidos</span>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: 'var(--color-accent-green)' }}>142</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+            <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>+12% vs mês anterior</span>
+            <ShoppingBag size={16} color="var(--color-accent-green)" />
           </div>
         </div>
 
