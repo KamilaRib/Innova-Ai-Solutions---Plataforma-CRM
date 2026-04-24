@@ -1,16 +1,19 @@
 // This is your Prisma schema file
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-model Tenant {
-  id                           String     @id @default(uuid())
-  business_name                String
+model SystemSettings {
+  id                           String     @id @default("1")
+  business_name                String     @default("INNOVA AI")
+  logo_url                     String?
+  primary_color                String?    @default("#00F5FF")
   whatsapp_phone_number_id     String?
   whatsapp_business_account_id String?
   whatsapp_access_token        String?
@@ -19,55 +22,78 @@ model Tenant {
   evolution_api_key            String?
   evolution_instance_name      String?
   created_at                   DateTime   @default(now())
-  users                        User[]
-  leads                        Lead[]
-  usages                       UsageLog[]
 }
 
 model UsageLog {
   id          String   @id @default(uuid())
-  tenant_id   String
   type        String // OPENAI | WHATSAPP
   amount      Int // Número de Tokens ou 1 (para uma mensagem disparada)
   description String?
   created_at  DateTime @default(now())
-  tenant      Tenant   @relation(fields: [tenant_id], references: [id])
 }
 
 model User {
-  id            String    @id @default(uuid())
-  tenant_id     String?
-  name          String
-  email         String    @unique
-  password_hash String
-  role          String    @default("USER") // ADMIN, CLIENT_OWNER, USER
-  tenant        Tenant?   @relation(fields: [tenant_id], references: [id])
-  messages      Message[]
+  id                    String    @id @default(uuid())
+  name                  String
+  email                 String    @unique
+  password_hash         String
+  role                  String    @default("OPERADOR") // ADM, OPERADOR
+  recovery_token        String?   @unique
+  recovery_token_expires DateTime?
+  created_at            DateTime  @default(now())
+
+  messages              Message[]
+  connections           SocialConnection[]
+}
+
+model SocialConnection {
+  id           String   @id @default(uuid())
+  user_id      String
+  provider     String   // WHATSAPP | INSTAGRAM | FACEBOOK
+  instance_id  String   @unique // ID da instância no Evolution ou Meta
+  api_key      String?
+  name         String   // Ex: "WhatsApp Comercial"
+  status       String   @default("CONNECTED")
+  created_at   DateTime @default(now())
+  
+  user         User     @relation(fields: [user_id], references: [id])
+  leads        Lead[]
 }
 
 model Lead {
-  id                 String    @id @default(uuid())
-  tenant_id          String
+  id                 String            @id @default(uuid())
   name               String
   phone              String
   email              String?
-  source             String // WhatsApp | Website
-  pipeline_status    String    @default("Início de Atendimento") // Início de Atendimento, Conversando, Agendamento, Formulário Enviado, Follow Up
+  source             String            // WhatsApp | Website
+  pipeline_status    String            @default("Início de Atendimento")
   notes              String?
   last_contacted_at  DateTime?
   next_followup_date DateTime?
-  is_bot_paused      Boolean   @default(false)
-  tenant             Tenant    @relation(fields: [tenant_id], references: [id])
+  is_bot_paused      Boolean           @default(false)
+  connection_id      String?           // Vínculo com a conta social específica
+  
+  social_connection  SocialConnection? @relation(fields: [connection_id], references: [id])
   messages           Message[]
 }
 
 model Message {
   id          String   @id @default(uuid())
   lead_id     String
-  user_id     String? // Id da secretária (User) que mandou a msg, se for de agente humano
+  user_id     String?
   sender_type String // client | agent | bot
   content     String
   created_at  DateTime @default(now())
+  
   lead        Lead     @relation(fields: [lead_id], references: [id])
   user        User?    @relation(fields: [user_id], references: [id])
+}
+
+model YoutubeAgenda {
+  id               String    @id @default(uuid())
+  video_file_url   String    // Link público para download temporário do vídeo 
+  theme            String    // Sobre o que é o vídeo
+  post_date        DateTime  // Data que queremos postar
+  status           String    @default("PENDING") // PENDING | POSTED
+  created_at       DateTime  @default(now())
 }

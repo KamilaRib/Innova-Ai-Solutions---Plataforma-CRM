@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "activeInstanceId": "instance-1137afad",
+  "instances": [
+    {
+      "id": "instance-1137afad",
+      "name": "localhost · Innova AI",
+      "host": "http://localhost:5678",
+      "syncFolder": "workflows",
+      "projectId": "personal",
+      "projectName": "Personal",
+      "instanceIdentifier": "local_5678_innova_a",
+      "workflowDir": "workflows/local_5678_innova_a/personal",
+      "verification": {
+        "status": "verified",
+        "normalizedHost": "http://localhost:5678",
+        "userId": "5bef5616-2625-4e72-bf83-cbb2a3820fa0",
+        "userName": "Innova AI",
+        "userEmail": "innovaaisolutionss@gmail.com",
+        "lastCheckedAt": "2026-04-17T01:16:16.269Z"
+      }
+    }
+  ],
+  "host": "http://localhost:5678",
+  "syncFolder": "workflows",
+  "projectId": "personal",
+  "projectName": "Personal",
+  "instanceIdentifier": "local_5678_innova_a",
+  "workflowDir": "workflows/local_5678_innova_a/personal"
+}

@@ -1,0 +1,53 @@
+<h2>Como você prefere visualizar seus Clientes?</h2>
+<p class="subtitle">Escolha o layout que melhor se adapta à sua rotina de vendas.</p>
+
+<div class="options">
+  <div class="option" data-choice="table" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Tabela Inteligente</h3>
+      <p>Visão densa com todas as informações (Empresa, Responsável, Status Supabase) em uma grade editável, estilo Excel/Airtable.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="cards" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Grade de Cards</h3>
+      <p>Visual moderno com logotipos das empresas e indicadores rápidos de performance. Ótimo para uma visão geral rápida.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="split" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Visão Hierárquica (Empresa > Contatos)</h3>
+      <p>Uma lista de empresas à esquerda e os contatos/pessoas responsáveis à direita. Ideal para gerir múltiplas pessoas na mesma empresa.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Prévia do Conceito (Opção A)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Módulo: Cadastro de Clientes</div>
+    <div class="mockup-body">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+        <div class="mock-nav">Filtros: Status Supabase | Responsável | Data</div>
+        <button class="mock-button">+ Novo Cliente</button>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; color: #fff;">
+        <tr style="background: rgba(255,255,255,0.1);">
+          <th style="padding: 10px;">Empresa</th>
+          <th style="padding: 10px;">Responsável Comercial</th>
+          <th style="padding: 10px;">Status n8n</th>
+          <th style="padding: 10px;">Última Pergunta</th>
+        </tr>
+        <tr>
+          <td style="padding: 10px;">Tech Innovators S.A.</td>
+          <td style="padding: 10px;">Diego Freitas</td>
+          <td style="padding: 10px;"><span style="color: #39FF14;">Compilado</span></td>
+          <td style="padding: 10px;">"Qual o seu orçamento anual?"</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

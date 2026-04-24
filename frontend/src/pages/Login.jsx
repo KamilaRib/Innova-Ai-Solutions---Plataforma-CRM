@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SettingsContext } from '../context/SettingsContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const { settings } = useContext(SettingsContext);
 
   const handleLogin = (e) => {
-    e.stringify;
     e.preventDefault();
     // Simula validação para entrar no sistema
-    localStorage.setItem('role', email.includes('admin') ? 'CLIENT_OWNER' : 'USER');
-    navigate('/app/kanban');
+    localStorage.setItem('role', email.includes('admin') ? 'ADM' : 'OPERADOR');
+    navigate('/app/dashboard');
   };
 
   return (
@@ -19,20 +20,24 @@ export default function Login() {
       <div style={{
         background: 'rgba(248, 249, 250, 0.03)',
         backdropFilter: 'blur(12px)',
-        padding: '3rem', borderRadius: '16px', border: '1px solid rgba(0, 245, 255, 0.1)',
+        padding: '3rem', borderRadius: '16px', border: '1px solid rgba(34, 197, 94, 0.1)',
         width: '100%', maxWidth: '450px',
         boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2.5rem' }}>
-            INNOVA <span style={{ color: 'var(--color-accent-cyan)' }}>AI</span>
-          </h1>
+          {settings?.logo_url ? (
+            <img src={settings.logo_url} alt={settings.business_name || 'Logo'} style={{ maxHeight: '60px', marginBottom: '10px' }} />
+          ) : (
+            <h1 style={{ fontSize: '2.5rem' }}>
+              {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} <span style={{ color: 'var(--color-accent-green)' }}>{settings?.business_name ? settings.business_name.split(' ').slice(1).join(' ') : 'AI'}</span>
+            </h1>
+          )}
           <p style={{ opacity: 0.7 }}>Acesso ao CRM Inteligente</p>
         </div>
 
         <form onSubmit={handleLogin}>
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--color-accent-cyan)' }}>E-mail de Acesso</label>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--color-accent-green)' }}>E-mail de Acesso</label>
             <input 
               className="input-field" 
               type="email" 

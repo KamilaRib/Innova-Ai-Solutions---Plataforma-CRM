@@ -1,0 +1,21 @@
+# CRM Implementation - Phase 3
+
+- [x] **Task 1: Leads Inventory & Search**
+  - [x] Implement `GET /leads` with pagination and search (name/phone).
+  - [x] Implement `GET /leads/:id` to fetch full history + context.
+  - [x] Patch `Lead.stage_id` for Kanban drag-and-drop.
+- [x] **Task 2: Kanban Infrastructure**
+  - [x] Implement `GET /pipelines/stages` for the current tenant.
+  - [x] Logic to reorder stages (drag-and-drop support).
+- [x] **Task 3: Dashboard & BI (Simplified)**
+  - [x] `GET /dashboard/stats` - Summary of active leads, new leads today, message volume.
+  - [x] `GET /dashboard/usage` - API consumption (OpenAI, WhatsApp) from `UsageLog`.
+- [x] **Task 4: Intelligent Agent Settings (Whitelabel + Mute)**
+  - [x] Implement `GET/PATCH /settings/tenant`.
+  - [x] **Business Logic:** "Silenciar Agente"
+  - [x] **Business Logic:** "Auto-unpause" hours logic.
+
+- [x] **Task 5: Frontend Refinement & Build**
+  - [x] Fix TailwindCSS v4 build errors.
+  - [x] Install missing dependencies (`@dnd-kit/*`).
+  - [x] Verify frontend build completes without errors.

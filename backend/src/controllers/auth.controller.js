@@ -21,10 +21,9 @@ const login = async (req, res) => {
     */
 
     // ----- SIMULAÇÃO DA LÓGICA DO BANCO (Substituir pela de cima no futuro) -----
-    // Vamos imaginar a Secretária tentando entrar...
+    // Vamos imaginar a Secretária ou Administrador tentando entrar...
     const mockUser = {
       id: "usr-002",
-      tenant_id: "empresa-cliente-777",
       email: email,
       role: email.includes("admin") ? "CLIENT_OWNER" : "AGENT" 
     };
@@ -34,7 +33,6 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { 
         user_id: mockUser.id, 
-        tenant_id: mockUser.tenant_id, 
         role: mockUser.role // A Frontend vai usar isso para esconder o Dashboard
       },
       JWT_SECRET,

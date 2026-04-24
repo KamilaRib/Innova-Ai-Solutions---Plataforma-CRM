@@ -1,0 +1,32 @@
+<h2>Resumo do Design Final</h2>
+<p class="subtitle">Eis o que vamos construir para o módulo de Clientes.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Especificação: Módulo Clientes</div>
+  <div class="mockup-body">
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Funcionalidades</h4>
+        <ul>
+          <li>Lista de empresas à esquerda com filtro de busca.</li>
+          <li>Painel central com dados da empresa (CNPJ, Endereço, etc.).</li>
+          <li>Seção "Responsável Comercial" editável.</li>
+          <li>Histórico de conversas do Agente n8n / Supabase.</li>
+          <li>Botão "+ Novo Cadastro" manual.</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Considerações</h4>
+        <ul>
+          <li>Precisaremos de uma integração com Supabase p/ as respostas reais.</li>
+          <li>O layout será focado em desktop devido à densidade de informações.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 10px; margin-top: 20px;">
+  <button class="mock-button" style="background: #39FF14; color: #000; font-weight: bold;" data-choice="approved" onclick="toggleSelect(this)">APROVAR E INICIAR</button>
+  <button class="mock-button" data-choice="back" onclick="toggleSelect(this)">REVISAR ALGO</button>
+</div>

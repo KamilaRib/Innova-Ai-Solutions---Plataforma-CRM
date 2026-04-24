@@ -1,0 +1,74 @@
+<h2>Design Detalhado: Visão Hierárquica</h2>
+<p class="subtitle">Empresas à esquerda, detalhes e contatos à direita.</p>
+
+<div class="split">
+  <div class="mockup" style="flex: 0 0 300px;">
+    <div class="mockup-header">Lista de Empresas</div>
+    <div class="mockup-body" style="padding: 0;">
+      <div style="background: rgba(0, 245, 255, 0.1); border-left: 3px solid #00F5FF; padding: 15px;">
+        <strong>Tech Innovators S.A.</strong><br/>
+        <span style="font-size: 0.7rem; opacity: 0.5;">CNPJ: 12.345.678/0001-90</span>
+      </div>
+      <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <strong>Global Solutions Ltd.</strong><br/>
+        <span style="font-size: 0.7rem; opacity: 0.5;">CNPJ: 98.765.432/0001-21</span>
+      </div>
+      <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <strong>Innova Retail</strong><br/>
+        <span style="font-size: 0.7rem; opacity: 0.5;">CNPJ: 45.678.912/0001-33</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" style="flex: 1;">
+    <div class="mockup-header">Detalhes: Tech Innovators S.A.</div>
+    <div class="mockup-body">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+        <div class="section">
+          <div class="label">Dados da Empresa</div>
+          <p><strong>NOME:</strong> Tech Innovators S.A.</p>
+          <p><strong>SITE:</strong> techinnovators.com.br</p>
+          <p><strong>SETOR:</strong> Tecnologia / SaaS</p>
+        </div>
+        <div class="section">
+          <div class="label">Responsável Comercial</div>
+          <p><strong>AGENTE:</strong> Kamila Ribeiro</p>
+          <p><strong>CARGO:</strong> Manager de Vendas</p>
+          <p><strong>ULT. CONTATO:</strong> Hoje, 10:45</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="label">Respostas do Lead (Sincronizado via Supabase)</div>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+           <div style="margin-bottom: 10px;">
+              <span style="color: #00F5FF; font-size: 0.7rem;">[n8n Agent]:</span> "Qual o seu orçamento?"<br/>
+              <span style="font-weight: bold;">[Cliente]:</span> "R$ 5.000 / mês"
+           </div>
+           <hr style="opacity: 0.1; border: 0; border-top: 1px solid #fff;"/>
+           <div style="margin-top: 10px;">
+              <span style="color: #00F5FF; font-size: 0.7rem;">[n8n Agent]:</span> "Quantos funcionários?"<br/>
+              <span style="font-weight: bold;">[Cliente]:</span> "50 a 100"
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="edit" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>Campos Editáveis</h3>
+      <p>Quer que eu deixe os campos de Empresa e Responsável editáveis como fizemos no ROI?</p>
+    </div>
+  </div>
+  <div class="option" data-choice="tabs" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>Abas de Navegação</h3>
+      <p>Adicionar abas para "Histórico n8n", "Documentos" e "Tarefas vinculadas"?</p>
+    </div>
+  </div>
+</div>
