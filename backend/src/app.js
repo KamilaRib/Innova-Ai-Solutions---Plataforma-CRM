@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 // Registrando Controladores
 const webhookRoutes = require('./routes/webhook.routes');
@@ -28,6 +29,14 @@ app.use('/api/settings', require('./routes/settings.routes')); // Configuraçõe
 // Rota de Health Check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+// Servir arquivos estáticos do Frontend (React/Vite)
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+
+// Qualquer outra requisição que não seja API vai para o index.html do React
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
 
 module.exports = app;
