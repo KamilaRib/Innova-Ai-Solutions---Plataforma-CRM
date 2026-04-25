@@ -149,18 +149,6 @@ const Home = () => {
           </button>
         ) : (
           <nav style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
-            <span
-              onClick={() => document.getElementById('servicos').scrollIntoView({ behavior: 'smooth' })}
-              style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: '0.2s', cursor: 'pointer' }}
-              onMouseOver={e => e.target.style.color = '#22C55E'}
-              onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.7)'}
-            >SERVIÇOS</span>
-            <span
-              onClick={() => document.getElementById('transformacao').scrollIntoView({ behavior: 'smooth' })}
-              style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: '0.2s', cursor: 'pointer' }}
-              onMouseOver={e => e.target.style.color = '#22C55E'}
-              onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.7)'}
-            >TECNOLOGIA</span>
             <button 
               onClick={() => navigate('/login')}
               style={{ 
@@ -183,8 +171,6 @@ const Home = () => {
           background: '#05070a', display: 'flex', flexDirection: 'column',
           padding: '100px 30px', gap: '25px'
         }}>
-          <span onClick={() => { setIsMobileMenuOpen(false); document.getElementById('servicos').scrollIntoView({ behavior: 'smooth' }); }} style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>SERVIÇOS</span>
-          <span onClick={() => { setIsMobileMenuOpen(false); document.getElementById('transformacao').scrollIntoView({ behavior: 'smooth' }); }} style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>TECNOLOGIA</span>
           <button 
             onClick={() => navigate('/login')}
             style={{ 
