@@ -210,6 +210,12 @@ export default function ClientLayout() {
             
             {expandedGroups.settings && (
               <div className="sub-menu">
+                {userRole === 'ADM' && (
+                  <NavLink onClick={closeMobile} to="/app/settings/users" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                    <Shield size={16} color="var(--color-accent-green)" />
+                    <span>Gestão de Usuários</span>
+                  </NavLink>
+                )}
                 <NavLink onClick={closeMobile} to="/app/settings/branding" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Palette size={16} />
                   <span>Identidade Visual</span>
@@ -222,12 +228,6 @@ export default function ClientLayout() {
                   <Zap size={16} />
                   <span>Evolution API</span>
                 </NavLink>
-                {userRole === 'ADM' && (
-                  <NavLink onClick={closeMobile} to="/app/settings/users" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                    <Shield size={16} color="var(--color-accent-green)" />
-                    <span>Gestão de Usuários</span>
-                  </NavLink>
-                )}
               </div>
             )}
           </div>
