@@ -40,7 +40,7 @@ export function SettingsProvider({ children }) {
 
   const fetchSettings = () => {
     // Busca todas as configurações (incluindo as privadas)
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || '';
     return fetch(`${API_URL}/api/settings`)
       .then(res => res.json())
       .then(data => {
@@ -59,7 +59,7 @@ export function SettingsProvider({ children }) {
   }, []);
 
   const saveSettings = (newData) => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || '';
     return fetch(`${API_URL}/api/settings`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },

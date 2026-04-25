@@ -8,7 +8,7 @@ const Settings = () => {
   });
 
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || '';
     fetch(`${API_URL}/api/settings`)
       .then(res => res.json())
       .then(data => {
@@ -23,7 +23,7 @@ const Settings = () => {
   };
 
   const handleSave = () => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || '';
     fetch(`${API_URL}/api/settings`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
