@@ -130,11 +130,11 @@ const Home = () => {
         padding: isMobile ? '15px 20px' : '20px 60px', backdropFilter: 'blur(12px)', background: 'rgba(5, 7, 10, 0.7)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '8px' : '12px', cursor: 'pointer' }} onClick={() => document.getElementById('home-top').scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div style={{ background: '#22C55E', color: '#000', padding: '2px 8px', borderRadius: '4px', fontWeight: '900', fontSize: '0.85rem' }}>AI</div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 'bold', fontSize: isMobile ? '1rem' : '1.2rem', letterSpacing: '1px' }}>INNOVA <span style={{ color: '#22C55E' }}>AI</span> SOLUTIONS</span>
-            {!isMobile && <span style={{ color: '#22C55E', fontSize: '12px', fontWeight: '400', letterSpacing: '0.3px' }}>Transformação Digital & Automações Inteligentes</span>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '12px', cursor: 'pointer' }} onClick={() => document.getElementById('home-top').scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div style={{ background: '#22C55E', color: '#000', padding: '2px 6px', borderRadius: '4px', fontWeight: '900', fontSize: '0.75rem' }}>AI</div>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
+            <span style={{ fontWeight: 'bold', fontSize: 'clamp(0.9rem, 4vw, 1.2rem)', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>INNOVA <span style={{ color: '#22C55E' }}>AI</span> SOLUTIONS</span>
+            {!isMobile && <span style={{ color: '#22C55E', fontSize: '11px', fontWeight: '400', letterSpacing: '0.2px' }}>Transformação Digital & Automações Inteligentes</span>}
           </div>
         </div>
 
@@ -213,8 +213,14 @@ const Home = () => {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(5,7,10,0.4) 0%, rgba(5,7,10,0.1) 50%, rgba(5,7,10,0.6) 100%)' }} />
 
         {/* HERO LABEL */}
-        <div style={{ position: 'absolute', top: '90px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
-          <div style={{ display: 'inline-block', padding: '8px 20px', borderRadius: '50px', background: 'rgba(34,197,94,0.2)', color: '#22C55E', fontSize: '0.8rem', fontWeight: 'bold', letterSpacing: '2px', backdropFilter: 'blur(10px)', border: '1px solid rgba(34,197,94,0.3)', whiteSpace: 'nowrap' }}>
+        <div style={{ position: 'absolute', top: isMobile ? '80px' : '100px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: '90%', textAlign: 'center' }}>
+          <div style={{ 
+            display: 'inline-block', padding: '6px 15px', borderRadius: '50px', 
+            background: 'rgba(34,197,94,0.2)', color: '#22C55E', 
+            fontSize: 'clamp(0.65rem, 3vw, 0.8rem)', fontWeight: 'bold', 
+            letterSpacing: '1.5px', backdropFilter: 'blur(10px)', 
+            border: '1px solid rgba(34,197,94,0.3)', textTransform: 'uppercase'
+          }}>
             {slides[currentSlide].label}
           </div>
         </div>
@@ -246,11 +252,11 @@ const Home = () => {
 
       {/* SERVICES GRID */}
       <section id="servicos" style={{ padding: isMobile ? '60px 20px' : '100px 60px', background: 'rgba(0,0,0,0.2)' }}>
-        <div style={{ textAlign: 'center', marginBottom: '70px', maxWidth: '800px', margin: '0 auto 70px auto' }}>
-          <h2 style={{ fontSize: isMobile ? '1.8rem' : '2.5rem', fontWeight: '900', lineHeight: '1.2', marginBottom: '20px' }}>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '70px', maxWidth: '800px', margin: '0 auto 70px auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)', fontWeight: '900', lineHeight: '1.1', marginBottom: '20px' }}>
             Escolha a estratégia digital <span style={{ color: '#22C55E' }}>certa</span> para impulsionar o seu negócio
           </h2>
-          <p style={{ opacity: 0.55, fontSize: '0.95rem', lineHeight: '1.7' }}>
+          <p style={{ opacity: 0.55, fontSize: 'clamp(0.85rem, 3.5vw, 1rem)', lineHeight: '1.6' }}>
             Nossas soluções foram desenvolvidas para atender diferentes necessidades empresariais. Avalie as opções disponíveis e identifique a que melhor se alinha aos objetivos, ao momento e à visão de crescimento da sua empresa.
           </p>
         </div>
@@ -279,12 +285,12 @@ const Home = () => {
 
       {/* CALL TO ACTION */}
       <section id="transformacao" style={{ 
-        padding: isMobile ? '80px 20px' : '120px 60px', textAlign: 'center', 
+        padding: isMobile ? '60px 20px' : '120px 60px', textAlign: 'center', 
         background: 'linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.03), transparent)' 
       }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <div style={{ fontSize: '0.7rem', color: '#22C55E', letterSpacing: '3px', marginBottom: '20px' }}>// POR QUE A INNOVA</div>
-          <h2 style={{ fontSize: isMobile ? '2.2rem' : '3rem', fontWeight: '900', marginBottom: '30px', lineHeight: '1.1' }}>
+          <div style={{ fontSize: '0.65rem', color: '#22C55E', letterSpacing: '3px', marginBottom: '15px' }}>// POR QUE A INNOVA</div>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 8vw, 3rem)', fontWeight: '900', marginBottom: '25px', lineHeight: '1.05' }}>
             Sua transformação digital <span style={{ color: '#22C55E' }}>começa aqui</span>
           </h2>
           <p style={{ fontSize: '1rem', opacity: 0.65, marginBottom: '20px', lineHeight: '1.8' }}>
