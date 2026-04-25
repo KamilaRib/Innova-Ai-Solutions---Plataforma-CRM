@@ -27,6 +27,14 @@ const Home = () => {
   const navigate = useNavigate();
   const [activeFaq, setActiveFaq] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     document.title = 'Innova AI Solutions — Tecnologia que Transforma Negócios';
@@ -119,44 +127,71 @@ const Home = () => {
       <header style={{ 
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, 
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-        padding: '20px 60px', backdropFilter: 'blur(12px)', background: 'rgba(5, 7, 10, 0.7)',
+        padding: isMobile ? '15px 20px' : '20px 60px', backdropFilter: 'blur(12px)', background: 'rgba(5, 7, 10, 0.7)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => document.getElementById('home-top').scrollTo({ top: 0, behavior: 'smooth' })}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '8px' : '12px', cursor: 'pointer' }} onClick={() => document.getElementById('home-top').scrollTo({ top: 0, behavior: 'smooth' })}>
           <div style={{ background: '#22C55E', color: '#000', padding: '2px 8px', borderRadius: '4px', fontWeight: '900', fontSize: '0.85rem' }}>AI</div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '1.2rem', letterSpacing: '1px' }}>INNOVA <span style={{ color: '#22C55E' }}>AI</span> SOLUTIONS</span>
-            <span style={{ color: '#22C55E', fontSize: '12px', fontWeight: '400', letterSpacing: '0.3px' }}>Transformação Digital & Automações Inteligentes</span>
+            <span style={{ fontWeight: 'bold', fontSize: isMobile ? '1rem' : '1.2rem', letterSpacing: '1px' }}>INNOVA <span style={{ color: '#22C55E' }}>AI</span> SOLUTIONS</span>
+            {!isMobile && <span style={{ color: '#22C55E', fontSize: '12px', fontWeight: '400', letterSpacing: '0.3px' }}>Transformação Digital & Automações Inteligentes</span>}
           </div>
         </div>
-        <nav style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
-          <span
-            onClick={() => document.getElementById('servicos').scrollIntoView({ behavior: 'smooth' })}
-            style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: '0.2s', cursor: 'pointer' }}
-            onMouseOver={e => e.target.style.color = '#22C55E'}
-            onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.7)'}
-          >SERVIÇOS</span>
-          <span
-            onClick={() => document.getElementById('transformacao').scrollIntoView({ behavior: 'smooth' })}
-            style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: '0.2s', cursor: 'pointer' }}
-            onMouseOver={e => e.target.style.color = '#22C55E'}
-            onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.7)'}
-          >TECNOLOGIA</span>
+
+        {isMobile ? (
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        ) : (
+          <nav style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
+            <span
+              onClick={() => document.getElementById('servicos').scrollIntoView({ behavior: 'smooth' })}
+              style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: '0.2s', cursor: 'pointer' }}
+              onMouseOver={e => e.target.style.color = '#22C55E'}
+              onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.7)'}
+            >SERVIÇOS</span>
+            <span
+              onClick={() => document.getElementById('transformacao').scrollIntoView({ behavior: 'smooth' })}
+              style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: '0.2s', cursor: 'pointer' }}
+              onMouseOver={e => e.target.style.color = '#22C55E'}
+              onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.7)'}
+            >TECNOLOGIA</span>
+            <button 
+              onClick={() => navigate('/login')}
+              style={{ 
+                background: '#22C55E', border: 'none', color: '#000', 
+                padding: '10px 22px', borderRadius: '50px', fontSize: '0.85rem', fontWeight: '800', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: '8px', transition: '0.3s'
+              }}
+            >
+              <LogIn size={16} />
+              LOGIN
+            </button>
+          </nav>
+        )}
+      </header>
+
+      {/* MOBILE MENU OVERLAY */}
+      {isMobile && isMobileMenuOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 999,
+          background: '#05070a', display: 'flex', flexDirection: 'column',
+          padding: '100px 30px', gap: '25px'
+        }}>
+          <span onClick={() => { setIsMobileMenuOpen(false); document.getElementById('servicos').scrollIntoView({ behavior: 'smooth' }); }} style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>SERVIÇOS</span>
+          <span onClick={() => { setIsMobileMenuOpen(false); document.getElementById('transformacao').scrollIntoView({ behavior: 'smooth' }); }} style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>TECNOLOGIA</span>
           <button 
             onClick={() => navigate('/login')}
             style={{ 
               background: '#22C55E', border: 'none', color: '#000', 
-              padding: '10px 22px', borderRadius: '50px', fontSize: '0.85rem', fontWeight: '800', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '8px', transition: '0.3s'
+              padding: '15px', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '800', width: '100%'
             }}
-            onMouseOver={e => e.currentTarget.style.background = '#22C55E'}
-            onMouseOut={e => e.currentTarget.style.background = '#22C55E'}
-          >
-            <LogIn size={16} />
-            LOGIN
-          </button>
-        </nav>
-      </header>
+          >LOGIN</button>
+        </div>
+      )}
 
       {/* HERO CAROUSEL */}
       <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
@@ -185,12 +220,16 @@ const Home = () => {
         </div>
 
         {/* PREV / NEXT ARROWS */}
-        <button onClick={() => setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)} style={{ position: 'absolute', left: '30px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, backdropFilter: 'blur(8px)' }}>
-          <ChevronLeft size={20} />
-        </button>
-        <button onClick={nextSlide} style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, backdropFilter: 'blur(8px)' }}>
-          <ChevronRight size={20} />
-        </button>
+        {!isMobile && (
+          <>
+            <button onClick={() => setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)} style={{ position: 'absolute', left: '30px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, backdropFilter: 'blur(8px)' }}>
+              <ChevronLeft size={20} />
+            </button>
+            <button onClick={nextSlide} style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, backdropFilter: 'blur(8px)' }}>
+              <ChevronRight size={20} />
+            </button>
+          </>
+        )}
 
         {/* SLIDE DOTS */}
         <div style={{ position: 'absolute', bottom: '35px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '10px', zIndex: 20 }}>
@@ -206,18 +245,18 @@ const Home = () => {
 
 
       {/* SERVICES GRID */}
-      <section id="servicos" style={{ padding: '100px 60px', background: 'rgba(0,0,0,0.2)' }}>
+      <section id="servicos" style={{ padding: isMobile ? '60px 20px' : '100px 60px', background: 'rgba(0,0,0,0.2)' }}>
         <div style={{ textAlign: 'center', marginBottom: '70px', maxWidth: '800px', margin: '0 auto 70px auto' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '900', lineHeight: '1.2', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: isMobile ? '1.8rem' : '2.5rem', fontWeight: '900', lineHeight: '1.2', marginBottom: '20px' }}>
             Escolha a estratégia digital <span style={{ color: '#22C55E' }}>certa</span> para impulsionar o seu negócio
           </h2>
-          <p style={{ opacity: 0.55, fontSize: '1rem', lineHeight: '1.7' }}>
+          <p style={{ opacity: 0.55, fontSize: '0.95rem', lineHeight: '1.7' }}>
             Nossas soluções foram desenvolvidas para atender diferentes necessidades empresariais. Avalie as opções disponíveis e identifique a que melhor se alinha aos objetivos, ao momento e à visão de crescimento da sua empresa.
           </p>
         </div>
         <div style={{ 
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-          gap: '24px', maxWidth: '1200px', margin: '0 auto' 
+          display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', 
+          gap: '20px', maxWidth: '1200px', margin: '0 auto' 
         }}>
           {services.map(service => (
             <div key={service.id} style={{ 
@@ -240,12 +279,12 @@ const Home = () => {
 
       {/* CALL TO ACTION */}
       <section id="transformacao" style={{ 
-        padding: '120px 60px', textAlign: 'center', 
+        padding: isMobile ? '80px 20px' : '120px 60px', textAlign: 'center', 
         background: 'linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.03), transparent)' 
       }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           <div style={{ fontSize: '0.7rem', color: '#22C55E', letterSpacing: '3px', marginBottom: '20px' }}>// POR QUE A INNOVA</div>
-          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '30px', lineHeight: '1.1' }}>
+          <h2 style={{ fontSize: isMobile ? '2.2rem' : '3rem', fontWeight: '900', marginBottom: '30px', lineHeight: '1.1' }}>
             Sua transformação digital <span style={{ color: '#22C55E' }}>começa aqui</span>
           </h2>
           <p style={{ fontSize: '1rem', opacity: 0.65, marginBottom: '20px', lineHeight: '1.8' }}>
@@ -275,10 +314,10 @@ const Home = () => {
 
 
       {/* FAQ SECTION */}
-      <section style={{ padding: '100px 60px', background: 'rgba(0,0,0,0.15)' }}>
+      <section style={{ padding: isMobile ? '60px 20px' : '100px 60px', background: 'rgba(0,0,0,0.15)' }}>
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <div style={{ fontSize: '0.7rem', color: '#22C55E', letterSpacing: '3px', marginBottom: '10px' }}>// DÚVIDAS FREQUENTES</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '900' }}>
+          <h2 style={{ fontSize: isMobile ? '2rem' : '2.5rem', fontWeight: '900' }}>
             Tudo que você precisa <span style={{ color: '#22C55E' }}>saber</span>
           </h2>
           <p style={{ opacity: 0.5, marginTop: '10px', fontSize: '0.9rem' }}>Respondemos as perguntas mais comuns sobre nossos serviços, processos e formas de trabalho.</p>
@@ -318,8 +357,8 @@ const Home = () => {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: '70px 60px 30px 60px', borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1.2fr', gap: '60px', maxWidth: '1200px', margin: '0 auto 60px auto' }}>
+      <footer style={{ padding: isMobile ? '60px 20px 30px 20px' : '70px 60px 30px 60px', borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr 1.2fr', gap: isMobile ? '40px' : '60px', maxWidth: '1200px', margin: '0 auto 60px auto' }}>
           {/* BRAND */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
