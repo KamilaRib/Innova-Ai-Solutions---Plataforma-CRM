@@ -35,8 +35,12 @@ app.get('/health', (req, res) => {
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 // Qualquer outra requisição que não seja API vai para o index.html do React
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  } else {
+    next();
+  }
 });
 
 module.exports = app;
