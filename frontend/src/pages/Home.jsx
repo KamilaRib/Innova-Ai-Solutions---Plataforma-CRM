@@ -20,7 +20,9 @@ import {
   Instagram,
   Facebook,
   Linkedin,
-  Youtube
+  Youtube,
+  Menu,
+  X
 } from 'lucide-react';
 
 const Home = () => {
