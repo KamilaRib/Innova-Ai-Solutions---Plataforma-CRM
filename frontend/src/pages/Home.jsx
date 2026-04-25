@@ -214,19 +214,6 @@ const Home = () => {
         {/* DARK OVERLAY */}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(5,7,10,0.4) 0%, rgba(5,7,10,0.1) 50%, rgba(5,7,10,0.6) 100%)' }} />
 
-        {/* HERO LABEL */}
-        <div style={{ position: 'absolute', top: isMobile ? '80px' : '100px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: '90%', textAlign: 'center' }}>
-          <div style={{ 
-            display: 'inline-block', padding: '6px 15px', borderRadius: '50px', 
-            background: 'rgba(34,197,94,0.2)', color: '#22C55E', 
-            fontSize: 'clamp(0.65rem, 3vw, 0.8rem)', fontWeight: 'bold', 
-            letterSpacing: '1.5px', backdropFilter: 'blur(10px)', 
-            border: '1px solid rgba(34,197,94,0.3)', textTransform: 'uppercase'
-          }}>
-            {slides[currentSlide].label}
-          </div>
-        </div>
-
         {/* PREV / NEXT ARROWS */}
         {!isMobile && (
           <>
