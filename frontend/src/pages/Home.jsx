@@ -182,7 +182,7 @@ const Home = () => {
       )}
 
       {/* HERO CAROUSEL */}
-      <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', width: '100%', height: isMobile ? '65vh' : '100vh', overflow: 'hidden' }}>
         {/* SLIDES */}
         {slides.map((slide, idx) => (
           <div 
@@ -190,9 +190,12 @@ const Home = () => {
             style={{
               position: 'absolute', inset: 0, 
               backgroundImage: `url('${slide.img}')`,
-              backgroundSize: 'cover', backgroundPosition: 'center',
+              backgroundSize: isMobile ? 'contain' : 'cover', 
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
               opacity: currentSlide === idx ? 1 : 0,
-              transition: 'opacity 1s ease-in-out'
+              transition: 'opacity 1s ease-in-out',
+              backgroundColor: '#05070a'
             }}
           />
         ))}
