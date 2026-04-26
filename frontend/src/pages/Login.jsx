@@ -28,7 +28,7 @@ export default function Login() {
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt={settings.business_name || 'Logo'} style={{ maxHeight: '60px', marginBottom: '10px' }} />
           ) : (
-            <h1 style={{ fontSize: '2.5rem', fontWeight: 900 }}>
+            <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>
               {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} 
               <span style={{ color: 'var(--color-accent-green)', marginLeft: '10px' }}>
                 {settings?.business_name ? settings.business_name.split(' ')[1] : 'AI'}
@@ -38,7 +38,7 @@ export default function Login() {
               </span>
             </h1>
           )}
-          <p style={{ opacity: 0.7 }}>Acesso ao CRM Inteligente</p>
+          <p style={{ opacity: 0.7, fontSize: '0.85rem' }}>Acesso ao CRM Inteligente</p>
         </div>
 
         <form onSubmit={handleLogin}>
