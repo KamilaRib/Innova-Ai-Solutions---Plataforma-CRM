@@ -140,46 +140,22 @@ const Home = () => {
           </div>
         </div>
 
-        {isMobile ? (
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        ) : (
-          <nav style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
-            <button 
-              onClick={() => navigate('/login')}
-              style={{ 
-                background: '#22C55E', border: 'none', color: '#000', 
-                padding: '10px 22px', borderRadius: '50px', fontSize: '0.85rem', fontWeight: '800', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', gap: '8px', transition: '0.3s'
-              }}
-            >
-              <LogIn size={16} />
-              LOGIN
-            </button>
-          </nav>
-        )}
-      </header>
-
-      {/* MOBILE MENU OVERLAY */}
-      {isMobile && isMobileMenuOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 999,
-          background: '#05070a', display: 'flex', flexDirection: 'column',
-          padding: '100px 30px', gap: '25px'
-        }}>
+        <nav style={{ display: 'flex', gap: isMobile ? '12px' : '30px', alignItems: 'center' }}>
           <button 
             onClick={() => navigate('/login')}
             style={{ 
               background: '#22C55E', border: 'none', color: '#000', 
-              padding: '15px', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '800', width: '100%'
+              padding: isMobile ? '8px 16px' : '10px 22px', borderRadius: '50px', 
+              fontSize: isMobile ? '0.75rem' : '0.85rem', fontWeight: '800', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: '6px', transition: '0.3s'
             }}
-          >LOGIN</button>
-        </div>
-      )}
+          >
+            <LogIn size={isMobile ? 14 : 16} />
+            LOGIN
+          </button>
+        </nav>
+      </header>
+
 
       {/* HERO CAROUSEL */}
       <section style={{ position: 'relative', width: '100%', height: isMobile ? '65vh' : '100vh', overflow: 'hidden' }}>
