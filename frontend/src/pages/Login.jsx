@@ -28,12 +28,12 @@ export default function Login() {
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt={settings.business_name || 'Logo'} style={{ maxHeight: '60px', marginBottom: '10px' }} />
           ) : (
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>
+            <h1 style={{ fontSize: '1.4rem', fontWeight: 700 }}>
               {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} 
-              <span style={{ color: 'var(--color-accent-green)', marginLeft: '10px' }}>
+              <span style={{ color: 'var(--color-accent-green)', marginLeft: '6px' }}>
                 {settings?.business_name ? settings.business_name.split(' ')[1] : 'AI'}
               </span>
-              <span style={{ color: '#fff', marginLeft: '10px' }}>
+              <span style={{ color: '#fff', marginLeft: '6px' }}>
                 {settings?.business_name ? settings.business_name.split(' ').slice(2).join(' ') : 'SOLUTIONS'}
               </span>
             </h1>
