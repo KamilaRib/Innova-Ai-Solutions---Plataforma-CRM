@@ -43,7 +43,12 @@ export default function ClientLayout() {
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt="Logo" style={{ maxHeight: '30px' }} />
           ) : (
-            'INNOVA'
+          ) : (
+            <>
+              INNOVA 
+              <span style={{ color: 'var(--color-accent-green)', marginLeft: '6px' }}>AI</span> 
+              <span style={{ color: '#fff', marginLeft: '6px' }}>SOLUTIONS</span>
+            </>
           )}
         </div>
         <button className="mobile-header-btn" onClick={() => setIsMobileOpen(true)}>
