@@ -28,8 +28,14 @@ export default function Login() {
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt={settings.business_name || 'Logo'} style={{ maxHeight: '60px', marginBottom: '10px' }} />
           ) : (
-            <h1 style={{ fontSize: '2.5rem' }}>
-              {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} <span style={{ color: 'var(--color-accent-green)' }}>{settings?.business_name ? settings.business_name.split(' ').slice(1).join(' ') : 'AI'}</span>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 900 }}>
+              {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} 
+              <span style={{ color: 'var(--color-accent-green)', marginLeft: '10px' }}>
+                {settings?.business_name ? settings.business_name.split(' ')[1] : 'AI'}
+              </span>
+              <span style={{ color: '#fff', marginLeft: '10px' }}>
+                {settings?.business_name ? settings.business_name.split(' ').slice(2).join(' ') : 'SOLUTIONS'}
+              </span>
             </h1>
           )}
           <p style={{ opacity: 0.7 }}>Acesso ao CRM Inteligente</p>
