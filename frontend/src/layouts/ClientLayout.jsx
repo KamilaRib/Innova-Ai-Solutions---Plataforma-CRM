@@ -67,7 +67,10 @@ export default function ClientLayout() {
               <>
                 {settings?.business_name ? settings.business_name.split(' ')[0].toUpperCase() : 'INNOVA'} 
                 <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
-                  {settings?.business_name ? settings.business_name.split(' ').slice(1).join(' ').toUpperCase() : 'AI SOLUTIONS'}
+                  {settings?.business_name ? settings.business_name.split(' ')[1]?.toUpperCase() : 'AI'}
+                </span>
+                <span style={{ color: '#fff', marginLeft: '8px' }}>
+                  {settings?.business_name ? settings.business_name.split(' ').slice(2).join(' ').toUpperCase() : 'SOLUTIONS'}
                 </span>
               </>
             )}
