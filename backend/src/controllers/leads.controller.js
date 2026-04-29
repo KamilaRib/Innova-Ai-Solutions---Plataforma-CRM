@@ -1,6 +1,51 @@
 const prisma = require('../lib/prisma');
 
 /**
+ * Retorna as estatísticas para o Dashboard
+ */
+const getStats = async (req, res) => {
+  try {
+    const totalLeads = await prisma.lead.count();
+    const leadsAtivos = await prisma.lead.count({
+      where: {
+        NOT: [
+          { pipeline_status: 'Ganhos' },
+          { pipeline_status: 'Perdidos' }
+        ]
+      }
+    });
+    const leadsGanhos = await prisma.lead.count({
+      where: { pipeline_status: 'Ganhos' }
+    });
+    const leadsPerdidos = await prisma.lead.count({
+      where: { pipeline_status: 'Perdidos' }
+    });
+
+    const totalMessages = await prisma.message.count({
+      where: {
+        created_at: {
+          gte: new Date(new Date().setHours(0, 0, 0, 0))
+        }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalLeads,
+        leadsAtivos,
+        leadsGanhos,
+        leadsPerdidos,
+        totalMessages
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao buscar estatísticas:', error);
+    res.status(500).json({ error: 'Erro ao buscar estatísticas.' });
+  }
+};
+
+/**
  * Busca o contexto de um lead pelo telefone (histórico de mensagens e status atual)
  */
 const getLeadContextByPhone = async (req, res) => {
@@ -60,6 +105,7 @@ const updateLeadStatus = async (req, res) => {
 };
 
 module.exports = {
+  getStats,
   getLeadContextByPhone,
   updateLeadStatus
 };

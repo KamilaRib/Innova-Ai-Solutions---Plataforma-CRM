@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   BarChart, Bar, PieChart, Pie, Cell, Legend 
@@ -32,6 +32,36 @@ const Dashboard = () => {
   const { settings } = useContext(SettingsContext);
   const accentColor = settings?.primary_color || '#22C55E';
 
+  const [stats, setStats] = useState({
+    totalLeads: 0,
+    leadsAtivos: 0,
+    leadsGanhos: 0,
+    leadsPerdidos: 0,
+    totalMessages: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('https://innovaisolutions.com.br/api/leads/stats');
+        const result = await response.json();
+        if (result.success) {
+          setStats(result.data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar estatísticas do dashboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+    // Atualiza a cada 30 segundos
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ paddingBottom: '40px' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
@@ -42,7 +72,7 @@ const Dashboard = () => {
         <div style={{ display: 'flex', gap: '10px' }}>
           <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', fontSize: '0.85rem' }}>
             <Calendar size={16} />
-            <span>Hoje: 27 Mar</span>
+            <span>Hoje: {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
           </button>
         </div>
       </header>
@@ -60,7 +90,7 @@ const Dashboard = () => {
         <div className="card" style={{ gridRow: 'span 2', padding: '20px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Mensagens Recebidas</span>
-            <div style={{ color: accentColor, fontWeight: 'bold' }}>0 <small style={{ opacity: 0.5 }}>hoje</small></div>
+            <div style={{ color: accentColor, fontWeight: 'bold' }}>{stats.totalMessages} <small style={{ opacity: 0.5 }}>hoje</small></div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
@@ -84,7 +114,7 @@ const Dashboard = () => {
         {/* CARD CONVERSAS ATUAIS */}
         <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Conversas Atuais</span>
-          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: accentColor }}>2.825</div>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: accentColor }}>{stats.totalLeads}</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
             <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>0 hoje</span>
             <TrendingUp size={16} color="#39FF14" />
@@ -94,7 +124,7 @@ const Dashboard = () => {
         {/* CARD CHATS SEM RESPOSTA */}
         <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #FF4D4D' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Chats sem Resposta</span>
-          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#FF4D4D' }}>15</div>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#FF4D4D' }}>0</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
             <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Ação imediata necessária</span>
             <AlertCircle size={16} color="#FF4D4D" />
@@ -115,7 +145,7 @@ const Dashboard = () => {
         {/* CARD MAIS TEMPO ESPERANDO */}
         <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Mais tempo esperando</span>
-          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#F8F9FA' }}>58h</div>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#F8F9FA' }}>0h</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
             <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Lead: João Silva</span>
             <MoreVertical size={16} opacity={0.3} />
@@ -125,7 +155,7 @@ const Dashboard = () => {
         {/* NOVO: CARD PRODUTOS VENDIDOS */}
         <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid var(--color-accent-green)' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Produtos Vendidos</span>
-          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: 'var(--color-accent-green)' }}>142</div>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: 'var(--color-accent-green)' }}>0</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
             <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>+12% vs mês anterior</span>
             <ShoppingBag size={16} color="var(--color-accent-green)" />
@@ -144,7 +174,7 @@ const Dashboard = () => {
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#39FF14' }}></div>
               <span style={{ fontSize: '0.7rem', opacity: 0.6, fontWeight: '800' }}>LEADS GANHOS</span>
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>4</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>{stats.leadsGanhos}</div>
             <div style={{ fontSize: '0.8rem', color: '#39FF14' }}>R$ 12.400</div>
           </div>
           <div className="card" style={{ padding: '15px' }}>
@@ -152,7 +182,7 @@ const Dashboard = () => {
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: accentColor }}></div>
               <span style={{ fontSize: '0.7rem', opacity: 0.6, fontWeight: '800' }}>LEADS ATIVOS</span>
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>3.343</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>{stats.leadsAtivos}</div>
             <div style={{ fontSize: '0.8rem', opacity: 0.5 }}>R$ 450.000</div>
           </div>
           <div className="card" style={{ padding: '15px' }}>
@@ -160,7 +190,7 @@ const Dashboard = () => {
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF4D4D' }}></div>
               <span style={{ fontSize: '0.7rem', opacity: 0.6, fontWeight: '800' }}>LEADS PERDIDOS</span>
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>18</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>{stats.leadsPerdidos}</div>
             <div style={{ fontSize: '0.8rem', opacity: 0.5 }}>R$ 1.200</div>
           </div>
           <div className="card" style={{ padding: '15px' }}>
@@ -179,7 +209,7 @@ const Dashboard = () => {
             <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4 }}>TAREFAS</span>
             <span style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem' }}>Hoje</span>
           </div>
-          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#F8F9FA', marginBottom: '15px' }}>40</div>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#F8F9FA', marginBottom: '15px' }}>0</div>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(57, 255, 20, 0.05)', padding: '10px', borderRadius: '8px' }}>
             <CheckCircle size={18} color="#39FF14" />
             <span style={{ fontSize: '0.8rem' }}>Você tem <strong>12 tarefas</strong> críticas para hoje.</span>
@@ -226,11 +256,11 @@ const Dashboard = () => {
         
         <div style={{ display: 'flex', gap: '4px' }}>
           {[
-            { label: 'Novo Lead', val: 1200, color: 'rgba(0, 245, 255, 0.4)' },
-            { label: 'Em Qualificação', val: 800, color: 'rgba(0, 245, 255, 0.3)' },
-            { label: 'Proposta Enviada', val: 400, color: 'rgba(0, 245, 255, 0.2)' },
-            { label: 'Negociação', val: 150, color: 'rgba(0, 245, 255, 0.15)' },
-            { label: 'Fechamento', val: 84, color: 'rgba(57, 255, 20, 0.2)' },
+            { label: 'Novo Lead', val: 0, color: 'rgba(0, 245, 255, 0.4)' },
+            { label: 'Em Qualificação', val: 0, color: 'rgba(0, 245, 255, 0.3)' },
+            { label: 'Proposta Enviada', val: 0, color: 'rgba(0, 245, 255, 0.2)' },
+            { label: 'Negociação', val: 0, color: 'rgba(0, 245, 255, 0.15)' },
+            { label: 'Fechamento', val: 0, color: 'rgba(57, 255, 20, 0.2)' },
           ].map((step, i) => (
             <div key={i} style={{ flex: 1, background: step.color, padding: '15px', borderRadius: '4px', textAlign: 'center' }}>
               <div style={{ fontSize: '1.2rem', fontWeight: '900' }}>{step.val}</div>
