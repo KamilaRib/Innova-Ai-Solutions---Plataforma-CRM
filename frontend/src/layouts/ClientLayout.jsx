@@ -43,7 +43,6 @@ export default function ClientLayout() {
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt="Logo" style={{ maxHeight: '30px' }} />
           ) : (
-          ) : (
             <>
               INNOVA 
               <span style={{ color: 'var(--color-accent-green)', marginLeft: '6px' }}>AI</span> 
