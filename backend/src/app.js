@@ -25,6 +25,8 @@ app.use(cors());
 app.use('/auth', authLimiter, authRoutes); // Proteção contra força bruta no Login/Recuperação
 app.use('/webhook', webhookRoutes); // Entrada de Dados via WhatsApp Oficial/Evolution
 app.use('/api/settings', require('./routes/settings.routes')); // Configurações Globais (Logo, Cores)
+app.use('/api/leads', require('./routes/leads.routes')); // Gestão de Leads e Kanban
+app.use('/api/customers', require('./routes/customers.routes')); // Gestão de Clientes (Cadastro)
 
 // Rota de Health Check
 app.get('/health', (req, res) => {

@@ -5,5 +5,6 @@ export default defineConfig({
   datasource: {
     url: env("DIRECT_URL"),
   },
-  schema: "prisma/schema.prisma"
+  schema: "prisma/schema.prisma",
+  engineType: "library"
 });

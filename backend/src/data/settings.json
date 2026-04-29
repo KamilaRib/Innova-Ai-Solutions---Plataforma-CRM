@@ -1,12 +1,12 @@
 {
-  "business_name": "Innova AI Solutions",
+  "business_name": "INNOVA AI",
   "logo_url": null,
-  "primary_color": "#0fcc74",
+  "primary_color": "#00F5FF",
   "whatsapp_phone_number_id": "",
   "whatsapp_business_account_id": "",
   "whatsapp_access_token": "",
   "whatsapp_verify_token": "",
-  "evolution_webhook_url": "",
-  "evolution_api_key": "",
-  "evolution_instance_name": ""
+  "evolution_webhook_url": "https://remark-inkjet-states-dice.trycloudflare.com",
+  "evolution_api_key": "Scrmarketing_2026",
+  "evolution_instance_name": "Innova_CRM"
 }

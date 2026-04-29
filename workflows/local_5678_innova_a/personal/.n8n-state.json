@@ -9,6 +9,16 @@
       "lastSyncedHash": "084060cc277cd4177591c32e7b65136f1d443ef7c8724597ea0e4f5652f44638",
       "lastSyncedAt": "2026-04-17T01:57:24.578Z",
       "filename": "google-multimodal-agent.workflow.ts"
+    },
+    "ZRjSfholDPYQT9Co": {
+      "lastSyncedHash": "3a5e579d88e45ea025a431ba1f222f715a04ca842d739b0ff5d9c1378a279dd4",
+      "lastSyncedAt": "2026-04-29T22:07:30.504Z",
+      "filename": "lead-classification.workflow.ts"
+    },
+    "Avv8G0npHyMt64p6": {
+      "lastSyncedHash": "94a9422076e7123b2e94663d16aebf859b3c75a922f0730501033f41ab638e3d",
+      "lastSyncedAt": "2026-04-29T22:21:09.175Z",
+      "filename": "ai-concierge.workflow.ts"
     }
   }
 }

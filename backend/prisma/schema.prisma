@@ -2,7 +2,7 @@
 
 generator client {
   provider   = "prisma-client-js"
-  engineType = "binary"
+  engineType = "library"
 }
 
 datasource db {
@@ -75,6 +75,25 @@ model Lead {
   
   social_connection  SocialConnection? @relation(fields: [connection_id], references: [id])
   messages           Message[]
+  customer           Customer?         @relation(fields: [customer_id], references: [id])
+  customer_id        String?           @unique
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  name          String
+  phone         String   @unique
+  email         String?
+  document      String?  // CPF ou CNPJ
+  address       String?
+  city          String?
+  state         String?
+  zip_code      String?
+  status        String   @default("ACTIVE") // ACTIVE | INACTIVE
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  lead          Lead?
 }
 
 model Message {
