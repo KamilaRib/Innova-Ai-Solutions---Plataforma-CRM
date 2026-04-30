@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { mockLeads } from '../data/mockData';
 import { Star, Clock, ShieldAlert, Zap, Settings2 } from 'lucide-react';
 
