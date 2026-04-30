@@ -34,7 +34,12 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
     name: 'Lead Classification & Kanban Automation',
     active: false,
     isArchived: false,
-    settings: { executionOrder: 'v1', callerPolicy: 'workflowsFromSameOwner', availableInMCP: false },
+    settings: {
+        executionOrder: 'v1',
+        callerPolicy: 'workflowsFromSameOwner',
+        availableInMCP: false,
+        binaryMode: 'separate',
+    },
 })
 export class LeadClassificationKanbanAutomationWorkflow {
     // =====================================================================
@@ -63,7 +68,7 @@ export class LeadClassificationKanbanAutomationWorkflow {
         position: [200, 0],
     })
     GetLeadContext = {
-        url: '={{ $env.BACKEND_URL || "http://localhost:5000" }}/api/leads/context/{{ $json.body.phone || $json.body.from }}',
+        url: '={{ $env.BACKEND_URL || "https://innovaisolutions.com.br" }}/api/leads/context/{{ $json.body.phone || $json.body.from }}',
         method: 'GET',
         authentication: 'none',
     };
@@ -121,7 +126,7 @@ export class LeadClassificationKanbanAutomationWorkflow {
         position: [850, -100],
     })
     UpdateLeadStatus = {
-        url: '={{ ($env.BACKEND_URL || "http://localhost:5000") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
+        url: '={{ ($env.BACKEND_URL || "https://innovaisolutions.com.br") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
         method: 'PATCH',
         sendBody: true,
         specifyBody: 'json',

@@ -9,14 +9,14 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 // Property name                    Node type (short)         Flags
 // Webhook                            webhook
 // GetLeadContext                     httpRequest
-// AiAgent                            agent
-// GeminiModel                        lmChatGoogleGemini
-// Memory                             memoryBufferWindow
-// UpsertCustomerTool                 httpRequestTool
+// AiAgent                            agent                      [AI]
+// Memory                             memoryBufferWindow         [ai_memory]
+// UpsertCustomerTool                 httpRequestTool            [ai_tool]
 // AiClassifier                       chainLlm
 // CheckStageChange                   if
 // UpdateLeadStatus                   httpRequest
 // GoogleCalendar                     googleCalendar
+// OpenaiChatModel                    lmChatOpenAi               [creds] [ai_languageModel]
 //
 // ROUTING MAP
 // ──────────────────────────────────────────────────────────────────
@@ -27,6 +27,9 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 //          → CheckStageChange
 //            → UpdateLeadStatus
 //              → GoogleCalendar
+//
+// AI CONNECTIONS
+// AiAgent.uses({ ai_languageModel: OpenaiChatModel, ai_memory: Memory, ai_tool: [UpsertCustomerTool] })
 // </workflow-map>
 
 // =====================================================================
@@ -38,7 +41,12 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
     name: 'AI Agent Concierge & Lead Classification',
     active: false,
     isArchived: false,
-    settings: { executionOrder: 'v1', callerPolicy: 'workflowsFromSameOwner', availableInMCP: false },
+    settings: {
+        executionOrder: 'v1',
+        callerPolicy: 'workflowsFromSameOwner',
+        availableInMCP: false,
+        binaryMode: 'separate',
+    },
 })
 export class AiAgentConciergeLeadClassificationWorkflow {
     // =====================================================================
@@ -56,7 +64,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     Webhook = {
         httpMethod: 'POST',
         path: 'lead-message-v2',
-        responseMode: 'onReceived',
+        options: {},
     };
 
     @node({
@@ -64,12 +72,11 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Get Lead Context',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.1,
-        position: [200, 0],
+        position: [240, 0],
     })
     GetLeadContext = {
-        url: '={{ $env.BACKEND_URL || "http://localhost:5000" }}/api/leads/context/{{ $json.body.phone || $json.body.from }}',
-        method: 'GET',
-        authentication: 'none',
+        url: '=https://innovaisolutions.com.br/api/leads/context/{{ $json.body.phone || $json.body.from }}',
+        options: {},
     };
 
     @node({
@@ -77,7 +84,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'AI Agent',
         type: '@n8n/n8n-nodes-langchain.agent',
         version: 3.1,
-        position: [450, 0],
+        position: [464, 0],
     })
     AiAgent = {
         promptType: 'define',
@@ -89,25 +96,11 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     };
 
     @node({
-        id: 'c283749b-f5b6-4a14-99cc-cd2349b4d320',
-        name: 'Gemini Model',
-        type: '@n8n/n8n-nodes-langchain.lmChatGoogleGemini',
-        version: 1.1,
-        position: [350, 250],
-    })
-    GeminiModel = {
-        modelName: 'models/gemini-1.5-flash',
-        options: {
-            temperature: 0.7,
-        },
-    };
-
-    @node({
         id: '4b10c462-3d88-449f-ae0e-3a05579fbe0e',
         name: 'Memory',
         type: '@n8n/n8n-nodes-langchain.memoryBufferWindow',
         version: 1.3,
-        position: [550, 250],
+        position: [544, 224],
     })
     Memory = {
         sessionKey: 'chat_history',
@@ -118,14 +111,13 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Upsert Customer Tool',
         type: 'n8n-nodes-base.httpRequestTool',
         version: 4.4,
-        position: [700, 250],
+        position: [672, 224],
     })
     UpsertCustomerTool = {
-        url: '={{ ($env.BACKEND_URL || "http://localhost:5000") + "/api/customers" }}',
-        method: 'POST',
         toolDescription: 'Cria ou atualiza o cadastro de um cliente com Nome, Email, CPF/CNPJ (document) e Endereço.',
+        method: 'POST',
+        url: '={{ ($env.BACKEND_URL || "https://innovaisolutions.com.br") + "/api/customers" }}',
         sendBody: true,
-        contentType: 'json',
         bodyParameters: {
             parameters: [
                 {
@@ -154,6 +146,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
                 },
             ],
         },
+        options: {},
     };
 
     @node({
@@ -161,7 +154,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'AI Classifier',
         type: '@n8n/n8n-nodes-langchain.chainLlm',
         version: 1.4,
-        position: [750, 0],
+        position: [752, 0],
     })
     AiClassifier = {
         promptType: 'define',
@@ -173,7 +166,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Check Stage Change',
         type: 'n8n-nodes-base.if',
         version: 2,
-        position: [950, 0],
+        position: [1088, 0],
     })
     CheckStageChange = {
         conditions: {
@@ -185,6 +178,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
                 },
             ],
         },
+        options: {},
     };
 
     @node({
@@ -192,14 +186,15 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Update Lead Status',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.1,
-        position: [1150, -50],
+        position: [1344, -32],
     })
     UpdateLeadStatus = {
-        url: '={{ ($env.BACKEND_URL || "http://localhost:5000") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
         method: 'PATCH',
+        url: '={{ ($env.BACKEND_URL || "https://innovaisolutions.com.br") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
         sendBody: true,
         specifyBody: 'json',
         jsonBody: '={ "pipeline_status": "{{ $node["AI Classifier"].json.text }}" }',
+        options: {},
     };
 
     @node({
@@ -207,21 +202,37 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Google Calendar',
         type: 'n8n-nodes-base.googleCalendar',
         version: 1.3,
-        position: [1350, -50],
+        position: [1584, -32],
     })
     GoogleCalendar = {
-        resource: 'event',
-        operation: 'create',
         calendar: {
             mode: 'list',
             value: 'primary',
         },
-        start: '={{ $now }}',
         end: '={{ $now.plus({ hours: 1 }) }}',
         additionalFields: {
-            summary: '={{ "Reunião com Lead: " + $node["Get Lead Context"].json.name }}',
             description: 'Agendado automaticamente pelo Innova CRM.',
+            summary: '={{ "Reunião com Lead: " + $node["Get Lead Context"].json.name }}',
         },
+    };
+
+    @node({
+        id: '96baaff7-163c-413a-96c9-0ef91c2ff934',
+        name: 'OpenAI Chat Model',
+        type: '@n8n/n8n-nodes-langchain.lmChatOpenAi',
+        version: 1.3,
+        position: [384, 224],
+        credentials: { openAiApi: { id: 'qkfeOXkBjp68AZvf', name: 'OpenAi account' } },
+    })
+    OpenaiChatModel = {
+        model: {
+            __rl: true,
+            value: 'gpt-4o',
+            mode: 'list',
+            cachedResultName: 'gpt-4o',
+        },
+        builtInTools: {},
+        options: {},
     };
 
     // =====================================================================
@@ -236,5 +247,11 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         this.AiClassifier.out(0).to(this.CheckStageChange.in(0));
         this.CheckStageChange.out(0).to(this.UpdateLeadStatus.in(0));
         this.UpdateLeadStatus.out(0).to(this.GoogleCalendar.in(0));
+
+        this.AiAgent.uses({
+            ai_languageModel: this.OpenaiChatModel.output,
+            ai_memory: this.Memory.output,
+            ai_tool: [this.UpsertCustomerTool.output],
+        });
     }
 }
