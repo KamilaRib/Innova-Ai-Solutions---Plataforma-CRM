@@ -101,10 +101,16 @@ const ROIReport = () => {
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#94A3B8', fontSize: 12}} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} tick={{fill: '#94A3B8', fontSize: 12}} />
+                                <YAxis 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{fill: '#94A3B8', fontSize: 10}} 
+                                    label={{ value: 'ROI (%)', angle: -90, position: 'insideLeft', fill: accentColor, fontSize: 10, fontWeight: 'bold' }}
+                                />
                                 <Tooltip 
                                     contentStyle={{ background: '#0B132B', border: 'none', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
                                     itemStyle={{ color: accentColor, fontWeight: 'bold' }}
+                                    formatter={(value) => [`${value}%`, 'ROI']}
                                 />
                                 <Area type="monotone" dataKey="roi" stroke={accentColor} strokeWidth={3} fillOpacity={1} fill="url(#colorRoi)" />
                             </AreaChart>
