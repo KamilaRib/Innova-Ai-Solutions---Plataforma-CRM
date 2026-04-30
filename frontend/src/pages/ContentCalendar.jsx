@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { SettingsContext } from '../context/SettingsContext';
 import { Instagram, Facebook, Youtube, Share2, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Plus, Sparkles, X, Send } from 'lucide-react';
 
@@ -10,25 +10,53 @@ const TikTokIcon = ({ size = 20, color = "currentColor" }) => (
 
 const ContentCalendar = () => {
     const { settings } = useContext(SettingsContext);
+    const [currentDate, setCurrentDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [idea, setIdea] = useState("");
     const [platform, setPlatform] = useState("instagram");
-    const [date, setDate] = useState("2026-03-27");
+    const [date, setDate] = useState("");
     const [time, setTime] = useState("10:00");
     const [tone, setTone] = useState("profissional");
     const [generatedContent, setGeneratedContent] = useState(null);
+    const [scheduledPosts, setScheduledPosts] = useState([]); // Vazio para produção
 
-    // Mock de posts agendados
-    const scheduledPosts = [
-        { id: 1, day: 26, platform: 'facebook', time: '10:00', title: 'Novidades na Plataforma', color: '#1877F2' },
-        { id: 2, day: 27, platform: 'instagram', time: '14:30', title: 'Bastidores da Equipe', color: '#E1306C' },
-        { id: 3, day: 27, platform: 'tiktok', time: '18:00', title: 'Trend da Semana', color: '#22C55E' },
-        { id: 4, day: 28, platform: 'youtube', time: '11:00', title: 'Tutorial Completo CRM', color: '#FF0000' },
-        { id: 5, day: 30, platform: 'instagram', time: '20:00', title: 'Live de Lançamento', color: '#E1306C' },
-    ];
+    // Funções de Navegação
+    const handlePrevMonth = () => {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    };
 
-    const days = Array.from({ length: 35 }, (_, i) => i + 1); // Em 2026, Março começa num Domingo (índice 0)
+    const handleNextMonth = () => {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+    };
+
+    // Lógica de Geração dos Dias
+    const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+    const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const monthName = currentDate.toLocaleString('pt-BR', { month: 'long' });
+    
+    const daysInMonth = getDaysInMonth(year, month);
+    const firstDay = getFirstDayOfMonth(year, month);
+    
+    // Criar array de dias para o grid (incluindo espaços vazios do início)
+    const calendarDays = [];
+    // Dias do mês anterior para preencher o início
+    const prevMonthDays = getDaysInMonth(year, month - 1);
+    for (let i = firstDay - 1; i >= 0; i--) {
+        calendarDays.push({ day: prevMonthDays - i, currentMonth: false });
+    }
+    // Dias do mês atual
+    for (let i = 1; i <= daysInMonth; i++) {
+        calendarDays.push({ day: i, currentMonth: true });
+    }
+    // Completar até 35 ou 42 células (6 linhas)
+    const remainingCells = 42 - calendarDays.length;
+    for (let i = 1; i <= remainingCells; i++) {
+        calendarDays.push({ day: i, currentMonth: false });
+    }
 
     const handleGenerate = async () => {
         if (!settings.n8n_generation_webhook) {
@@ -47,20 +75,20 @@ const ContentCalendar = () => {
             if (response.ok) {
                 const data = await response.json();
                 setGeneratedContent({
-                    caption: data.caption || `🚀 ${idea}\n\nEste é um exemplo de legenda gerada com tom ${tone}. O motor de IA do n8n processou sua ideia e otimizou para ${platform}.`,
-                    hashtags: data.hashtags || "#inovacao #marketingdigital #tecnologia #crm"
+                    caption: data.caption || `🚀 ${idea}\n\nLegenda gerada estrategicamente pela Innova IA.`,
+                    hashtags: data.hashtags || "#inovacao #marketing #crm"
                 });
             } else {
                 setGeneratedContent({
-                    caption: `🚀 ${idea}\n\nEste é um exemplo de legenda gerada com tom ${tone}. O motor de IA do n8n processou sua ideia e otimizou para ${platform}.`,
-                    hashtags: "#inovacao #marketingdigital #tecnologia #crm"
+                    caption: `🚀 ${idea}\n\nEste é um exemplo de legenda gerada para ${platform}.`,
+                    hashtags: "#inovacao #marketing"
                 });
             }
         } catch (error) {
             console.error(error);
             setGeneratedContent({
-                caption: `🚀 ${idea}\n\nEste é um exemplo de legenda gerada com tom ${tone}. O motor de IA do n8n processou sua ideia e otimizou para ${platform}.`,
-                hashtags: "#inovacao #marketingdigital #tecnologia #crm"
+                caption: `🚀 ${idea}\n\nConteúdo gerado com sucesso.`,
+                hashtags: "#crm #inovacao"
             });
         } finally {
             setIsGenerating(false);
@@ -68,7 +96,7 @@ const ContentCalendar = () => {
     };
 
     const handleSchedule = () => {
-        alert("Post agendado com sucesso no calendário!");
+        alert("Post agendado com sucesso!");
         setIsModalOpen(false);
         setGeneratedContent(null);
         setIdea("");
@@ -94,9 +122,11 @@ const ContentCalendar = () => {
                 
                 <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                     <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '4px' }}>
-                        <button className="btn-icon" style={{ padding: '8px' }}><ChevronLeft size={20} /></button>
-                        <div style={{ padding: '0 20px', display: 'flex', alignItems: 'center', fontWeight: '700' }}>Março 2026</div>
-                        <button className="btn-icon" style={{ padding: '8px' }}><ChevronRight size={20} /></button>
+                        <button className="btn-icon" style={{ padding: '8px' }} onClick={handlePrevMonth}><ChevronLeft size={20} /></button>
+                        <div style={{ padding: '0 20px', display: 'flex', alignItems: 'center', fontWeight: '700', textTransform: 'capitalize', minWidth: '160px', justifyContent: 'center' }}>
+                            {monthName} {year}
+                        </div>
+                        <button className="btn-icon" style={{ padding: '8px' }} onClick={handleNextMonth}><ChevronRight size={20} /></button>
                     </div>
                     <button className="btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Plus size={18} />
@@ -105,7 +135,6 @@ const ContentCalendar = () => {
                 </div>
             </header>
 
-            {/* LEGENDA RÁPIDA */}
             <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', fontSize: '0.8rem', opacity: 0.6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1877F2' }}></div> Facebook</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E1306C' }}></div> Instagram</div>
@@ -113,71 +142,53 @@ const ContentCalendar = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF0000' }}></div> YouTube</div>
             </div>
 
-            {/* GRADE DO CALENDÁRIO */}
             <div style={{ 
                 flex: 1, 
                 display: 'grid', 
                 gridTemplateColumns: 'repeat(7, 1fr)', 
-                gridTemplateRows: 'auto repeat(5, 1fr)',
+                gridTemplateRows: 'auto repeat(6, 1fr)',
                 border: '1px solid rgba(255,255,255,0.05)',
                 borderRadius: '12px',
                 overflow: 'hidden',
                 background: 'rgba(255,255,255,0.02)'
             }}>
-                {/* DIAS DA SEMANA */}
                 {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
                     <div key={day} style={{ 
-                        padding: '12px', 
-                        textAlign: 'center', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '800', 
-                        opacity: 0.4, 
-                        textTransform: 'uppercase',
-                        borderBottom: '1px solid rgba(255,255,255,0.05)',
+                        padding: '12px', textAlign: 'center', fontSize: '0.75rem', fontWeight: '800', 
+                        opacity: 0.4, textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.05)',
                         background: 'rgba(255,255,255,0.03)'
                     }}>
                         {day}
                     </div>
                 ))}
 
-                {/* CÉLULAS DOS DIAS */}
-                {days.map((d, i) => {
-                    const isToday = d === 27;
-                    const isOutside = d <= 0 || d > 31;
-                    const dayPosts = scheduledPosts.filter(p => p.day === d);
+                {calendarDays.map((d, i) => {
+                    const isToday = d.currentMonth && d.day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+                    const dayPosts = scheduledPosts.filter(p => p.day === d.day && d.currentMonth);
 
                     return (
                         <div key={i} style={{ 
                             padding: '10px', 
                             borderRight: '1px solid rgba(255,255,255,0.05)', 
                             borderBottom: '1px solid rgba(255,255,255,0.05)',
-                            opacity: isOutside ? 0.2 : 1,
+                            opacity: d.currentMonth ? 1 : 0.15,
                             backgroundColor: isToday ? 'rgba(0, 245, 255, 0.03)' : 'transparent',
-                            minHeight: '120px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '6px'
+                            minHeight: '100px',
+                            display: 'flex', flexDirection: 'column', gap: '6px'
                         }}>
                             <div style={{ 
-                                fontSize: '0.85rem', 
-                                fontWeight: isToday ? '900' : '400',
+                                fontSize: '0.85rem', fontWeight: isToday ? '900' : '400',
                                 color: isToday ? 'var(--color-accent-cyan)' : 'inherit'
                             }}>
-                                {d > 0 && d <= 31 ? d : (d <= 0 ? 28 + d : d - 31)}
+                                {d.day}
                             </div>
 
                             {dayPosts.map(post => (
                                 <div key={post.id} style={{
-                                    background: `${post.color}15`,
-                                    borderLeft: `3px solid ${post.color}`,
-                                    padding: '6px 8px',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    transition: 'transform 0.2s',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '2px'
-                                }} className="calendar-post-item">
+                                    background: `${post.color}15`, borderLeft: `3px solid ${post.color}`,
+                                    padding: '6px 8px', borderRadius: '4px', cursor: 'pointer',
+                                    display: 'flex', flexDirection: 'column', gap: '2px'
+                                }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                         {getPlatformIcon(post.platform)}
                                         <span style={{ fontSize: '0.65rem', fontWeight: '800', textTransform: 'uppercase', opacity: 0.8 }}>{post.time}</span>
