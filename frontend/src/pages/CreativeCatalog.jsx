@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, Download, Plus, FileText, ExternalLink, Trash2, Eye, Video, Edit, X, Save } from 'lucide-react';
 
 const CreativeCatalog = () => {
-  const [creatives, setCreatives] = useState([
-    { id: 0, title: 'Logomarca Oficial', desc: 'Versões em PNG (fundo transparente), SVG e variações de cor.', type: 'IDENTIDADE', size: '12MB', format: 'SVG/PNG', recommended: 'Vetor Original', url: '#' },
-    { id: 1, title: 'Capa para Facebook', desc: 'Capa institucional para a página oficial do Facebook.', type: 'BANNER', size: '850KB', format: '820 x 312 px', recommended: 'Ideal para Desktop/Mobile', url: '#' },
-    { id: 2, title: 'Reels - Apresentação IA', desc: 'Vídeo dinâmico mostrando o Robô virtual em ação.', type: 'VÍDEO', size: '15MB', format: '1080 x 1920 px', recommended: '9:16 (Vertical)', url: '#' },
-    { id: 3, title: 'Post Feed - Benefícios', desc: 'Arte estática com os 5 principais benefícios do CRM.', type: 'SOCIAL', size: '1.1MB', format: '1080 x 1080 px', recommended: '1:1 (Quadrado)', url: '#' },
-    { id: 4, title: 'Banner Site Principal', desc: 'Banner horizontal para o topo do site (Hero Section).', type: 'BANNER', size: '2.3MB', format: '1920 x 600 px', recommended: 'Ultra Wide', url: '#' },
-  ]);
-
+  const [creatives, setCreatives] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [previewItem, setPreviewItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -23,6 +17,22 @@ const CreativeCatalog = () => {
     recommended: '',
     url: ''
   });
+
+  const fetchCreatives = async () => {
+    try {
+      const response = await fetch('https://innovaisolutions.com.br/api/catalog/creatives');
+      const result = await response.json();
+      if (result.success) setCreatives(result.data);
+    } catch (error) {
+      console.error("Erro ao buscar criativos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCreatives();
+  }, []);
 
   const handleOpenModal = (item = null) => {
     if (item) {
@@ -43,23 +53,44 @@ const CreativeCatalog = () => {
     setShowModal(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.title) {
       alert('Por favor, preencha pelo menos o título.');
       return;
     }
 
-    if (editingItem) {
-      setCreatives(creatives.map(c => c.id === editingItem.id ? { ...formData, id: c.id } : c));
-    } else {
-      setCreatives([...creatives, { ...formData, id: Date.now() }]);
+    try {
+      const url = editingItem 
+        ? `https://innovaisolutions.com.br/api/catalog/creatives/${editingItem.id}`
+        : 'https://innovaisolutions.com.br/api/catalog/creatives';
+      
+      const method = editingItem ? 'PATCH' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        fetchCreatives();
+        setShowModal(false);
+      }
+    } catch (error) {
+      console.error("Erro ao salvar criativo:", error);
     }
-    setShowModal(false);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Tem certeza que deseja excluir este ativo?")) {
-      setCreatives(creatives.filter(c => c.id !== id));
+  const handleDelete = async (id) => {
+    if (!window.confirm("Tem certeza que deseja excluir este ativo?")) return;
+    
+    try {
+      const response = await fetch(`https://innovaisolutions.com.br/api/catalog/creatives/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) fetchCreatives();
+    } catch (error) {
+      console.error("Erro ao excluir criativo:", error);
     }
   };
 
@@ -72,8 +103,12 @@ const CreativeCatalog = () => {
     return true;
   });
 
-  const handleDownload = (title) => {
-    alert(`Iniciando download de: ${title} ...`);
+  const handleDownload = (url) => {
+    if (url && url !== '#') {
+      window.open(url, '_blank');
+    } else {
+      alert('Link de download não disponível.');
+    }
   };
 
   return (
@@ -93,15 +128,15 @@ const CreativeCatalog = () => {
               <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '30px' }}>
                 <div>
                   <small style={{ display: 'block', opacity: 0.4, textTransform: 'uppercase', fontSize: '0.65rem' }}>Formato</small>
-                  <strong>{previewItem.format}</strong>
+                  <strong>{previewItem.format || 'N/A'}</strong>
                 </div>
                 <div>
                   <small style={{ display: 'block', opacity: 0.4, textTransform: 'uppercase', fontSize: '0.65rem' }}>Indicação</small>
-                  <strong>{previewItem.recommended}</strong>
+                  <strong>{previewItem.recommended || 'Geral'}</strong>
                 </div>
                 <div>
                   <small style={{ display: 'block', opacity: 0.4, textTransform: 'uppercase', fontSize: '0.65rem' }}>Tamanho</small>
-                  <strong>{previewItem.size}</strong>
+                  <strong>{previewItem.size || 'N/A'}</strong>
                 </div>
               </div>
             </div>
@@ -160,7 +195,7 @@ const CreativeCatalog = () => {
 
               <div style={{ marginBottom: '30px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 'bold', opacity: 0.6 }}>DESCRIÇÃO</label>
-                <textarea className="input-field" style={{ height: '80px', resize: 'none' }} placeholder="Descreva o propósito deste ativo..." value={formData.desc} onChange={e => setFormData({...formData, desc: e.target.value})} />
+                <textarea className="input-field" style={{ height: '80px', resize: 'none' }} placeholder="Descreva o propósito deste ativo..." value={formData.desc || ''} onChange={e => setFormData({...formData, desc: e.target.value})} />
               </div>
             </div>
 
@@ -217,9 +252,14 @@ const CreativeCatalog = () => {
 
       {/* GRID DE GALERIA */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '25px' }}>
+        {filteredCreatives.length === 0 && !loading && (
+          <div style={{ gridColumn: '1 / -1', padding: '100px', textAlign: 'center', opacity: 0.3 }}>
+            <Image size={48} style={{ marginBottom: '20px' }} />
+            <p>Nenhum ativo cadastrado nesta categoria.</p>
+          </div>
+        )}
         {filteredCreatives.map(item => (
           <div key={item.id} className="card" style={{ padding: 0, overflow: 'hidden', border: 'none', background: '#12151a', transition: 'transform 0.3s ease' }}>
-            {/* ÁREA DE PREVIEW DO CARD */}
             <div style={{ 
               height: '200px', background: 'linear-gradient(45deg, #1a1b1f, #12151a)', 
               display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
@@ -230,32 +270,28 @@ const CreativeCatalog = () => {
                 {item.type}
               </div>
               
-              {/* BOTÕES DE EDIÇÃO RÁPIDA (HOVER) */}
               <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '8px' }}>
                 <button 
                   onClick={() => handleOpenModal(item)}
                   style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(5px)', border: 'none', color: '#fff', width: '30px', height: '30px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  title="Editar"
                 >
                   <Edit size={14} />
                 </button>
                 <button 
                   onClick={() => handleDelete(item.id)}
                   style={{ background: 'rgba(239, 68, 68, 0.2)', backdropFilter: 'blur(5px)', border: 'none', color: '#ff4d4d', width: '30px', height: '30px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  title="Excluir"
                 >
                   <Trash2 size={14} />
                 </button>
               </div>
             </div>
 
-            {/* INFO DO CARD */}
             <div style={{ padding: '20px' }}>
               <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '6px', color: '#fff' }}>{item.title}</h3>
               <p style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '20px', height: '36px', overflow: 'hidden' }}>{item.desc}</p>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>{item.format}</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>{item.format || 'N/A'}</span>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
                     onClick={() => setPreviewItem(item)}
@@ -264,7 +300,7 @@ const CreativeCatalog = () => {
                     <Eye size={16} />
                   </button>
                   <button 
-                    onClick={() => handleDownload(item.title)}
+                    onClick={() => handleDownload(item.url)}
                     style={{ background: 'var(--color-accent-green)', border: 'none', color: '#000', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '800' }}
                   >
                     <Download size={14} style={{ marginRight: '6px' }} />
@@ -281,4 +317,3 @@ const CreativeCatalog = () => {
 };
 
 export default CreativeCatalog;
-

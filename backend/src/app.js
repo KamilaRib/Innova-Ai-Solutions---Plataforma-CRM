@@ -27,6 +27,7 @@ app.use('/webhook', webhookRoutes); // Entrada de Dados via WhatsApp Oficial/Evo
 app.use('/api/settings', require('./routes/settings.routes')); // Configurações Globais (Logo, Cores)
 app.use('/api/leads', require('./routes/leads.routes')); // Gestão de Leads e Kanban
 app.use('/api/customers', require('./routes/customers.routes')); // Gestão de Clientes (Cadastro)
+app.use('/api/catalog', require('./routes/catalog.routes')); // Catálogo de Criativos e Produtos
 
 // Rota de Health Check
 app.get('/health', (req, res) => {

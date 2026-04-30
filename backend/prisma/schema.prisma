@@ -116,3 +116,25 @@ model YoutubeAgenda {
   status           String    @default("PENDING") // PENDING | POSTED
   created_at       DateTime  @default(now())
 }
+
+model Creative {
+  id          String   @id @default(uuid())
+  title       String
+  desc        String?
+  type        String   // IDENTIDADE | SOCIAL | VÍDEO | BANNER
+  format      String?
+  size        String?
+  recommended String?
+  url         String
+  created_at  DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  desc        String?
+  price       Decimal  @default(0)
+  category    String?
+  image_url   String?
+  created_at  DateTime @default(now())
+}
