@@ -5,6 +5,9 @@ const leadsController = require('../controllers/leads.controller');
 // Rota para estatísticas do dashboard
 router.get('/stats', leadsController.getStats);
 
+// Rota para listar todos os leads (Kanban)
+router.get('/', leadsController.getAll);
+
 // Rota para o n8n buscar o contexto do lead antes de classificar
 router.get('/context/:phone', leadsController.getLeadContextByPhone);
 

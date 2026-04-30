@@ -46,6 +46,21 @@ const getStats = async (req, res) => {
 };
 
 /**
+ * Lista todos os leads (Kanban)
+ */
+const getAll = async (req, res) => {
+  try {
+    const leads = await prisma.lead.findMany({
+      orderBy: { last_contacted_at: 'desc' }
+    });
+    res.status(200).json({ success: true, data: leads });
+  } catch (error) {
+    console.error('Erro ao listar leads:', error);
+    res.status(500).json({ error: 'Erro ao listar leads.' });
+  }
+};
+
+/**
  * Busca o contexto de um lead pelo telefone (histórico de mensagens e status atual)
  */
 const getLeadContextByPhone = async (req, res) => {
@@ -106,6 +121,7 @@ const updateLeadStatus = async (req, res) => {
 
 module.exports = {
   getStats,
+  getAll,
   getLeadContextByPhone,
   updateLeadStatus
 };

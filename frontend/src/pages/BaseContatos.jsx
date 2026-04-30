@@ -1,9 +1,30 @@
-import React, { useRef } from 'react';
-import { mockLeads } from '../data/mockData';
+import React, { useRef, useState, useEffect } from 'react';
 import { FileUp, Search, UserPlus, Mail, Instagram, Facebook, Globe, MessageCircle, Star } from 'lucide-react';
 
 const BaseContatos = () => {
   const fileInputRef = useRef(null);
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLeads = async () => {
+    try {
+      const response = await fetch('https://innovaisolutions.com.br/api/leads');
+      const result = await response.json();
+      if (result.success) {
+        setLeads(result.data);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar contatos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeads();
+    const interval = setInterval(fetchLeads, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleImportClick = () => {
     fileInputRef.current.click();
@@ -13,7 +34,6 @@ const BaseContatos = () => {
     const file = e.target.files[0];
     if (file) {
       alert(`Arquivo "${file.name}" selecionado para importação! Iniciando processamento...`);
-      // Aqui entrará a lógica de leitura de Excel/CSV no futuro
     }
   };
 
@@ -78,10 +98,17 @@ const BaseContatos = () => {
             </tr>
           </thead>
           <tbody>
-            {mockLeads.map(lead => (
+            {leads.length === 0 && !loading && (
+              <tr>
+                <td colSpan="9" style={{ padding: '40px', textAlign: 'center', opacity: 0.5 }}>
+                  Nenhum cliente cadastrado na base ainda.
+                </td>
+              </tr>
+            )}
+            {leads.map(lead => (
               <tr key={lead.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.2s' }}>
                 <td style={{ padding: '20px', color: 'var(--color-light)' }}><strong>{lead.name}</strong></td>
-                <td style={{ padding: '20px', opacity: 0.8 }}>{lead.contact}</td>
+                <td style={{ padding: '20px', opacity: 0.8 }}>{lead.contact || 'N/A'}</td>
                 <td style={{ padding: '20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: lead.source === 'Instagram' ? '#E1306C' : lead.source === 'Facebook' ? '#1877F2' : 'var(--color-accent-green)' }}>
                     {lead.source === 'Instagram' ? <Instagram size={16} /> : 
@@ -93,7 +120,7 @@ const BaseContatos = () => {
                 <td style={{ padding: '20px', opacity: 0.8 }}>{lead.phone}</td>
                 <td style={{ padding: '20px' }}>
                   <a 
-                    href={`mailto:${lead.email || 'contato@cliente.com'}`} 
+                    href={`mailto:${lead.email || '#'}`} 
                     style={{ 
                       color: 'var(--color-accent-green)', 
                       textDecoration: 'none', 
@@ -108,42 +135,39 @@ const BaseContatos = () => {
                       border: '1px solid rgba(34, 197, 94, 0.2)',
                       transition: '0.2s'
                     }}
-                    onMouseOver={e => e.currentTarget.style.background = 'rgba(34, 197, 94, 0.15)'}
-                    onMouseOut={e => e.currentTarget.style.background = 'rgba(34, 197, 94, 0.08)'}
                   >
                     <Mail size={14} />
-                    {lead.email || 'Enviar E-mail'}
+                    {lead.email || 'N/A'}
                   </a>
                 </td>
                 <td style={{ padding: '20px' }}>
                   <div style={{ 
                     display: 'flex', alignItems: 'center', gap: '6px', 
-                    color: lead.id % 2 === 0 ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.3)',
+                    color: lead.last_contacted_at ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.3)',
                     fontSize: '0.75rem', fontWeight: 'bold'
                   }}>
                     <div style={{ 
                       width: '8px', height: '8px', borderRadius: '50%', 
-                      background: lead.id % 2 === 0 ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.2)' 
+                      background: lead.last_contacted_at ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.2)' 
                     }}></div>
-                    {lead.id % 2 === 0 ? 'CONTATADO' : 'AGUARDANDO'}
+                    {lead.last_contacted_at ? 'CONTATADO' : 'AGUARDANDO'}
                   </div>
                 </td>
                 <td style={{ padding: '20px' }}>
                   <span style={{ 
-                    background: lead.status === 'Conversando' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255, 255, 255, 0.05)', 
-                    color: lead.status === 'Conversando' ? 'var(--color-accent-green)' : 'rgba(255, 255, 255, 0.6)', 
+                    background: 'rgba(255, 255, 255, 0.05)', 
+                    color: 'rgba(255, 255, 255, 0.6)', 
                     padding: '6px 12px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 'bold', textTransform: 'uppercase'
                   }}>
-                    {lead.status}
+                    {lead.pipeline_status}
                   </span>
                 </td>
                 <td style={{ padding: '20px' }}>
                   <div style={{ display: 'flex', gap: '3px', color: '#FFD700' }}>
                     {[1, 2, 3, 4, 5].map(star => (
-                      <Star key={star} size={14} fill={star <= (lead.id % 2 === 0 ? 5 : 4) ? '#FFD700' : 'transparent'} opacity={star <= (lead.id % 2 === 0 ? 5 : 4) ? 1 : 0.2} />
+                      <Star key={star} size={14} fill={star <= 5 ? '#FFD700' : 'transparent'} opacity={star <= 5 ? 1 : 0.2} />
                     ))}
                   </div>
-                  <div style={{ fontSize: '0.65rem', opacity: 0.5, marginTop: '4px' }}>Excelente</div>
                 </td>
                 <td style={{ padding: '20px', textAlign: 'right' }}>
                   <button style={{ 

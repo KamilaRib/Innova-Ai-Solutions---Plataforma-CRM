@@ -25,8 +25,30 @@ const StatusLegend = () => (
 
 const Kanban = () => {
   const [isManualMode, setIsManualMode] = useState(false);
-  const [leads, setLeads] = useState(mockLeads);
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
   const columns = ['Início de Atendimento', 'Conversando', 'Agendamento', 'Formulário Enviado', 'Follow Up'];
+
+  const fetchLeads = async () => {
+    try {
+      const response = await fetch('https://innovaisolutions.com.br/api/leads');
+      const result = await response.json();
+      if (result.success) {
+        setLeads(result.data);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar leads:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeads();
+    const interval = setInterval(fetchLeads, 10000); // Atualiza a cada 10s
+    return () => clearInterval(interval);
+  }, []);
 
   const onDragStart = (e, leadId) => {
     e.dataTransfer.setData('leadId', leadId);
@@ -36,11 +58,24 @@ const Kanban = () => {
     e.preventDefault();
   };
 
-  const onDrop = (e, newStatus) => {
-    const leadId = parseInt(e.dataTransfer.getData('leadId'));
+  const onDrop = async (e, newStatus) => {
+    const leadId = e.dataTransfer.getData('leadId');
+    
+    // Atualização Otimista no UI
     setLeads(leads.map(lead => 
-      lead.id === leadId ? { ...lead, status: newStatus } : lead
+      String(lead.id) === String(leadId) ? { ...lead, pipeline_status: newStatus } : lead
     ));
+
+    try {
+      await fetch(`https://innovaisolutions.com.br/api/leads/${leadId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pipeline_status: newStatus })
+      });
+    } catch (error) {
+      console.error("Erro ao atualizar status do lead:", error);
+      fetchLeads(); // Reverte se der erro
+    }
   };
   
   return (
@@ -88,11 +123,11 @@ const Kanban = () => {
           >
             <h3 style={{ fontSize: '0.9rem', marginBottom: '20px', borderBottom: '2px solid rgba(255,255,255,0.1)', paddingBottom: '15px', display: 'flex', justifyContent: 'space-between' }}>
               <span>{col}</span>
-              <span style={{ opacity: 0.5 }}>{leads.filter(l => l.status === col).length}</span>
+              <span style={{ opacity: 0.5 }}>{leads.filter(l => l.pipeline_status === col).length}</span>
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
-              {leads.filter(l => l.status === col).map(lead => (
+              {leads.filter(l => l.pipeline_status === col).map(lead => (
                 <div 
                   key={lead.id} 
                   draggable
