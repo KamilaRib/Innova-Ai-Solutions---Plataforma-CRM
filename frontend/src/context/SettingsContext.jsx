@@ -10,8 +10,6 @@ export function SettingsProvider({ children }) {
     whatsapp_phone_number_id: '',
     whatsapp_access_token: '',
     whatsapp_verify_token: '',
-    evolution_api_url: '',
-    evolution_api_key: '',
     facebook_url: '',
     instagram_url: '',
     tiktok_url: '',

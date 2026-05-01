@@ -64,7 +64,7 @@ const EvolutionSettings = () => {
       <h1 style={{ color: 'var(--color-accent-green)', marginBottom: '10px' }}>Evolution API</h1>
       <p style={{ opacity: 0.8, marginBottom: '30px' }}>Gerencie suas instâncias de WhatsApp e conecte novas contas.</p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
         
         {/* CONFIGURAÇÕES TÉCNICAS */}
         <div className="card">
@@ -90,62 +90,6 @@ const EvolutionSettings = () => {
             SALVAR CONFIGURAÇÕES
           </button>
         </div>
-
-        {/* ÁREA DO QR CODE / STATUS */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-          {connectionStatus === 'conectado' ? (
-            <div style={{ color: 'var(--color-accent-green)' }}>
-              <CheckCircle2 size={64} style={{ marginBottom: '20px' }} />
-              <h2 style={{ marginBottom: '10px' }}>WhatsApp Conectado!</h2>
-              <p style={{ opacity: 0.6 }}>Sua instância está ativa e pronta para enviar mensagens.</p>
-              <button 
-                className="btn-primary" 
-                style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'rgb(239, 68, 68)', border: '1px solid rgb(239, 68, 68)', marginTop: '20px' }}
-                onClick={() => setConnectionStatus('desconectado')}
-              >
-                DESCONECTAR
-              </button>
-            </div>
-          ) : (
-            <>
-              {qrCode ? (
-                <div>
-                  <div style={{ background: '#fff', padding: '15px', borderRadius: '12px', display: 'inline-block', marginBottom: '20px' }}>
-                    <img src={qrCode} alt="WhatsApp QR Code" style={{ width: '250px', height: '250px' }} />
-                  </div>
-                  <p style={{ marginBottom: '20px', fontWeight: 'bold' }}>Escaneie o código acima com seu WhatsApp</p>
-                  <button className="btn-primary" onClick={fetchQRCode} style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0 auto' }}>
-                    <RefreshCw size={18} className={loading ? 'spin' : ''} />
-                    ATUALIZAR QR CODE
-                  </button>
-                </div>
-              ) : (
-                <div style={{ opacity: 0.5 }}>
-                  <QrCode size={80} style={{ marginBottom: '20px' }} />
-                  <h3>Gerador de Conexão</h3>
-                  <p style={{ maxWidth: '300px', margin: '10px auto' }}>Após salvar as configurações, clique no botão abaixo para gerar o código de pareamento.</p>
-                  <button 
-                    className="btn-primary" 
-                    onClick={fetchQRCode} 
-                    style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}
-                    disabled={loading}
-                  >
-                    <Send size={18} />
-                    {loading ? 'GERANDO...' : 'GERAR QR CODE'}
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-
-          {connectionStatus === 'aguardando' && !qrCode && !loading && (
-            <div style={{ marginTop: '20px', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={16} />
-              <span style={{ fontSize: '0.85rem' }}>Verifique se a instância foi criada no painel Evolution.</span>
-            </div>
-          )}
-        </div>
-
       </div>
 
       {/* DICAS PARA DOCKER LOCAL */}

@@ -231,10 +231,7 @@ export default function ClientLayout() {
                   <MessageCircle size={16} />
                   <span>WhatsApp API</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/settings/evolution" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Zap size={16} />
-                  <span>Evolution API</span>
-                </NavLink>
+
               </div>
             )}
           </div>

@@ -2,11 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Importando Telas
-import Home from './pages/Home';
 import Login from './pages/Login';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfUse from './pages/TermsOfUse';
-import CookiesPolicy from './pages/CookiesPolicy';
 import ClientLayout from './layouts/ClientLayout';
 import Dashboard from './pages/Dashboard';
 import Kanban from './pages/Kanban';
@@ -38,11 +34,9 @@ const App = () => {
     <SettingsProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfUse />} />
-          <Route path="/cookies" element={<CookiesPolicy />} />
+          {/* Páginas institucionais movidas para o projeto 'Site' */}
           <Route path="/app" element={<ClientLayout />}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />

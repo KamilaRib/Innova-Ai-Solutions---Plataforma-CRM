@@ -5,8 +5,5 @@
   "whatsapp_phone_number_id": "",
   "whatsapp_business_account_id": "",
   "whatsapp_access_token": "",
-  "whatsapp_verify_token": "",
-  "evolution_webhook_url": "https://remark-inkjet-states-dice.trycloudflare.com",
-  "evolution_api_key": "Scrmarketing_2026",
-  "evolution_instance_name": "Innova_CRM"
+  "whatsapp_verify_token": ""
 }

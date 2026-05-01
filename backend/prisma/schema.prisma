@@ -18,9 +18,6 @@ model SystemSettings {
   whatsapp_business_account_id String?
   whatsapp_access_token        String?
   whatsapp_verify_token        String?
-  evolution_webhook_url        String?
-  evolution_api_key            String?
-  evolution_instance_name      String?
   created_at                   DateTime   @default(now())
 }
 

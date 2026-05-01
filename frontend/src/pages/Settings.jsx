@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 const Settings = () => {
   const [formData, setFormData] = useState({
     business_name: '', logo_url: '', primary_color: '#00F5FF',
-    whatsapp_phone_number_id: '', whatsapp_access_token: '', whatsapp_verify_token: '',
-    evolution_webhook_url: '', evolution_api_key: ''
+    whatsapp_phone_number_id: '', whatsapp_access_token: '', whatsapp_verify_token: ''
   });
 
   useEffect(() => {
@@ -70,6 +69,7 @@ const Settings = () => {
           <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.75rem', opacity: 0.7 }}>Token de Verificação Webhook</label>
           <input className="input-field" type="text" name="whatsapp_verify_token" value={formData.whatsapp_verify_token || ''} onChange={handleChange} />
         </div>
+
         
         {/* Botão de salvar comum */}
         <div style={{ width: '100%', marginTop: '10px' }}>
