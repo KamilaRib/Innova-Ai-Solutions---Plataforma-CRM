@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 // Importando Telas
 import Login from './pages/Login';
+import Landing from './pages/Landing';
 import ClientLayout from './layouts/ClientLayout';
 import Dashboard from './pages/Dashboard';
 import Kanban from './pages/Kanban';
@@ -34,7 +35,7 @@ const App = () => {
     <SettingsProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           {/* Páginas institucionais movidas para o projeto 'Site' */}
           <Route path="/app" element={<ClientLayout />}>
