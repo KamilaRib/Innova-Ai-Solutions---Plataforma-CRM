@@ -8,6 +8,15 @@ import {
 export default function Landing() {
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    // Permite rolagem no body para a Landing Page
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'auto';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   const handleWhatsAppClick = () => {
     // Simula link para testar o bot inteligente em produção
     window.open('https://wa.me/5500000000000?text=Quero%20testar%20o%20Concierge%20Inteligente', '_blank');
@@ -43,13 +52,12 @@ export default function Landing() {
         <h1 style={{ fontSize: '1.3rem', fontWeight: 900, margin: 0, cursor: 'pointer' }} onClick={() => navigate('/')}>
           INNOVA <span style={{ color: 'var(--color-accent-green)' }}>AI</span> <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 400, opacity: 0.6, marginLeft: '6px' }}>CRM</span>
         </h1>
-        <button className="btn-primary" onClick={() => navigate('/login')}>Entrar no CRM</button>
       </header>
 
       {/* Hero Section */}
       <section style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px', maxWidth: '1000px', margin: '0 auto' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '30px', fontSize: '0.8rem', color: 'var(--color-accent-green)', fontWeight: 600, marginBottom: '24px' }}>
-          <Sparkles size={14} /> O Primeiro CRM do Mundo Controlado por Agentes IA n8n
+          <Sparkles size={14} /> O Primeiro CRM do Mundo Controlado por Inteligência Artificial
         </div>
         <h1 className="landing-hero-title" style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.15, letterSpacing: '-1.5px', marginBottom: '24px' }}>
           Sua máquina autônoma de <span style={{ color: 'var(--color-accent-green)' }}>atração e vendas</span> no WhatsApp.
@@ -60,9 +68,6 @@ export default function Landing() {
         <div style={{ display: 'flex', gap: '20px', marginBottom: '60px' }}>
           <button className="btn-primary" style={{ fontSize: '0.85rem', padding: '16px 36px' }} onClick={handleWhatsAppClick}>
             Ver a Máquina em Ação <ArrowRight size={16} style={{ marginLeft: '8px', verticalAlign: 'middle', display: 'inline-block' }} />
-          </button>
-          <button className="btn-primary" style={{ background: 'rgba(255,255,255,0.03)', color: '#fff', border: '1px solid var(--color-border)', boxShadow: 'none' }} onClick={() => navigate('/login')}>
-            Acessar Painel
           </button>
         </div>
         
@@ -86,7 +91,7 @@ export default function Landing() {
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: '10px' }}>1. Atração Autônoma</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
-                Nossos robôs do n8n criam e postam Shorts no YouTube de forma automática para trazer leads orgânicos.
+                Nossos robôs inteligentes criam e postam Shorts no YouTube de forma automática para trazer leads orgânicos.
               </p>
             </div>
 
@@ -134,7 +139,7 @@ export default function Landing() {
               <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--color-accent-green)', letterSpacing: '2px', marginBottom: '12px' }}>Geração de Conteúdo</div>
               <h2 className="landing-section-title" style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.2, marginBottom: '24px' }}>IA que gera tráfego para sua marca.</h2>
               <p style={{ color: 'var(--color-text-muted)', lineHeight: 1.6, marginBottom: '30px' }}>
-                Esqueça a rotina estressante de publicar criativos. Nossa integração com o n8n e Google Vertex AI cria imagens fotorealistas, roteiriza descrições virais e posta no YouTube de forma automática.
+                Esqueça a rotina estressante de publicar criativos. Nossa integração com Inteligência Artificial e Google Vertex AI cria imagens fotorealistas, roteiriza descrições virais e posta no YouTube de forma automática.
               </p>
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', fontSize: '0.95rem' }}>
@@ -193,7 +198,7 @@ export default function Landing() {
                     Olá, gostaria de saber o preço do plano profissional e se tem integração.
                   </div>
                   <div style={{ alignSelf: 'flex-end', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', maxWidth: '80%', color: '#fff' }}>
-                    Olá! O plano Pro é R$ 299/mês. Sim, temos integração oficial n8n! Qual seu e-mail para eu te enviar a proposta formal?
+                    Olá! O plano Pro é R$ 299/mês. Sim, temos integração oficial! Qual seu e-mail para eu te enviar a proposta formal?
                   </div>
                   <div style={{ alignSelf: 'flex-start', background: 'rgba(255,255,255,0.05)', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', maxWidth: '80%' }}>
                     É comercial@empresa.com. Meu CNPJ é 12.345.678/0001-99.
@@ -245,11 +250,37 @@ export default function Landing() {
       {/* Footer */}
       <footer style={{ padding: '40px 20px', borderTop: '1px solid var(--color-border)', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginBottom: '20px' }}>
-          <Link to="/login" style={{ color: 'var(--color-text-muted)', textDecoration: 'none' }}>Login CRM</Link>
           <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-muted)', textDecoration: 'none' }}>Suporte</a>
         </div>
         <p>© 2026 Innova AI Solutions. Todos os direitos reservados. Projeto White-Label CRM.</p>
       </footer>
+      {/* Floating WhatsApp Button */}
+      <div 
+        onClick={handleWhatsAppClick}
+        style={{
+          position: 'fixed',
+          bottom: '30px',
+          right: '30px',
+          backgroundColor: '#25d366',
+          color: '#fff',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+          cursor: 'pointer',
+          zIndex: 1000,
+          transition: 'transform 0.2s ease',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      >
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.799.002-2.599-1.002-5.042-2.83-6.87C16.425 2.1 13.987 1.097 11.99 1.096c-5.4.004-9.8 4.4-9.802 9.806-.001 1.706.467 3.376 1.353 4.887L2.43 20.1l4.217-1.126-.001.001a9.715 9.715 0 0 0 4.148 1.054 9.7 9.7 0 0 0 .001 0zM17.15 14.5c-.284-.141-1.677-.827-1.937-.922-.26-.096-.45-.141-.637.141-.188.283-.726.922-.89 1.107-.164.185-.327.208-.61.067-.284-.141-1.2-.441-2.286-1.41-.845-.753-1.415-1.684-1.58-1.966-.164-.283-.018-.435.124-.576.127-.127.284-.329.426-.494.141-.164.188-.283.284-.47.096-.188.047-.353-.024-.495-.071-.141-.637-1.533-.873-2.1-.23-.554-.462-.48-.637-.488-.164-.008-.353-.01-.542-.01s-.495.071-.754.353c-.26.283-.992.969-.992 2.364s1.018 2.741 1.16 2.929c.141.188 2.002 3.056 4.85 4.283.678.293 1.207.467 1.62.598.681.216 1.3.185 1.79.112.545-.08 1.678-.687 1.914-1.353.237-.667.237-1.239.165-1.353-.07-.113-.26-.18-.544-.321z"/>
+        </svg>
+      </div>
     </div>
   );
 }
