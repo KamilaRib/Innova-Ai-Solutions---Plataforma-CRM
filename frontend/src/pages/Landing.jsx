@@ -15,8 +15,31 @@ export default function Landing() {
 
   return (
     <div className="landing-container" style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', overflowY: 'auto' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .landing-header {
+            padding: 15px 20px !important;
+          }
+          .landing-hero-title {
+            font-size: 2.2rem !important;
+            line-height: 1.2 !important;
+            letter-spacing: -1px !important;
+          }
+          .landing-hero-subtitle {
+            font-size: 1rem !important;
+            margin-bottom: 25px !important;
+          }
+          .landing-section-title {
+            font-size: 1.7rem !important;
+          }
+          .landing-grid-split {
+            gap: 30px !important;
+          }
+        }
+      `}</style>
+
       {/* Header */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', borderBottom: '1px solid var(--color-border)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 100 }}>
+      <header className="landing-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', borderBottom: '1px solid var(--color-border)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 100 }}>
         <h1 style={{ fontSize: '1.3rem', fontWeight: 900, margin: 0, cursor: 'pointer' }} onClick={() => navigate('/')}>
           INNOVA <span style={{ color: 'var(--color-accent-green)' }}>AI</span> <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 400, opacity: 0.6, marginLeft: '6px' }}>CRM</span>
         </h1>
@@ -28,10 +51,10 @@ export default function Landing() {
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '30px', fontSize: '0.8rem', color: 'var(--color-accent-green)', fontWeight: 600, marginBottom: '24px' }}>
           <Sparkles size={14} /> O Primeiro CRM do Mundo Controlado por Agentes IA n8n
         </div>
-        <h1 style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.15, letterSpacing: '-1.5px', marginBottom: '24px' }}>
+        <h1 className="landing-hero-title" style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.15, letterSpacing: '-1.5px', marginBottom: '24px' }}>
           Sua máquina autônoma de <span style={{ color: 'var(--color-accent-green)' }}>atração e vendas</span> no WhatsApp.
         </h1>
-        <p style={{ fontSize: '1.15rem', color: 'var(--color-text-muted)', maxWidth: '700px', marginBottom: '40px', lineHeight: 1.6 }}>
+        <p className="landing-hero-subtitle" style={{ fontSize: '1.15rem', color: 'var(--color-text-muted)', maxWidth: '700px', marginBottom: '40px', lineHeight: 1.6 }}>
           O único ecossistema que posta conteúdos virais nas suas redes sociais para atrair contatos e utiliza IA conversacional premium no WhatsApp para qualificar e fechar negócios 24/7.
         </p>
         <div style={{ display: 'flex', gap: '20px', marginBottom: '60px' }}>
@@ -52,7 +75,7 @@ export default function Landing() {
       {/* Dobra 2: Ciclo de Automação */}
       <section style={{ padding: '80px 20px', background: 'radial-gradient(circle at bottom, #12151a 0%, #0a0b0d 100%)', borderTop: '1px solid var(--color-border)' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '16px' }}>O Ciclo Autônomo da Máquina</h2>
+          <h2 className="landing-section-title" style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '16px' }}>O Ciclo Autônomo da Máquina</h2>
           <p style={{ color: 'var(--color-text-muted)', marginBottom: '60px' }}>Como a IA da Innova substitui a operação repetitiva de ponta a ponta</p>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '20px', position: 'relative' }}>
@@ -106,10 +129,10 @@ export default function Landing() {
       {/* Dobra 3: Motor de Atração */}
       <section style={{ padding: '80px 20px', borderTop: '1px solid var(--color-border)' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '60px' }}>
+          <div className="landing-grid-split" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '60px' }}>
             <div style={{ flex: '1 1 400px' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--color-accent-green)', letterSpacing: '2px', marginBottom: '12px' }}>Geração de Conteúdo</div>
-              <h2 style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.2, marginBottom: '24px' }}>IA que gera tráfego para sua marca.</h2>
+              <h2 className="landing-section-title" style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.2, marginBottom: '24px' }}>IA que gera tráfego para sua marca.</h2>
               <p style={{ color: 'var(--color-text-muted)', lineHeight: 1.6, marginBottom: '30px' }}>
                 Esqueça a rotina estressante de publicar criativos. Nossa integração com o n8n e Google Vertex AI cria imagens fotorealistas, roteiriza descrições virais e posta no YouTube de forma automática.
               </p>
@@ -158,7 +181,7 @@ export default function Landing() {
       {/* Dobra 4: Motor de Vendas */}
       <section style={{ padding: '80px 20px', background: 'radial-gradient(circle at top right, #12151a 0%, #0a0b0d 100%)', borderTop: '1px solid var(--color-border)' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap-reverse', alignItems: 'center', gap: '60px' }}>
+          <div className="landing-grid-split" style={{ display: 'flex', flexWrap: 'wrap-reverse', alignItems: 'center', gap: '60px' }}>
             <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div className="card" style={{ padding: '24px', margin: 0 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px' }}>
@@ -183,7 +206,7 @@ export default function Landing() {
             </div>
             <div style={{ flex: '1 1 400px' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--color-accent-green)', letterSpacing: '2px', marginBottom: '12px' }}>Vendas & Conversão</div>
-              <h2 style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.2, marginBottom: '24px' }}>Atendimento híbrido de alta performance.</h2>
+              <h2 className="landing-section-title" style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.2, marginBottom: '24px' }}>Atendimento híbrido de alta performance.</h2>
               <p style={{ color: 'var(--color-text-muted)', lineHeight: 1.6, marginBottom: '30px' }}>
                 Não perca vendas por atraso na resposta. A IA qualifica e captura informações fiscais automaticamente. E quando você precisar intervir, basta um clique no CRM para silenciar a automação e reassumir no WhatsApp.
               </p>
@@ -209,7 +232,7 @@ export default function Landing() {
       {/* CTA Section */}
       <section style={{ padding: '100px 20px', textAlign: 'center', background: 'radial-gradient(circle, rgba(34, 197, 94, 0.05) 0%, transparent 80%)', borderTop: '1px solid var(--color-border)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '2.6rem', fontWeight: 900, marginBottom: '24px', letterSpacing: '-1px' }}>Pronto para colocar sua empresa no piloto automático?</h2>
+          <h2 className="landing-section-title" style={{ fontSize: '2.6rem', fontWeight: 900, marginBottom: '24px', letterSpacing: '-1px' }}>Pronto para colocar sua empresa no piloto automático?</h2>
           <p style={{ fontSize: '1.1rem', color: 'var(--color-text-muted)', marginBottom: '40px', lineHeight: 1.6 }}>
             Teste a experiência real. Converse agora com o nosso robô demonstrativo no WhatsApp e sinta como ele capta dados e agenda compromissos na prática.
           </p>
