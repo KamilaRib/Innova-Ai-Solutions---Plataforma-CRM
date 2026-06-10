@@ -1,9 +1,16 @@
 {
-  "business_name": "INNOVA AI",
+  "business_name": "Innova AI Solutions",
   "logo_url": null,
-  "primary_color": "#00F5FF",
+  "primary_color": "#00ff7b",
   "whatsapp_phone_number_id": "",
   "whatsapp_business_account_id": "",
   "whatsapp_access_token": "",
-  "whatsapp_verify_token": ""
+  "whatsapp_verify_token": "",
+  "evolution_api_url": "http://localhost:8080",
+  "evolution_api_key": "innova_secret_key",
+  "evolution_instance_name": "INNOVA AI SOLUTIONS",
+  "evolution_webhook_url": "https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2",
+  "evolution_events": [
+    "CONTACTS_UPSERT"
+  ]
 }

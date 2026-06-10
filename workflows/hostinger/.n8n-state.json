@@ -1,0 +1,24 @@
+{
+  "workflows": {
+    "VJs1ScucIVdIneHi": {
+      "lastSyncedHash": "d69e20bce8cfd6361c468ca130eeac9ee451c406f88d2c1864898d544f71105f",
+      "lastSyncedAt": "2026-06-10T07:19:27.514Z",
+      "filename": "ai-concierge.workflow.ts"
+    },
+    "oZR5jgwvjDhmMwcd": {
+      "lastSyncedHash": "ffa1ed948f5099e27d0cc9dcee41263ac4354abf7f6f250edd3357e9021d440f",
+      "lastSyncedAt": "2026-06-10T06:48:32.978Z",
+      "filename": "google-multimodal-agent.workflow.ts"
+    },
+    "j8ULLJwPonA3vZrG": {
+      "lastSyncedHash": "6cd6ab41b1af709cc55a8de2587ee0adf24f26aeb5b17ae8d4690927f4282430",
+      "lastSyncedAt": "2026-06-10T07:19:46.161Z",
+      "filename": "lead-classification.workflow.ts"
+    },
+    "v3xHUqzbsDNBdA3E": {
+      "lastSyncedHash": "ecb0cb0737a5b02d92f29317100329b6a039bac7ce3b1ed6bd1599d523da523c",
+      "lastSyncedAt": "2026-06-10T06:50:22.045Z",
+      "filename": "youtube-ai-agent.workflow.ts"
+    }
+  }
+}

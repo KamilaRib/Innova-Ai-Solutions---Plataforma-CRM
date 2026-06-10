@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 
@@ -14,7 +14,7 @@ export default function ClientLayout() {
   const location = useLocation();
   const { settings } = useContext(SettingsContext);
   const userRole = localStorage.getItem('role') || 'OPERADOR';
-  
+
   const handleLogout = () => {
     localStorage.removeItem('role');
     navigate('/');
@@ -40,15 +40,17 @@ export default function ClientLayout() {
       {/* MOBILE HEADER */}
       <header className="mobile-header">
         <div className="logo">
-          {settings?.logo_url ? (
-            <img src={settings.logo_url} alt="Logo" style={{ maxHeight: '30px' }} />
-          ) : (
-            <>
-              INNOVA 
-              <span style={{ color: 'var(--color-accent-green)', marginLeft: '6px' }}>AI</span> 
-              <span style={{ color: '#fff', marginLeft: '6px' }}>SOLUTIONS</span>
-            </>
-          )}
+          <Link to="/app/dashboard" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
+            {settings?.logo_url ? (
+              <img src={settings.logo_url} alt="Logo" style={{ maxHeight: '30px' }} />
+            ) : (
+              <>
+                INNOVA
+                <span style={{ color: 'var(--color-accent-green)', marginLeft: '6px' }}>AI</span>
+                <span style={{ color: '#fff', marginLeft: '6px' }}>SOLUTIONS</span>
+              </>
+            )}
+          </Link>
         </div>
         <button className="mobile-header-btn" onClick={() => setIsMobileOpen(true)}>
           <Menu size={24} />
@@ -56,20 +58,20 @@ export default function ClientLayout() {
       </header>
 
       {/* OVERLAY MOBILE */}
-      <div 
-        className={`mobile-overlay ${isMobileOpen ? 'open' : ''}`} 
+      <div
+        className={`mobile-overlay ${isMobileOpen ? 'open' : ''}`}
         onClick={closeMobile}
       />
 
       {/* MENU LATERAL */}
       <aside className={`sidebar ${isMobileOpen ? 'open' : ''}`}>
         <div className="sidebar-logo" style={{ color: '#fff', fontSize: '1.2rem' }}>
-          <div>
+          <Link to="/app/dashboard" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
             {settings?.logo_url ? (
               <img src={settings.logo_url} alt={settings.business_name || 'Logo'} style={{ maxHeight: '40px' }} />
             ) : (
               <>
-                {settings?.business_name ? settings.business_name.split(' ')[0].toUpperCase() : 'INNOVA'} 
+                {settings?.business_name ? settings.business_name.split(' ')[0].toUpperCase() : 'INNOVA'}
                 <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
                   {settings?.business_name ? settings.business_name.split(' ')[1]?.toUpperCase() : 'AI'}
                 </span>
@@ -78,23 +80,23 @@ export default function ClientLayout() {
                 </span>
               </>
             )}
-          </div>
+          </Link>
           <button className="mobile-close-btn" onClick={closeMobile}>
             <X size={20} />
           </button>
         </div>
 
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          
+
           {userRole !== 'USER' && (
-            <NavLink onClick={closeMobile} to="/app/dashboard" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+            <NavLink onClick={closeMobile} to="/app/dashboard" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
               <LayoutDashboard size={20} />
               <span>Dashboard</span>
             </NavLink>
           )}
 
           <div className="nav-group">
-            <div 
+            <div
               className={`menu-item ${location.pathname.includes('analysis') ? 'active' : ''}`}
               onClick={() => toggleGroup('statistics')}
               style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -105,26 +107,26 @@ export default function ClientLayout() {
               </div>
               {expandedGroups.statistics ? <ChevronDown size={14} opacity={0.5} /> : <ChevronRight size={14} opacity={0.5} />}
             </div>
-            
+
             {expandedGroups.statistics && (
               <div className="sub-menu">
-                <NavLink onClick={closeMobile} to="/app/analysis/sales" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/analysis/sales" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <BarChart size={16} />
                   <span>Análise de vendas</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/analysis/consolidated" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/analysis/consolidated" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Activity size={16} />
                   <span>Relatório consolidado</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/analysis/roi" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/analysis/roi" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <DollarSign size={16} />
                   <span>ROI</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/analysis/activities" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/analysis/activities" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <ClipboardList size={16} />
                   <span>Relatório por atividades</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/analysis/goals" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/analysis/goals" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Target size={16} />
                   <span>Relatório de metas</span>
                 </NavLink>
@@ -132,33 +134,33 @@ export default function ClientLayout() {
             )}
           </div>
 
-          <NavLink onClick={closeMobile} to="/app/kanban" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/kanban" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <DollarSign size={20} />
             <span>Leads</span>
           </NavLink>
 
-          <NavLink onClick={closeMobile} to="/app/tasks" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/tasks" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <Calendar size={20} />
             <span>Tarefas</span>
           </NavLink>
 
-          <NavLink onClick={closeMobile} to="/app/calendar" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/calendar" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <CalendarDays size={20} />
             <span>Calendário</span>
           </NavLink>
 
-          <NavLink onClick={closeMobile} to="/app/chats" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/chats" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <MessageSquare size={20} />
             <span>Chats</span>
           </NavLink>
 
-          <NavLink onClick={closeMobile} to="/app/leads" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/leads" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <Users size={20} />
             <span>Carteira de Cliente</span>
           </NavLink>
 
           <div className="nav-group">
-            <div 
+            <div
               className={`menu-item ${location.pathname.includes('social') ? 'active' : ''}`}
               onClick={() => toggleGroup('social')}
               style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -169,22 +171,22 @@ export default function ClientLayout() {
               </div>
               {expandedGroups.social ? <ChevronDown size={14} opacity={0.5} /> : <ChevronRight size={14} opacity={0.5} />}
             </div>
-            
+
             {expandedGroups.social && (
               <div className="sub-menu">
-                <NavLink onClick={closeMobile} to="/app/social/facebook" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/social/facebook" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Facebook size={16} />
                   <span>Facebook</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/social/instagram" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/social/instagram" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Instagram size={16} />
                   <span>Instagram</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/social/tiktok" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/social/tiktok" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <TikTokIcon size={16} />
                   <span>TikTok</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/social/youtube" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/social/youtube" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Youtube size={16} />
                   <span>YouTube</span>
                 </NavLink>
@@ -192,18 +194,18 @@ export default function ClientLayout() {
             )}
           </div>
 
-          <NavLink onClick={closeMobile} to="/app/creatives" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/creatives" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <Palette size={20} />
             <span>Criativos</span>
           </NavLink>
 
-          <NavLink onClick={closeMobile} to="/app/products" className={({isActive}) => `menu-item ${isActive ? 'active' : ''}`}>
+          <NavLink onClick={closeMobile} to="/app/products" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <ShoppingBag size={20} />
             <span>Produtos</span>
           </NavLink>
 
           <div className="nav-group">
-            <div 
+            <div
               className={`menu-item ${location.pathname.includes('settings') ? 'active' : ''}`}
               onClick={() => toggleGroup('settings')}
               style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -214,33 +216,36 @@ export default function ClientLayout() {
               </div>
               {expandedGroups.settings ? <ChevronDown size={14} opacity={0.5} /> : <ChevronRight size={14} opacity={0.5} />}
             </div>
-            
+
             {expandedGroups.settings && (
               <div className="sub-menu">
                 {userRole === 'ADM' && (
-                  <NavLink onClick={closeMobile} to="/app/settings/users" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <NavLink onClick={closeMobile} to="/app/settings/users" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                     <Shield size={16} color="var(--color-accent-green)" />
                     <span>Gestão de Usuários</span>
                   </NavLink>
                 )}
-                <NavLink onClick={closeMobile} to="/app/settings/branding" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/settings/branding" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Palette size={16} />
                   <span>Identidade Visual</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/settings/whatsapp" className={({isActive}) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink onClick={closeMobile} to="/app/settings/whatsapp" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <MessageCircle size={16} />
                   <span>WhatsApp API</span>
                 </NavLink>
-
+                <NavLink onClick={closeMobile} to="/app/settings/evolution" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <Zap size={16} color="var(--color-accent-green)" />
+                  <span>Evolution API (Local)</span>
+                </NavLink>
               </div>
             )}
           </div>
 
         </nav>
 
-        <button 
+        <button
           onClick={handleLogout}
-          className="menu-item" 
+          className="menu-item"
           style={{ background: 'transparent', border: 'none', width: '100%', cursor: 'pointer', opacity: 0.7, marginTop: 'auto' }}
         >
           <LogOut size={20} color="var(--color-accent-cyan)" />

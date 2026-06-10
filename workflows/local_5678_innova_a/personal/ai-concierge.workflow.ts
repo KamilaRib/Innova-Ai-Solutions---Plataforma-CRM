@@ -12,11 +12,11 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 // AiAgent                            agent                      [AI]
 // Memory                             memoryBufferWindow         [ai_memory]
 // UpsertCustomerTool                 httpRequestTool            [ai_tool]
-// AiClassifier                       chainLlm
+// AiClassifier                       chainLlm                   [AI]
 // CheckStageChange                   if
 // UpdateLeadStatus                   httpRequest
 // GoogleCalendar                     googleCalendar
-// OpenaiChatModel                    lmChatOpenAi               [creds] [ai_languageModel]
+// OpenaiChatModel                    lmChatOpenAi               [creds] [ai_languageModel] [ai_languageModel]
 //
 // ROUTING MAP
 // ──────────────────────────────────────────────────────────────────
@@ -30,6 +30,7 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 //
 // AI CONNECTIONS
 // AiAgent.uses({ ai_languageModel: OpenaiChatModel, ai_memory: Memory, ai_tool: [UpsertCustomerTool] })
+// AiClassifier.uses({ ai_languageModel: OpenaiChatModel })
 // </workflow-map>
 
 // =====================================================================
@@ -44,7 +45,7 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
     settings: {
         executionOrder: 'v1',
         callerPolicy: 'workflowsFromSameOwner',
-        availableInMCP: false,
+        availableInMCP: true,
         binaryMode: 'separate',
     },
 })
@@ -75,7 +76,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         position: [240, 0],
     })
     GetLeadContext = {
-        url: '=https://innovaisolutions.com.br/api/leads/context/{{ $json.body.phone || $json.body.from }}',
+        url: '=http://localhost:5000/api/leads/context/{{ $json.body.phone || $json.body.from }}',
         options: {},
     };
 
@@ -116,7 +117,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     UpsertCustomerTool = {
         toolDescription: 'Cria ou atualiza o cadastro de um cliente com Nome, Email, CPF/CNPJ (document) e Endereço.',
         method: 'POST',
-        url: '={{ ($env.BACKEND_URL || "https://innovaisolutions.com.br") + "/api/customers" }}',
+        url: '={{ ($env.BACKEND_URL || "http://localhost:5000") + "/api/customers" }}',
         sendBody: true,
         bodyParameters: {
             parameters: [
@@ -190,7 +191,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     })
     UpdateLeadStatus = {
         method: 'PATCH',
-        url: '={{ ($env.BACKEND_URL || "https://innovaisolutions.com.br") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
+        url: '={{ ($env.BACKEND_URL || "http://localhost:5000") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
         sendBody: true,
         specifyBody: 'json',
         jsonBody: '={ "pipeline_status": "{{ $node["AI Classifier"].json.text }}" }',
@@ -252,6 +253,9 @@ export class AiAgentConciergeLeadClassificationWorkflow {
             ai_languageModel: this.OpenaiChatModel.output,
             ai_memory: this.Memory.output,
             ai_tool: [this.UpsertCustomerTool.output],
+        });
+        this.AiClassifier.uses({
+            ai_languageModel: this.OpenaiChatModel.output,
         });
     }
 }

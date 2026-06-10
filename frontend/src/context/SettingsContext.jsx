@@ -25,6 +25,12 @@ export function SettingsProvider({ children }) {
     n8n_generation_webhook: '',
     n8n_generation_token: '',
     openai_api_key: '',
+    evolution_api_url: 'http://localhost:8080',
+    evolution_api_key: '',
+    evolution_instance_name: '',
+    evolution_webhook_url: 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2',
+    evolution_events: ['MESSAGES_UPSERT'],
+    ai_concierge_webhook: '',
   });
   const [loading, setLoading] = useState(true);
 

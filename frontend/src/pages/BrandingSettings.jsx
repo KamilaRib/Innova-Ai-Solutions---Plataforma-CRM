@@ -27,7 +27,8 @@ const BrandingSettings = () => {
       <h1 style={{ color: 'var(--color-light)', marginBottom: '10px' }}>Identidade Visual</h1>
       <p style={{ opacity: 0.8, marginBottom: '30px' }}>Personalize as cores e a marca do seu sistema.</p>
 
-      <div className="card" style={{ maxWidth: '600px', borderTop: '4px solid var(--color-accent-cyan)' }}>
+      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div className="card">
         <h3 style={{ color: 'var(--color-accent-cyan)', marginBottom: '20px' }}>Branding</h3>
         
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>Nome do Sistema / Empresa</label>
@@ -40,6 +41,7 @@ const BrandingSettings = () => {
         <input className="input-field" type="color" name="primary_color" value={formData.primary_color || '#00F5FF'} onChange={handleChange} style={{ padding: '2px', height: '45px' }} />
 
         <button className="btn-primary" onClick={handleSave} style={{ marginTop: '20px' }}>Salvar Identidade</button>
+        </div>
       </div>
     </div>
   );

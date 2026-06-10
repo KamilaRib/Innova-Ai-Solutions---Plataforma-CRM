@@ -27,7 +27,8 @@ const WhatsAppSettings = () => {
       <h1 style={{ color: 'var(--color-light)', marginBottom: '10px' }}>WhatsApp API</h1>
       <p style={{ opacity: 0.8, marginBottom: '30px' }}>Configure as chaves e tokens da Meta Cloud API.</p>
 
-      <div className="card" style={{ maxWidth: '600px', borderTop: '4px solid #39FF14' }}>
+      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div className="card">
         <h3 style={{ color: '#39FF14', marginBottom: '20px' }}>Credenciais Meta</h3>
         
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>Phone Number ID</label>
@@ -40,6 +41,7 @@ const WhatsAppSettings = () => {
         <input className="input-field" type="text" name="whatsapp_verify_token" value={formData.whatsapp_verify_token || ''} onChange={handleChange} />
 
         <button className="btn-primary" onClick={handleSave} style={{ marginTop: '20px' }}>Salvar Configurações</button>
+        </div>
       </div>
     </div>
   );
