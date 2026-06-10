@@ -71,7 +71,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         position: [240, 0],
     })
     GetLeadContext = {
-        url: '={{ ($env.BACKEND_URL || "https://innovaaisolutions.com.br") + "/api/leads/context/" + ($json.body.phone || $json.body.from) }}',
+        url: '={{ ($env.BACKEND_URL || "https://agency-innova-ai-solutions.cloud") + "/api/leads/context/" + ($json.body.phone || $json.body.from) }}',
         options: {},
     };
 
@@ -112,7 +112,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     UpsertCustomerTool = {
         toolDescription: 'Cria ou atualiza o cadastro de um cliente com Nome, Email, CPF/CNPJ (document) e Endereço.',
         method: 'POST',
-        url: '={{ ($env.BACKEND_URL || "https://innovaaisolutions.com.br") + "/api/customers" }}',
+        url: '={{ ($env.BACKEND_URL || "https://agency-innova-ai-solutions.cloud") + "/api/customers" }}',
         sendBody: true,
         bodyParameters: {
             parameters: [
@@ -196,7 +196,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     })
     UpdateLeadStatus = {
         method: 'PATCH',
-        url: '={{ ($env.BACKEND_URL || "https://innovaaisolutions.com.br") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
+        url: '={{ ($env.BACKEND_URL || "https://agency-innova-ai-solutions.cloud") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
         sendBody: true,
         specifyBody: 'json',
         jsonBody: '={ "pipeline_status": "{{ $node["AI Classifier"].json.text }}" }',

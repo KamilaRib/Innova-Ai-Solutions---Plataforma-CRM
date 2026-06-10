@@ -63,7 +63,7 @@ export class LeadClassificationKanbanAutomationWorkflow {
         position: [200, 0],
     })
     GetLeadContext = {
-        url: '={{ $env.BACKEND_URL || "https://innovaaisolutions.com.br" }}/api/leads/context/{{ $json.body.phone || $json.body.from }}',
+        url: '={{ $env.BACKEND_URL || "https://agency-innova-ai-solutions.cloud" }}/api/leads/context/{{ $json.body.phone || $json.body.from }}',
         method: 'GET',
         authentication: 'none',
     };
@@ -131,7 +131,7 @@ export class LeadClassificationKanbanAutomationWorkflow {
         position: [850, -100],
     })
     UpdateLeadStatus = {
-        url: '={{ ($env.BACKEND_URL || "https://innovaaisolutions.com.br") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
+        url: '={{ ($env.BACKEND_URL || "https://agency-innova-ai-solutions.cloud") + "/api/leads/" + $node["Get Lead Context"].json.id }}',
         method: 'PATCH',
         sendBody: true,
         specifyBody: 'json',

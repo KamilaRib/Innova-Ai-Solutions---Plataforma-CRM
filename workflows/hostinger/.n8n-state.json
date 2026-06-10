@@ -1,8 +1,8 @@
 {
   "workflows": {
     "VJs1ScucIVdIneHi": {
-      "lastSyncedHash": "d69e20bce8cfd6361c468ca130eeac9ee451c406f88d2c1864898d544f71105f",
-      "lastSyncedAt": "2026-06-10T07:19:27.514Z",
+      "lastSyncedHash": "e42b8de958c72bc56bbd5f3ab144589682dc298da5ba09131c6a6665ed51cb2e",
+      "lastSyncedAt": "2026-06-10T07:31:56.733Z",
       "filename": "ai-concierge.workflow.ts"
     },
     "oZR5jgwvjDhmMwcd": {
@@ -11,8 +11,8 @@
       "filename": "google-multimodal-agent.workflow.ts"
     },
     "j8ULLJwPonA3vZrG": {
-      "lastSyncedHash": "6cd6ab41b1af709cc55a8de2587ee0adf24f26aeb5b17ae8d4690927f4282430",
-      "lastSyncedAt": "2026-06-10T07:19:46.161Z",
+      "lastSyncedHash": "916333cca072654972c9dce8b811ef6fed76101dae4e942af3d3ac44eeb7f279",
+      "lastSyncedAt": "2026-06-10T07:41:37.143Z",
       "filename": "lead-classification.workflow.ts"
     },
     "v3xHUqzbsDNBdA3E": {
