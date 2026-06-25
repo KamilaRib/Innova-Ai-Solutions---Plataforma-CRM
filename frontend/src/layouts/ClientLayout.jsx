@@ -162,10 +162,6 @@ export default function ClientLayout() {
             )}
           </div>
 
-          <NavLink onClick={closeMobile} to="/app/tasks" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-            <Calendar size={20} />
-            <span>Tarefas</span>
-          </NavLink>
 
           <NavLink onClick={closeMobile} to="/app/calendar" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <CalendarDays size={20} />
