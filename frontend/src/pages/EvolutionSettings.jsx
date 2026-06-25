@@ -29,9 +29,11 @@ const EvolutionSettings = () => {
             'apikey': formData.evolution_api_key
           },
           body: JSON.stringify({
-            url: formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2',
-            enabled: true,
-            events: formData.evolution_events || ['MESSAGES_UPSERT']
+            webhook: {
+              url: formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2',
+              enabled: true,
+              events: formData.evolution_events || ['MESSAGES_UPSERT']
+            }
           })
         });
 
