@@ -162,8 +162,8 @@ const Kanban = () => {
             onDragOver={onDragOver}
             onDrop={(e) => onDrop(e, col)}
             style={{ 
-              flexShrink: 0, width: '320px', minHeight: '650px', display: 'flex', 
-              flexDirection: 'column', padding: '20px', marginTop: 0,
+              flexShrink: 0, width: '320px', height: 'calc(100vh - 200px)', minHeight: '500px', display: 'flex', 
+              flexDirection: 'column', padding: '20px', paddingBottom: '10px', marginTop: 0,
               background: 'rgba(18, 21, 26, 0.8)',
               backdropFilter: 'blur(15px)',
               border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -178,7 +178,7 @@ const Kanban = () => {
               <span style={{ opacity: 0.5 }}>{leads.filter(l => l.pipeline_status === col).length}</span>
             </h3>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1, overflowY: 'auto', paddingRight: '5px' }}>
               {leads.filter(l => l.pipeline_status === col).map(lead => (
                 <div 
                   key={lead.id} 
