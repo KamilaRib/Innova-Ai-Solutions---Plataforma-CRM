@@ -86,9 +86,11 @@ const EvolutionSettings = () => {
       if (data.code || data.base64) {
         setQrCode(data.base64 || data.code);
         setConnectionStatus('aguardando');
-      } else if (data.status === 'open' || data.instance?.status === 'open') {
+      } else if (data.status === 'open' || data.instance?.status === 'open' || data.instance?.state === 'open' || data.state === 'open') {
         setConnectionStatus('conectado');
         setQrCode(null);
+      } else if (data.error || data.message || data.response?.message) {
+        alert(`Erro da Evolution: ${data.response?.message || data.message || data.error}`);
       } else {
         alert("O servidor respondeu, mas não enviou um QR Code. Tente novamente em instantes.");
       }
