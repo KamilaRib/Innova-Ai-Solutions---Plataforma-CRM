@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 
 const TikTokIcon = ({ size = 16, color = "currentColor" }) => (
@@ -26,7 +26,8 @@ export default function ClientLayout() {
   const [expandedGroups, setExpandedGroups] = useState({
     social: false,
     settings: false,
-    statistics: false
+    statistics: false,
+    funnels: false
   });
 
   const toggleGroup = (group) => {
@@ -134,10 +135,32 @@ export default function ClientLayout() {
             )}
           </div>
 
-          <NavLink onClick={closeMobile} to="/app/kanban" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-            <DollarSign size={20} />
-            <span>Leads</span>
-          </NavLink>
+          <div className="nav-group">
+            <div
+              className={`menu-item ${location.pathname.includes('kanban') ? 'active' : ''}`}
+              onClick={() => toggleGroup('funnels')}
+              style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Filter size={20} />
+                <span>Funis de Vendas</span>
+              </div>
+              {expandedGroups.funnels ? <ChevronDown size={14} opacity={0.5} /> : <ChevronRight size={14} opacity={0.5} />}
+            </div>
+
+            {expandedGroups.funnels && (
+              <div className="sub-menu">
+                <NavLink onClick={closeMobile} to="/app/kanban" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <Filter size={16} />
+                  <span>Funil Principal</span>
+                </NavLink>
+                <div onClick={() => alert('Em breve: Criação de múltiplos funis!')} className="sub-menu-item" style={{ cursor: 'pointer', opacity: 0.8 }}>
+                  <Plus size={16} />
+                  <span>Adicionar Funil</span>
+                </div>
+              </div>
+            )}
+          </div>
 
           <NavLink onClick={closeMobile} to="/app/tasks" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <Calendar size={20} />
