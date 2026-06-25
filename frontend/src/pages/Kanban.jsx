@@ -192,8 +192,6 @@ const Kanban = () => {
                     boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
                     border: '1px solid rgba(255,255,255,0.05)'
                   }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 >
                   <strong style={{ display: 'block', fontSize: '1.05rem', color: 'var(--color-light)', marginBottom: '8px' }}>{lead.name}</strong>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem', opacity: 0.5, marginBottom: '8px', fontFamily: 'monospace', wordBreak: 'break-all' }}>
