@@ -41,11 +41,12 @@ const SalesReport = () => {
                 ))}
             </div>
 
-            <div className="card" style={{ padding: '30px', height: '400px' }}>
+            <div className="card" style={{ padding: '30px', height: '450px', display: 'flex', flexDirection: 'column' }}>
                 <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '25px' }}>Faturamento por Canal de Origem</h3>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={salesData} layout="vertical" margin={{ left: 50 }}>
-                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
+                <div style={{ flex: 1, minHeight: 0 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={salesData} layout="vertical" margin={{ left: 50, bottom: 20, right: 20 }}>
+                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
                         <XAxis type="number" axisLine={false} tickLine={false} tick={{fill:'#94A3B8'}} />
                         <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fill:'#94A3B8'}} />
                         <Tooltip contentStyle={{ background: '#0B132B', border: 'none', borderRadius: '12px' }} />
@@ -56,6 +57,7 @@ const SalesReport = () => {
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
+                </div>
             </div>
         </div>
     );
