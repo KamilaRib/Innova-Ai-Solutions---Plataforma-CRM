@@ -238,20 +238,6 @@ const EvolutionSettings = () => {
         )}
       </div>
 
-      {/* DICAS PARA DOCKER LOCAL */}
-      <div className="card" style={{ marginTop: '30px', background: 'rgba(34, 197, 94, 0.02)' }}>
-        <h4 style={{ color: 'var(--color-accent-green)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <AlertCircle size={16} />
-          Dicas para Evolution em Docker Local
-        </h4>
-        <ul style={{ fontSize: '0.85rem', opacity: 0.7, paddingLeft: '20px', lineHeight: '1.8' }}>
-          <li>Certifique-se de que o container <strong>evolution_api</strong> está rodando (<code>docker ps</code>).</li>
-          <li>A URL padrão geralmente é <code>http://localhost:8080</code>.</li>
-          <li>Verifique se o <strong>AUTHENTICATION_GLOBAL_KEY</strong> no seu .env coincide com a API Key acima.</li>
-          <li>Se der erro de conexão, verifique se a variável <code>CORS_ORIGIN=*</code> está ativa no seu .env da Evolution.</li>
-        </ul>
-      </div>
-
       <style>{`
         @keyframes spin {
           from { transform: rotate(0deg); }
