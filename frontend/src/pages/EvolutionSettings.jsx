@@ -38,7 +38,7 @@ const EvolutionSettings = () => {
         });
 
         const data = await response.json();
-        if (data.status === 200 || data.success) {
+        if (response.ok || data.id || data.status === 200 || data.success) {
           alert("Configurações salvas e Webhook ativo na Evolution!");
         } else {
           alert("Configurações salvas no CRM, mas houve um erro ao ativar o Webhook na Evolution. Verifique a URL.");
