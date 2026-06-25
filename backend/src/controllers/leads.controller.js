@@ -102,7 +102,20 @@ const getLeadContextByPhone = async (req, res) => {
 const updateLeadStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { pipeline_status } = req.body;
+    let { pipeline_status } = req.body;
+
+    // Mapeamento secreto de ID numérico para o nome real da etapa (n8n usa o número)
+    const statusMap = {
+      '1': 'Início de Atendimento',
+      '2': 'Conversando',
+      '3': 'Agendamento',
+      '4': 'Formulário Enviado',
+      '5': 'Follow Up'
+    };
+
+    if (pipeline_status && statusMap[pipeline_status]) {
+      pipeline_status = statusMap[pipeline_status];
+    }
 
     const lead = await prisma.lead.update({
       where: { id },

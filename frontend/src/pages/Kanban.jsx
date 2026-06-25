@@ -173,16 +173,10 @@ const Kanban = () => {
             }}
           >
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '5px', background: 'linear-gradient(90deg, #22c55e, #4ade80, #22c55e)', opacity: 0.9 }}></div>
-            <h3 style={{ fontSize: '0.9rem', marginBottom: '10px', paddingBottom: '15px', display: 'flex', justifyContent: 'space-between' }}>
+            <h3 style={{ fontSize: '0.9rem', marginBottom: '20px', borderBottom: '2px solid rgba(255,255,255,0.1)', paddingBottom: '15px', display: 'flex', justifyContent: 'space-between' }}>
               <span>{col}</span>
               <span style={{ opacity: 0.5 }}>{leads.filter(l => l.pipeline_status === col).length}</span>
             </h3>
-            <div style={{ marginBottom: '20px', borderBottom: '2px solid rgba(255,255,255,0.1)', paddingBottom: '15px' }}>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '5px 10px', borderRadius: '6px', fontSize: '0.7rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ opacity: 0.6 }}>ID p/ n8n:</span>
-                <span style={{ fontFamily: 'monospace', color: 'var(--color-accent-green)' }}>"{col}"</span>
-              </div>
-            </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
               {leads.filter(l => l.pipeline_status === col).map(lead => (
