@@ -106,7 +106,7 @@ const EvolutionSettings = () => {
       <p style={{ opacity: 0.8, marginBottom: '30px' }}>Gerencie suas instâncias de WhatsApp e conecte novas contas.</p>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {false && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', alignItems: 'start' }}>
 
           {/* CONFIGURAÇÕES TÉCNICAS */}
           <div className="card">
@@ -184,7 +184,7 @@ const EvolutionSettings = () => {
               ATUALIZAR WEBHOOK NA EVOLUTION
             </button>
           </div>
-        </div>}
+        </div>
 
         {/* QR CODE E STATUS */}
         {(qrCode || connectionStatus === 'conectado') && (
@@ -237,7 +237,7 @@ const EvolutionSettings = () => {
       </div>
 
       {/* DICAS PARA DOCKER LOCAL */}
-      {false && <div className="card" style={{ marginTop: '30px', background: 'rgba(34, 197, 94, 0.02)' }}>
+      <div className="card" style={{ marginTop: '30px', background: 'rgba(34, 197, 94, 0.02)' }}>
         <h4 style={{ color: 'var(--color-accent-green)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <AlertCircle size={16} />
           Dicas para Evolution em Docker Local
@@ -248,7 +248,7 @@ const EvolutionSettings = () => {
           <li>Verifique se o <strong>AUTHENTICATION_GLOBAL_KEY</strong> no seu .env coincide com a API Key acima.</li>
           <li>Se der erro de conexão, verifique se a variável <code>CORS_ORIGIN=*</code> está ativa no seu .env da Evolution.</li>
         </ul>
-      </div>}
+      </div>
 
       <style>{`
         @keyframes spin {
