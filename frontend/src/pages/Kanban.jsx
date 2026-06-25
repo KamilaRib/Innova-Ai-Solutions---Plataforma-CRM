@@ -26,13 +26,39 @@ const StatusLegend = () => (
 const Kanban = () => {
   const [isManualMode, setIsManualMode] = useState(false);
   const [leads, setLeads] = useState([]);
+  const [funnels, setFunnels] = useState([]);
+  const [selectedFunnel, setSelectedFunnel] = useState(null);
   const [loading, setLoading] = useState(true);
   
   const columns = ['Início de Atendimento', 'Conversando', 'Agendamento', 'Formulário Enviado', 'Follow Up'];
 
+  const fetchFunnels = async () => {
+    try {
+      const response = await fetch('https://innovaisolutions.com.br/api/funnels');
+      const result = await response.json();
+      if (result.success && result.data.length > 0) {
+        setFunnels(result.data);
+        if (!selectedFunnel) {
+          // Seleciona o primeiro funil por padrão ou o funil principal
+          const defaultFunnel = result.data.find(f => f.is_default) || result.data[0];
+          setSelectedFunnel(defaultFunnel.id);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao buscar funis:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFunnels();
+  }, []);
+
   const fetchLeads = async () => {
     try {
-      const response = await fetch('https://innovaisolutions.com.br/api/leads');
+      const url = selectedFunnel 
+        ? `https://innovaisolutions.com.br/api/leads?funnel_id=${selectedFunnel}`
+        : 'https://innovaisolutions.com.br/api/leads';
+      const response = await fetch(url);
       const result = await response.json();
       if (result.success) {
         setLeads(result.data);
@@ -45,10 +71,12 @@ const Kanban = () => {
   };
 
   useEffect(() => {
-    fetchLeads();
-    const interval = setInterval(fetchLeads, 10000); // Atualiza a cada 10s
-    return () => clearInterval(interval);
-  }, []);
+    if (selectedFunnel || funnels.length === 0) {
+      fetchLeads();
+      const interval = setInterval(fetchLeads, 10000); // Atualiza a cada 10s
+      return () => clearInterval(interval);
+    }
+  }, [selectedFunnel, funnels.length]);
 
   const onDragStart = (e, leadId) => {
     e.dataTransfer.setData('leadId', leadId);
@@ -105,6 +133,25 @@ const Kanban = () => {
           {isManualMode ? 'DESATIVAR MODO MANUAL' : 'ATIVAR MODO MANUAL'}
         </button>
       </header>
+
+      {funnels.length > 0 && (
+        <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <span style={{ fontSize: '0.85rem', opacity: 0.7, fontWeight: 'bold' }}>SELECIONAR FUNIL:</span>
+          <select 
+            value={selectedFunnel || ''} 
+            onChange={e => setSelectedFunnel(e.target.value)}
+            style={{ 
+              padding: '10px 15px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', 
+              color: '#fff', border: '1px solid rgba(255,255,255,0.1)', outline: 'none', cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            {funnels.map(f => (
+              <option key={f.id} value={f.id} style={{ color: '#000' }}>{f.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
       
       <StatusLegend />
       
@@ -144,8 +191,11 @@ const Kanban = () => {
                   onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 >
                   <strong style={{ display: 'block', fontSize: '1.05rem', color: 'var(--color-light)', marginBottom: '8px' }}>{lead.name}</strong>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem', opacity: 0.5, marginBottom: '8px', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                     ID: {lead.id}
+                  </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', opacity: 0.8, marginBottom: '4px' }}>
-                     👤 {lead.contact}
+                     👤 {lead.contact || 'Contato'}
                   </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', opacity: 0.8, marginBottom: '10px' }}>
                      📱 {lead.phone}

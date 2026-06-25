@@ -50,7 +50,11 @@ const getStats = async (req, res) => {
  */
 const getAll = async (req, res) => {
   try {
+    const { funnel_id } = req.query;
+    const whereClause = funnel_id ? { funnel_id } : {};
+
     const leads = await prisma.lead.findMany({
+      where: whereClause,
       orderBy: { last_contacted_at: 'desc' }
     });
     res.status(200).json({ success: true, data: leads });

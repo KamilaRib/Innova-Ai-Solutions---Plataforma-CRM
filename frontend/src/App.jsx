@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import ClientLayout from './layouts/ClientLayout';
 import Dashboard from './pages/Dashboard';
 import Kanban from './pages/Kanban';
+import FunnelsConfig from './pages/FunnelsConfig';
 import Statistics from './pages/Statistics';
 import ROIReport from './pages/ROIReport';
 import GoalsReport from './pages/GoalsReport';
@@ -46,6 +47,7 @@ const App = () => {
             <Route path="analysis/activities" element={<ActivitiesReport />} />
             <Route path="analysis/goals" element={<GoalsReport />} />
             <Route path="kanban" element={<Kanban />} />
+            <Route path="funnels" element={<FunnelsConfig />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="calendar" element={<ContentCalendar />} />
             <Route path="creatives" element={<CreativeCatalog />} />

@@ -14,7 +14,7 @@ const EvolutionSettings = () => {
   }, [settings]);
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
@@ -107,17 +107,17 @@ const EvolutionSettings = () => {
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {false && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', alignItems: 'start' }}>
-          
+
           {/* CONFIGURAÇÕES TÉCNICAS */}
           <div className="card">
             <h3 style={{ color: 'var(--color-accent-green)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Send size={18} />
               Configurações do Servidor
             </h3>
-            
+
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>URL do Servidor Evolution</label>
             <input className="input-field" type="url" name="evolution_api_url" value={formData.evolution_api_url || 'http://localhost:8080'} onChange={handleChange} placeholder="http://localhost:8080" />
-            
+
             <div style={{ marginTop: '15px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>API Key (Token Global)</label>
               <input className="input-field" type="password" name="evolution_api_key" value={formData.evolution_api_key || ''} onChange={handleChange} autoComplete="off" />
@@ -138,14 +138,14 @@ const EvolutionSettings = () => {
             <h3 style={{ color: 'var(--color-accent-cyan)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Zap size={20} /> Automação (Webhook)
             </h3>
-            
+
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>URL do Webhook (n8n)</label>
-            <input 
-              className="input-field" 
-              type="url" 
-              name="evolution_webhook_url" 
-              value={formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2'} 
-              onChange={handleChange} 
+            <input
+              className="input-field"
+              type="url"
+              name="evolution_webhook_url"
+              value={formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2'}
+              onChange={handleChange}
               placeholder="https://n8n.agency-innova-ai-solutions.cloud/webhook/..."
             />
 
@@ -158,20 +158,20 @@ const EvolutionSettings = () => {
                   { id: 'PRESENCE_UPDATE', label: 'Status Online/Digitando' },
                   { id: 'CONTACTS_UPSERT', label: 'Sincronizar Contatos' }
                 ].map(event => (
-                  <label key={event.id} style={{ 
-                    display: 'flex', alignItems: 'center', gap: '10px', 
+                  <label key={event.id} style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
                     background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px',
                     cursor: 'pointer', fontSize: '0.8rem'
                   }}>
-                    <input 
-                      type="checkbox" 
-                      checked={formData.evolution_events?.includes(event.id)} 
+                    <input
+                      type="checkbox"
+                      checked={formData.evolution_events?.includes(event.id)}
                       onChange={(e) => {
                         const events = formData.evolution_events || [];
-                        const newEvents = e.target.checked 
-                          ? [...events, event.id] 
+                        const newEvents = e.target.checked
+                          ? [...events, event.id]
                           : events.filter(id => id !== event.id);
-                        setFormData({...formData, evolution_events: newEvents});
+                        setFormData({ ...formData, evolution_events: newEvents });
                       }}
                     />
                     {event.label}
@@ -192,7 +192,7 @@ const EvolutionSettings = () => {
             <h3 style={{ color: 'var(--color-accent-green)', marginBottom: '20px' }}>
               Conectar WhatsApp
             </h3>
-            
+
             {connectionStatus === 'conectado' ? (
               <div style={{ padding: '40px 20px' }}>
                 <CheckCircle2 size={60} color="#22c55e" style={{ marginBottom: '15px' }} />
@@ -221,9 +221,9 @@ const EvolutionSettings = () => {
 
         {/* BOTÃO PARA GERAR QR CODE (CASO NÃO ESTEJA EXIBIDO) */}
         {!qrCode && connectionStatus !== 'conectado' && (
-          <button 
-            className="btn-primary" 
-            onClick={fetchQRCode} 
+          <button
+            className="btn-primary"
+            onClick={fetchQRCode}
             disabled={loading}
             style={{ marginTop: '20px', width: '100%', background: 'linear-gradient(90deg, #25D366 0%, #128C7E 100%)', border: 'none' }}
           >

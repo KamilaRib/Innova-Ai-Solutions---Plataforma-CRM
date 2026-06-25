@@ -154,10 +154,10 @@ export default function ClientLayout() {
                   <Filter size={16} />
                   <span>Funil Principal</span>
                 </NavLink>
-                <div onClick={() => alert('Em breve: Criação de múltiplos funis!')} className="sub-menu-item" style={{ cursor: 'pointer', opacity: 0.8 }}>
+                <NavLink onClick={closeMobile} to="/app/funnels" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Plus size={16} />
                   <span>Adicionar Funil</span>
-                </div>
+                </NavLink>
               </div>
             )}
           </div>

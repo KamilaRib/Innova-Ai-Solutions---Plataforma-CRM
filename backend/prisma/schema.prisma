@@ -69,11 +69,23 @@ model Lead {
   next_followup_date DateTime?
   is_bot_paused      Boolean           @default(false)
   connection_id      String?           // Vínculo com a conta social específica
+  funnel_id          String?           // Vínculo com o funil
   
   social_connection  SocialConnection? @relation(fields: [connection_id], references: [id])
+  funnel             Funnel?           @relation(fields: [funnel_id], references: [id])
   messages           Message[]
   customer           Customer?         @relation(fields: [customer_id], references: [id])
   customer_id        String?           @unique
+}
+
+model Funnel {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  is_default  Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  leads       Lead[]
 }
 
 model Customer {

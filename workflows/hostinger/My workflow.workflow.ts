@@ -1,13 +1,17 @@
 import { workflow, node, links } from '@n8n-as-code/transformer';
 
 // <workflow-map>
-// Workflow : AI Agent Concierge & Lead Classification
-// Nodes   : 10  |  Connections: 6
+// Workflow : My workflow
+// Nodes   : 14  |  Connections: 10
 //
 // NODE INDEX
 // ──────────────────────────────────────────────────────────────────
 // Property name                    Node type (short)         Flags
 // Webhook                            webhook
+// CheckCommand                       if
+// GetCrmStats                        httpRequest
+// FormatMetricsMessage               code
+// SendWhatsappResponse               httpRequest
 // GetLeadContext                     httpRequest
 // AiAgent                            agent                      [AI]
 // Memory                             memoryBufferWindow         [ai_memory]
@@ -21,12 +25,16 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 // ROUTING MAP
 // ──────────────────────────────────────────────────────────────────
 // Webhook
-//    → GetLeadContext
-//      → AiAgent
-//        → AiClassifier
-//          → CheckStageChange
-//            → UpdateLeadStatus
-//              → GoogleCalendar
+//    → CheckCommand
+//      → GetCrmStats
+//        → FormatMetricsMessage
+//          → SendWhatsappResponse
+//     .out(1) → GetLeadContext
+//        → AiAgent
+//          → AiClassifier
+//            → CheckStageChange
+//              → UpdateLeadStatus
+//                → GoogleCalendar
 //
 // AI CONNECTIONS
 // AiAgent.uses({ ai_languageModel: OpenaiChatModel, ai_memory: Memory, ai_tool: [UpsertCustomerTool] })
@@ -38,29 +46,132 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 // =====================================================================
 
 @workflow({
-    id: 'VJs1ScucIVdIneHi',
-    name: 'AI Agent Concierge & Lead Classification',
+    id: 'hsbioJ8U0OmoxXKx',
+    name: 'My workflow',
     active: false,
     isArchived: false,
-    settings: { executionOrder: 'v1', availableInMCP: true, callerPolicy: 'workflowsFromSameOwner' },
+    settings: { executionOrder: 'v1', callerPolicy: 'workflowsFromSameOwner', availableInMCP: false },
 })
-export class AiAgentConciergeLeadClassificationWorkflow {
+export class MyWorkflow {
     // =====================================================================
     // CONFIGURATION DES NOEUDS
     // =====================================================================
 
     @node({
-        id: '68719200-1e0c-4835-9449-25e35c6d178d',
-        webhookId: '34160047-3549-43c3-a554-b331e885228a',
+        id: '80202769-6b94-4ad6-a83e-ae67e6860cc2',
+        webhookId: '9ca628b7-b9ae-4edc-9694-0254b3312c4d',
         name: 'Webhook',
         type: 'n8n-nodes-base.webhook',
-        version: 1.1,
-        position: [0, 0],
+        version: 2.1,
+        position: [-400, -80],
     })
     Webhook = {
         httpMethod: 'POST',
-        path: 'lead-message-v2',
+        path: '9ca628b7-b9ae-4edc-9694-0254b3312c4d',
         options: {},
+    };
+
+    @node({
+        id: '9ce8fd82-9cb5-4e3a-86b3-de0192372c84',
+        name: 'Check Command',
+        type: 'n8n-nodes-base.if',
+        version: 2.2,
+        position: [-150, -80],
+    })
+    CheckCommand = {
+        conditions: {
+            options: {
+                version: 2,
+                caseSensitive: false,
+                typeValidation: 'loose',
+            },
+            conditions: [
+                {
+                    id: 'is-metrics-slash',
+                    leftValue:
+                        '={{ $json.body.message?.conversation || $json.body.message?.extendedTextMessage?.text || $json.body.message || $json.body.text || "" }}',
+                    rightValue: '/metricas',
+                    operator: {
+                        type: 'string',
+                        operation: 'equals',
+                    },
+                },
+                {
+                    id: 'is-metrics',
+                    leftValue:
+                        '={{ $json.body.message?.conversation || $json.body.message?.extendedTextMessage?.text || $json.body.message || $json.body.text || "" }}',
+                    rightValue: 'Métricas',
+                    operator: {
+                        type: 'string',
+                        operation: 'equals',
+                    },
+                },
+            ],
+            combinator: 'or',
+        },
+    };
+
+    @node({
+        id: 'f8d387f3-e5d3-4837-975d-384df882d921',
+        name: 'Get CRM Stats',
+        type: 'n8n-nodes-base.httpRequest',
+        version: 4.4,
+        position: [100, -250],
+    })
+    GetCrmStats = {
+        method: 'GET',
+        url: 'https://agency-innova-ai-solutions.cloud/api/leads/stats',
+        authentication: 'none',
+    };
+
+    @node({
+        id: '7d3e23f9-7cc4-4a4e-be89-53e3df774a32',
+        name: 'Format Metrics Message',
+        type: 'n8n-nodes-base.code',
+        version: 2,
+        position: [330, -250],
+    })
+    FormatMetricsMessage = {
+        mode: 'runOnceForAllItems',
+        language: 'javaScript',
+        jsCode: `
+const stats = $input.first().json.data;
+const total = stats?.totalLeads || 0;
+const ativos = stats?.leadsAtivos || 0;
+const ganhos = stats?.leadsGanhos || 0;
+const perdidos = stats?.leadsPerdidos || 0;
+const mensagens = stats?.totalMessages || 0;
+
+const formattedText = "📊 *MÉTRICAS DO CRM EM TEMPO REAL* 📊\\n\\n" +
+  "👤 *Total de Leads:* " + total + "\\n" +
+  "⚡ *Leads Ativos (Funil):* " + ativos + "\\n" +
+  "🏆 *Leads Ganhos:* " + ganhos + "\\n" +
+  "❌ *Leads Perdidos:* " + perdidos + "\\n" +
+  "💬 *Mensagens Hoje:* " + mensagens + "\\n\\n" +
+  "🕒 _Atualizado às: " + new Date().toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo'}) + " (BRT)_";
+
+return [{ json: { formattedText } }];
+`,
+    };
+
+    @node({
+        id: 'b8d92cf8-57fd-4e89-9a2e-83df24ef6c54',
+        name: 'Send WhatsApp Response',
+        type: 'n8n-nodes-base.httpRequest',
+        version: 4.4,
+        position: [560, -250],
+    })
+    SendWhatsappResponse = {
+        method: 'POST',
+        url: '={{ ($env.EVOLUTION_API_URL || "https://evolution.agency-innova-ai-solutions.cloud") + "/message/sendText/" + ($env.EVOLUTION_INSTANCE_NAME || "F64EE7FB7560-4ABD-82FA-2356ADD1AE00") }}',
+        sendHeaders: true,
+        specifyHeaders: 'json',
+        jsonHeaders: '={ "apikey": "{{ $env.EVOLUTION_API_KEY || "innova_secret_key" }}" }',
+        sendBody: true,
+        contentType: 'json',
+        specifyBody: 'json',
+        jsonBody:
+            '={ "number": "{{ $node["Webhook"].json.body.phone || $node["Webhook"].json.body.from || $node["Webhook"].json.body.key?.remoteJid || $node["Webhook"].json.body.data?.key?.remoteJid }}", "text": "{{ $node["Format Metrics Message"].json.formattedText }}", "textMessage": { "text": "{{ $node["Format Metrics Message"].json.formattedText }}" }, "options": { "delay": 1000, "presence": "composing", "linkPreview": false } }',
     };
 
     @node({
@@ -68,7 +179,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Get Lead Context',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.1,
-        position: [240, 0],
+        position: [100, 50],
     })
     GetLeadContext = {
         url: '={{ ($env.BACKEND_URL || "https://agency-innova-ai-solutions.cloud") + "/api/leads/context/" + ($json.body.phone || $json.body.from) }}',
@@ -80,7 +191,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'AI Agent',
         type: '@n8n/n8n-nodes-langchain.agent',
         version: 3.1,
-        position: [464, 0],
+        position: [330, 50],
     })
     AiAgent = {
         promptType: 'define',
@@ -96,7 +207,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Memory',
         type: '@n8n/n8n-nodes-langchain.memoryBufferWindow',
         version: 1.3,
-        position: [544, 224],
+        position: [400, 250],
     })
     Memory = {
         sessionKey: 'chat_history',
@@ -107,7 +218,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Upsert Customer Tool',
         type: 'n8n-nodes-base.httpRequestTool',
         version: 4.4,
-        position: [672, 224],
+        position: [530, 250],
     })
     UpsertCustomerTool = {
         toolDescription: 'Cria ou atualiza o cadastro de um cliente com Nome, Email, CPF/CNPJ (document) e Endereço.',
@@ -150,7 +261,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'AI Classifier',
         type: '@n8n/n8n-nodes-langchain.chainLlm',
         version: 1.4,
-        position: [752, 0],
+        position: [560, 50],
     })
     AiClassifier = {
         promptType: 'define',
@@ -162,7 +273,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Check Stage Change',
         type: 'n8n-nodes-base.if',
         version: 2,
-        position: [1088, 0],
+        position: [800, 50],
     })
     CheckStageChange = {
         conditions: {
@@ -192,7 +303,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Update Lead Status',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.1,
-        position: [1344, -32],
+        position: [1030, 20],
     })
     UpdateLeadStatus = {
         method: 'PATCH',
@@ -208,7 +319,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'Google Calendar',
         type: 'n8n-nodes-base.googleCalendar',
         version: 1.3,
-        position: [1584, -32],
+        position: [1260, 20],
     })
     GoogleCalendar = {
         calendar: {
@@ -227,7 +338,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
         name: 'OpenAI Chat Model',
         type: '@n8n/n8n-nodes-langchain.lmChatOpenAi',
         version: 1.3,
-        position: [384, 224],
+        position: [250, 250],
         credentials: { openAiApi: { id: 'qkfeOXkBjp68AZvf', name: 'OpenAi account' } },
     })
     OpenaiChatModel = {
@@ -247,7 +358,11 @@ export class AiAgentConciergeLeadClassificationWorkflow {
 
     @links()
     defineRouting() {
-        this.Webhook.out(0).to(this.GetLeadContext.in(0));
+        this.Webhook.out(0).to(this.CheckCommand.in(0));
+        this.CheckCommand.out(0).to(this.GetCrmStats.in(0));
+        this.CheckCommand.out(1).to(this.GetLeadContext.in(0));
+        this.GetCrmStats.out(0).to(this.FormatMetricsMessage.in(0));
+        this.FormatMetricsMessage.out(0).to(this.SendWhatsappResponse.in(0));
         this.GetLeadContext.out(0).to(this.AiAgent.in(0));
         this.AiAgent.out(0).to(this.AiClassifier.in(0));
         this.AiClassifier.out(0).to(this.CheckStageChange.in(0));
