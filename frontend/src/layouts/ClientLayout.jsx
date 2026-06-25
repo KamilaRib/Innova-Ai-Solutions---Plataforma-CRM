@@ -87,7 +87,7 @@ export default function ClientLayout() {
           </button>
         </div>
 
-        <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <nav className="custom-scroll" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', paddingRight: '10px' }}>
 
           {userRole !== 'USER' && (
             <NavLink onClick={closeMobile} to="/app/dashboard" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
