@@ -44,7 +44,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('https://innovaisolutions.com.br/api/leads/stats');
+        const response = await fetch('/api/leads/stats');
         const result = await response.json();
         if (result.success) {
           setStats(result.data);

@@ -8,7 +8,7 @@ const FunnelsConfig = () => {
 
   const fetchFunnels = async () => {
     try {
-      const res = await fetch('https://innovaisolutions.com.br/api/funnels');
+      const res = await fetch('/api/funnels');
       const data = await res.json();
       if (data.success) {
         setFunnels(data.data);
@@ -26,7 +26,7 @@ const FunnelsConfig = () => {
     if (!newFunnelName) return;
     setLoading(true);
     try {
-      const res = await fetch('https://innovaisolutions.com.br/api/funnels', {
+      const res = await fetch('/api/funnels', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newFunnelName })
@@ -48,7 +48,7 @@ const FunnelsConfig = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Tem certeza que deseja excluir este funil? Ele não pode conter leads.')) return;
     try {
-      const res = await fetch(`https://innovaisolutions.com.br/api/funnels/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/funnels/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         fetchFunnels();

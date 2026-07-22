@@ -8,7 +8,7 @@ const BaseContatos = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await fetch('https://innovaisolutions.com.br/api/leads');
+      const response = await fetch('/api/leads');
       const result = await response.json();
       if (result.success) {
         setLeads(result.data);

@@ -34,7 +34,7 @@ const Kanban = () => {
 
   const fetchFunnels = async () => {
     try {
-      const response = await fetch('https://innovaisolutions.com.br/api/funnels');
+      const response = await fetch('/api/funnels');
       const result = await response.json();
       if (result.success && result.data.length > 0) {
         setFunnels(result.data);
@@ -55,9 +55,9 @@ const Kanban = () => {
 
   const fetchLeads = async () => {
     try {
-      const url = selectedFunnel 
-        ? `https://innovaisolutions.com.br/api/leads?funnel_id=${selectedFunnel}`
-        : 'https://innovaisolutions.com.br/api/leads';
+      const url = selectedFunnel
+        ? `/api/leads?funnel_id=${selectedFunnel}`
+        : '/api/leads';
       const response = await fetch(url);
       const result = await response.json();
       if (result.success) {
@@ -95,7 +95,7 @@ const Kanban = () => {
     ));
 
     try {
-      await fetch(`https://innovaisolutions.com.br/api/leads/${leadId}`, {
+      await fetch(`/api/leads/${leadId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pipeline_status: newStatus })

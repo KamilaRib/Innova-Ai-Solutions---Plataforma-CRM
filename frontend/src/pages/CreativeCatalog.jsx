@@ -20,7 +20,7 @@ const CreativeCatalog = () => {
 
   const fetchCreatives = async () => {
     try {
-      const response = await fetch('https://innovaisolutions.com.br/api/catalog/creatives');
+      const response = await fetch('/api/catalog/creatives');
       const result = await response.json();
       if (result.success) setCreatives(result.data);
     } catch (error) {
@@ -60,9 +60,9 @@ const CreativeCatalog = () => {
     }
 
     try {
-      const url = editingItem 
-        ? `https://innovaisolutions.com.br/api/catalog/creatives/${editingItem.id}`
-        : 'https://innovaisolutions.com.br/api/catalog/creatives';
+      const url = editingItem
+        ? `/api/catalog/creatives/${editingItem.id}`
+        : '/api/catalog/creatives';
       
       const method = editingItem ? 'PATCH' : 'POST';
 
@@ -85,7 +85,7 @@ const CreativeCatalog = () => {
     if (!window.confirm("Tem certeza que deseja excluir este ativo?")) return;
     
     try {
-      const response = await fetch(`https://innovaisolutions.com.br/api/catalog/creatives/${id}`, {
+      const response = await fetch(`/api/catalog/creatives/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) fetchCreatives();

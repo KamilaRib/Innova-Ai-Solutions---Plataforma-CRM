@@ -10,7 +10,7 @@ const ProductCatalog = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('https://innovaisolutions.com.br/api/catalog/products');
+      const response = await fetch('/api/catalog/products');
       const result = await response.json();
       if (result.success) setProducts(result.data);
     } catch (error) {
@@ -47,9 +47,9 @@ const ProductCatalog = () => {
     }
 
     try {
-      const url = editingProduct 
-        ? `https://innovaisolutions.com.br/api/catalog/products/${editingProduct.id}`
-        : 'https://innovaisolutions.com.br/api/catalog/products';
+      const url = editingProduct
+        ? `/api/catalog/products/${editingProduct.id}`
+        : '/api/catalog/products';
       
       const method = editingProduct ? 'PATCH' : 'POST';
 
@@ -72,7 +72,7 @@ const ProductCatalog = () => {
     if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
     
     try {
-      const response = await fetch(`https://innovaisolutions.com.br/api/catalog/products/${id}`, {
+      const response = await fetch(`/api/catalog/products/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) fetchProducts();
