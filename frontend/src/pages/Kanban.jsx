@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { mockLeads } from '../data/mockData';
-import { Star, Clock, ShieldAlert, Zap, Settings2 } from 'lucide-react';
+import { Star, Clock, ShieldAlert, Zap, Settings2, DollarSign, X } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const StatusLegend = () => (
   <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', flexWrap: 'wrap', padding: '10px 0' }}>
@@ -29,12 +30,17 @@ const Kanban = () => {
   const [funnels, setFunnels] = useState([]);
   const [selectedFunnel, setSelectedFunnel] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [billingLead, setBillingLead] = useState(null);
+  const [billingForm, setBillingForm] = useState({ description: '', amount: '' });
+  const [billingLoading, setBillingLoading] = useState(false);
+  const [billingError, setBillingError] = useState('');
+  const [billingResult, setBillingResult] = useState(null);
   
   const columns = ['Início de Atendimento', 'Conversando', 'Agendamento', 'Formulário Enviado', 'Follow Up'];
 
   const fetchFunnels = async () => {
     try {
-      const response = await fetch('/api/funnels');
+      const response = await apiFetch('/api/funnels');
       const result = await response.json();
       if (result.success && result.data.length > 0) {
         setFunnels(result.data);
@@ -77,6 +83,46 @@ const Kanban = () => {
       return () => clearInterval(interval);
     }
   }, [selectedFunnel, funnels.length]);
+
+  const openBillingModal = (lead) => {
+    setBillingLead(lead);
+    setBillingForm({ description: '', amount: '' });
+    setBillingError('');
+    setBillingResult(null);
+  };
+
+  const closeBillingModal = () => {
+    setBillingLead(null);
+    setBillingResult(null);
+  };
+
+  const handleCreateInvoice = async (e) => {
+    e.preventDefault();
+    if (!billingForm.description || !billingForm.amount) return;
+
+    setBillingLoading(true);
+    setBillingError('');
+    try {
+      const response = await apiFetch('/api/billing/invoices', {
+        method: 'POST',
+        body: JSON.stringify({
+          lead_id: billingLead.id,
+          description: billingForm.description,
+          amount: Number(billingForm.amount)
+        })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        setBillingError(data.error || 'Erro ao criar fatura.');
+        return;
+      }
+      setBillingResult(data.data);
+    } catch (error) {
+      setBillingError('Erro ao conectar com o servidor.');
+    } finally {
+      setBillingLoading(false);
+    }
+  };
 
   const onDragStart = (e, leadId) => {
     e.dataTransfer.setData('leadId', leadId);
@@ -211,7 +257,7 @@ const Kanban = () => {
                   </div>
 
                   {/* FEEDBACK DO CLIENTE (ESTRELAS) */}
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                     <small style={{ fontSize: '0.65rem', opacity: 0.4, textTransform: 'uppercase' }}>Feedback</small>
                     <div style={{ display: 'flex', gap: '2px' }}>
                       {[1,2,3,4,5].map(s => (
@@ -219,12 +265,95 @@ const Kanban = () => {
                       ))}
                     </div>
                   </div>
+
+                  <button
+                    onClick={() => openBillingModal(lead)}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)',
+                      color: 'var(--color-accent-green)', padding: '8px', borderRadius: '8px',
+                      fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer'
+                    }}
+                  >
+                    <DollarSign size={14} /> FECHAR VENDA
+                  </button>
                 </div>
               ))}
             </div>
           </div>
         ))}
       </div>
+
+      {billingLead && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
+          <div className="card" style={{ width: '450px', padding: '30px', borderTop: '4px solid var(--color-accent-green)', background: '#0a0a0a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ color: 'var(--color-accent-green)', margin: 0 }}>Fechar Venda</h2>
+              <button onClick={closeBillingModal} style={{ background: 'none', border: 'none', color: '#fff', opacity: 0.5, cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {!billingResult ? (
+              <form onSubmit={handleCreateInvoice}>
+                <p style={{ opacity: 0.6, fontSize: '0.85rem', marginBottom: '20px' }}>
+                  Gera uma fatura no Stripe para <strong>{billingLead.name}</strong> e envia o link de pagamento (com cálculo de imposto automático).
+                </p>
+
+                <label style={{ display: 'block', marginBottom: '8px', opacity: 0.6 }}>Descrição</label>
+                <input
+                  className="input-field"
+                  placeholder="Ex: Implementação de IA — Pacote Essencial"
+                  value={billingForm.description}
+                  onChange={e => setBillingForm({ ...billingForm, description: e.target.value })}
+                  style={{ marginBottom: '15px' }}
+                  required
+                />
+
+                <label style={{ display: 'block', marginBottom: '8px', opacity: 0.6 }}>Valor (R$)</label>
+                <input
+                  className="input-field"
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  placeholder="0,00"
+                  value={billingForm.amount}
+                  onChange={e => setBillingForm({ ...billingForm, amount: e.target.value })}
+                  style={{ marginBottom: '20px' }}
+                  required
+                />
+
+                {billingError && (
+                  <p style={{ color: '#f87171', fontSize: '0.85rem', marginBottom: '15px' }}>{billingError}</p>
+                )}
+
+                <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={billingLoading}>
+                  {billingLoading ? 'GERANDO FATURA...' : 'GERAR FATURA E ENVIAR'}
+                </button>
+              </form>
+            ) : (
+              <div>
+                <p style={{ color: 'var(--color-accent-green)', marginBottom: '15px' }}>
+                  Fatura criada e enviada com sucesso!
+                </p>
+                {billingResult.hosted_invoice_url && (
+                  <a
+                    href={billingResult.hosted_invoice_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'block', wordBreak: 'break-all', color: 'var(--color-accent-cyan)', marginBottom: '20px', fontSize: '0.85rem' }}
+                  >
+                    {billingResult.hosted_invoice_url}
+                  </a>
+                )}
+                <button className="btn-primary" style={{ width: '100%' }} onClick={closeBillingModal}>
+                  FECHAR
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

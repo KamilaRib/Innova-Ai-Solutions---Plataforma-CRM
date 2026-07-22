@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Filter, Plus, Trash2 } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const FunnelsConfig = () => {
   const [funnels, setFunnels] = useState([]);
@@ -8,7 +9,7 @@ const FunnelsConfig = () => {
 
   const fetchFunnels = async () => {
     try {
-      const res = await fetch('/api/funnels');
+      const res = await apiFetch('/api/funnels');
       const data = await res.json();
       if (data.success) {
         setFunnels(data.data);
@@ -26,9 +27,8 @@ const FunnelsConfig = () => {
     if (!newFunnelName) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/funnels', {
+      const res = await apiFetch('/api/funnels', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newFunnelName })
       });
       const data = await res.json();
@@ -48,7 +48,7 @@ const FunnelsConfig = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Tem certeza que deseja excluir este funil? Ele não pode conter leads.')) return;
     try {
-      const res = await fetch(`/api/funnels/${id}`, { method: 'DELETE' });
+      const res = await apiFetch(`/api/funnels/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         fetchFunnels();

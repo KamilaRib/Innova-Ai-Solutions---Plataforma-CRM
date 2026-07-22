@@ -29,16 +29,19 @@ import ProductCatalog from './pages/ProductCatalog';
 import AISettings from './pages/AISettings';
 import UserManagement from './pages/UserManagement';
 import { SettingsProvider } from './context/SettingsContext';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
+    <AuthProvider>
     <SettingsProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           {/* Páginas institucionais movidas para o projeto 'Site' */}
-          <Route path="/app" element={<ClientLayout />}>
+          <Route path="/app" element={<ProtectedRoute><ClientLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="analysis/sales" element={<SalesReport />} />
@@ -65,12 +68,20 @@ const App = () => {
             <Route path="settings/ai" element={<AISettings />} />
             <Route path="settings/whatsapp" element={<WhatsAppSettings />} />
             <Route path="settings/evolution" element={<EvolutionSettings />} />
-            <Route path="settings/users" element={<UserManagement />} />
+            <Route
+              path="settings/users"
+              element={
+                <ProtectedRoute roles={['ADMINISTRADOR']}>
+                  <UserManagement />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     </SettingsProvider>
+    </AuthProvider>
   );
 };
 

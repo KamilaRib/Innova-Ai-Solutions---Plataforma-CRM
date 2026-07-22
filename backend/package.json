@@ -22,7 +22,8 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.4.0",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "stripe": "^22.3.2"
   },
   "devDependencies": {
     "jest": "^30.3.0",

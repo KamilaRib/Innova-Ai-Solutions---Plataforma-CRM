@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { logAudit } = require('../services/audit.service');
 
 const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
 
@@ -51,6 +52,15 @@ const updateSettings = async (req, res) => {
     const currentSettings = readSettings();
     const newSettings = { ...currentSettings, ...req.body };
     writeSettings(newSettings);
+
+    await logAudit({
+      usuario_id: req.user.user_id,
+      entidade: 'SystemSettings',
+      acao: 'UPDATE',
+      antes: currentSettings,
+      depois: newSettings
+    });
+
     res.status(200).json({ success: true, data: newSettings, message: 'Configurações salvas' });
   } catch (error) {
     console.error("Erro ao salvar configurações:", error);

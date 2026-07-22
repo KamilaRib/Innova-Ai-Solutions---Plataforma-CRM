@@ -5,6 +5,8 @@ const path = require('path');
 // Registrando Controladores
 const webhookRoutes = require('./routes/webhook.routes');
 const authRoutes = require('./routes/auth.routes');
+const { handleStripeWebhook } = require('./controllers/stripeWebhook.controller');
+const { authenticate, authorize } = require('./middleware/auth.middleware');
 
 const app = express();
 
@@ -18,6 +20,10 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Precisa do corpo em bruto (não JSON-parseado) para validar a assinatura do Stripe.
+// Por isso é registrada ANTES do express.json() global.
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
+
 app.use(express.json());
 app.use(cors());
 
@@ -27,8 +33,11 @@ app.use('/webhook', webhookRoutes); // Entrada de Dados via WhatsApp Oficial/Evo
 app.use('/api/settings', require('./routes/settings.routes')); // Configurações Globais (Logo, Cores)
 app.use('/api/funnels', require('./routes/funnels.routes')); // Gestão de Funis
 app.use('/api/leads', require('./routes/leads.routes')); // Gestão de Leads e Kanban
-app.use('/api/customers', require('./routes/customers.routes')); // Gestão de Clientes (Cadastro)
+app.use('/api/customers', require('./routes/customers.routes')); // Gestão de Clientes (Cadastro) — consumido também pelo n8n
 app.use('/api/catalog', require('./routes/catalog.routes')); // Catálogo de Criativos e Produtos
+app.use('/api/billing', require('./routes/billing.routes')); // Faturas via Stripe (Invoicing + Tax)
+app.use('/api/users', authenticate, authorize('ADMINISTRADOR'), require('./routes/users.routes')); // Gestão de Acessos (RBAC)
+app.use('/api/auditoria', authenticate, authorize('ADMINISTRADOR'), require('./routes/audit.routes')); // Trilha de auditoria (RN009)
 
 // Rota de Health Check
 app.get('/health', (req, res) => {

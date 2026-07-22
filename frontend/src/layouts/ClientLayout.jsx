@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
+import { AuthContext } from '../context/AuthContext';
 
 const TikTokIcon = ({ size = 16, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" style={{ verticalAlign: 'middle' }}>
@@ -13,11 +14,12 @@ export default function ClientLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { settings } = useContext(SettingsContext);
-  const userRole = localStorage.getItem('role') || 'OPERADOR';
+  const { user, logout } = useContext(AuthContext);
+  const userRole = user?.role || 'COMERCIAL';
 
   const handleLogout = () => {
-    localStorage.removeItem('role');
-    navigate('/');
+    logout();
+    navigate('/login');
   };
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -238,7 +240,7 @@ export default function ClientLayout() {
 
             {expandedGroups.settings && (
               <div className="sub-menu">
-                {userRole === 'ADM' && (
+                {userRole === 'ADMINISTRADOR' && (
                   <NavLink onClick={closeMobile} to="/app/settings/users" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                     <Shield size={16} color="var(--color-accent-green)" />
                     <span>Gestão de Usuários</span>

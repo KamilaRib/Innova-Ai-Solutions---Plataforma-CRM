@@ -1,17 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const catalogController = require('../controllers/catalog.controller');
+const { authenticate, authorize } = require('../middleware/auth.middleware');
+
+const canEdit = authorize('ADMINISTRADOR', 'MARKETING');
 
 // Criativos
-router.get('/creatives', catalogController.getCreatives);
-router.post('/creatives', catalogController.createCreative);
-router.patch('/creatives/:id', catalogController.updateCreative);
-router.delete('/creatives/:id', catalogController.deleteCreative);
+router.get('/creatives', authenticate, catalogController.getCreatives);
+router.post('/creatives', authenticate, canEdit, catalogController.createCreative);
+router.patch('/creatives/:id', authenticate, canEdit, catalogController.updateCreative);
+router.delete('/creatives/:id', authenticate, canEdit, catalogController.deleteCreative);
 
 // Produtos
-router.get('/products', catalogController.getProducts);
-router.post('/products', catalogController.createProduct);
-router.patch('/products/:id', catalogController.updateProduct);
-router.delete('/products/:id', catalogController.deleteProduct);
+router.get('/products', authenticate, catalogController.getProducts);
+router.post('/products', authenticate, canEdit, catalogController.createProduct);
+router.patch('/products/:id', authenticate, canEdit, catalogController.updateProduct);
+router.delete('/products/:id', authenticate, canEdit, catalogController.deleteProduct);
 
 module.exports = router;

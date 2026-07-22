@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { apiFetch } from '../utils/api';
 
 export const SettingsContext = createContext();
 
@@ -43,9 +44,10 @@ export function SettingsProvider({ children }) {
   };
 
   const fetchSettings = () => {
-    // Busca todas as configurações (incluindo as privadas)
+    // Busca as configurações públicas (nome, logo, cor) — usado antes do login e em toda a app.
+    // Dados sensíveis (tokens, chaves) só são carregados na tela de administração (Settings.jsx).
     const API_URL = import.meta.env.VITE_API_URL || '';
-    return fetch(`${API_URL}/api/settings`)
+    return fetch(`${API_URL}/api/settings/public`)
       .then(res => res.json())
       .then(data => {
         if (data && data.success && data.data) {
@@ -63,10 +65,8 @@ export function SettingsProvider({ children }) {
   }, []);
 
   const saveSettings = (newData) => {
-    const API_URL = import.meta.env.VITE_API_URL || '';
-    return fetch(`${API_URL}/api/settings`, {
+    return apiFetch('/api/settings', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newData)
     })
     .then(res => res.json())

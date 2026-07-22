@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Image, Download, Plus, FileText, ExternalLink, Trash2, Eye, Video, Edit, X, Save } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const CreativeCatalog = () => {
   const [creatives, setCreatives] = useState([]);
@@ -20,7 +21,7 @@ const CreativeCatalog = () => {
 
   const fetchCreatives = async () => {
     try {
-      const response = await fetch('/api/catalog/creatives');
+      const response = await apiFetch('/api/catalog/creatives');
       const result = await response.json();
       if (result.success) setCreatives(result.data);
     } catch (error) {
@@ -66,9 +67,8 @@ const CreativeCatalog = () => {
       
       const method = editingItem ? 'PATCH' : 'POST';
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
@@ -85,7 +85,7 @@ const CreativeCatalog = () => {
     if (!window.confirm("Tem certeza que deseja excluir este ativo?")) return;
     
     try {
-      const response = await fetch(`/api/catalog/creatives/${id}`, {
+      const response = await apiFetch(`/api/catalog/creatives/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) fetchCreatives();

@@ -1,17 +1,39 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SettingsContext } from '../context/SettingsContext';
+import { AuthContext } from '../context/AuthContext';
+import { apiFetch } from '../utils/api';
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { settings } = useContext(SettingsContext);
+  const { login } = useContext(AuthContext);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simula validação para entrar no sistema
-    localStorage.setItem('role', email.includes('admin') ? 'ADM' : 'OPERADOR');
-    navigate('/app/dashboard');
+    setError('');
+    setLoading(true);
+    try {
+      const response = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        setError(data.error || 'Não foi possível entrar. Verifique seus dados.');
+        return;
+      }
+      login(data.token, data.user_data);
+      navigate('/app/dashboard');
+    } catch (err) {
+      setError('Erro ao conectar com o servidor. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,15 +77,20 @@ export default function Login() {
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--color-accent-green)' }}>Senha</label>
-            <input 
-              className="input-field" 
-              type="password" 
-              placeholder="••••••••" 
-              required 
+            <input
+              className="input-field"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          <button type="submit" className="btn-primary" style={{ marginTop: '10px' }}>
-            ENTRAR
+          {error && (
+            <p style={{ color: '#f87171', fontSize: '0.85rem', marginTop: '10px' }}>{error}</p>
+          )}
+          <button type="submit" className="btn-primary" style={{ marginTop: '10px' }} disabled={loading}>
+            {loading ? 'ENTRANDO...' : 'ENTRAR'}
           </button>
         </form>
 

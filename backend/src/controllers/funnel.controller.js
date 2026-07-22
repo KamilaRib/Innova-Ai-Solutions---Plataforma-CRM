@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { logAudit } = require('../services/audit.service');
 
 exports.getFunnels = async (req, res) => {
   try {
@@ -26,6 +27,16 @@ exports.createFunnel = async (req, res) => {
         is_default: false
       }
     });
+
+    await logAudit({
+      usuario_id: req.user.user_id,
+      entidade: 'Funnel',
+      entidade_id: newFunnel.id,
+      acao: 'CREATE',
+      antes: null,
+      depois: newFunnel
+    });
+
     res.status(201).json({ success: true, data: newFunnel });
   } catch (error) {
     console.error('Error creating funnel:', error);
@@ -50,6 +61,16 @@ exports.deleteFunnel = async (req, res) => {
     }
 
     await prisma.funnel.delete({ where: { id } });
+
+    await logAudit({
+      usuario_id: req.user.user_id,
+      entidade: 'Funnel',
+      entidade_id: id,
+      acao: 'DELETE',
+      antes: funnel,
+      depois: null
+    });
+
     res.json({ success: true, message: 'Funnel deleted' });
   } catch (error) {
     console.error('Error deleting funnel:', error);

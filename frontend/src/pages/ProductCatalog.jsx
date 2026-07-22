@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Plus, ShoppingBag, Edit, Trash2, DollarSign } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const ProductCatalog = () => {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ const ProductCatalog = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/catalog/products');
+      const response = await apiFetch('/api/catalog/products');
       const result = await response.json();
       if (result.success) setProducts(result.data);
     } catch (error) {
@@ -53,9 +54,8 @@ const ProductCatalog = () => {
       
       const method = editingProduct ? 'PATCH' : 'POST';
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
@@ -72,7 +72,7 @@ const ProductCatalog = () => {
     if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
     
     try {
-      const response = await fetch(`/api/catalog/products/${id}`, {
+      const response = await apiFetch(`/api/catalog/products/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) fetchProducts();

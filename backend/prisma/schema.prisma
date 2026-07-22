@@ -18,6 +18,9 @@ model SystemSettings {
   whatsapp_business_account_id String?
   whatsapp_access_token        String?
   whatsapp_verify_token        String?
+  evolution_webhook_url        String?
+  evolution_api_key            String?
+  evolution_instance_name      String?
   created_at                   DateTime   @default(now())
 }
 
@@ -34,13 +37,34 @@ model User {
   name                  String
   email                 String    @unique
   password_hash         String
-  role                  String    @default("OPERADOR") // ADM, OPERADOR
+  role                  String    @default("COMERCIAL") // ADMINISTRADOR | MARKETING | COMERCIAL | GESTOR
+  active                Boolean   @default(true)
   recovery_token        String?   @unique
   recovery_token_expires DateTime?
   created_at            DateTime  @default(now())
 
   messages              Message[]
   connections           SocialConnection[]
+  auditorias            Auditoria[]
+}
+
+// Trilha de auditoria imutável para alterações críticas (RN009 / RF-SEC-02).
+// Sem rota de update/delete: só é criada e consultada.
+model Auditoria {
+  id          String   @id @default(uuid())
+  usuario_id  String
+  entidade    String   // Ex: "Lead", "Customer", "SystemSettings", "User"
+  entidade_id String?  // ID do registro afetado, quando aplicável
+  acao        String   // CREATE | UPDATE | DELETE
+  antes       Json?
+  depois      Json?
+  created_at  DateTime @default(now())
+
+  usuario     User     @relation(fields: [usuario_id], references: [id])
+
+  @@index([entidade, entidade_id])
+  @@index([usuario_id])
+  @@index([created_at])
 }
 
 model SocialConnection {
@@ -89,20 +113,47 @@ model Funnel {
 }
 
 model Customer {
-  id            String   @id @default(uuid())
-  name          String
-  phone         String   @unique
-  email         String?
-  document      String?  // CPF ou CNPJ
-  address       String?
-  city          String?
-  state         String?
-  zip_code      String?
-  status        String   @default("ACTIVE") // ACTIVE | INACTIVE
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id                 String   @id @default(uuid())
+  name               String
+  phone              String   @unique
+  email              String?
+  document           String?  // CPF ou CNPJ
+  address            String?
+  city               String?
+  state              String?
+  zip_code           String?
+  country            String?  @default("BR")
+  status             String   @default("ACTIVE") // ACTIVE | INACTIVE
+  stripe_customer_id String?  @unique
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
 
-  lead          Lead?
+  lead               Lead?
+  invoices           Invoice[]
+}
+
+// Fatura emitida via Stripe (Invoicing + Tax) a partir de um Lead/Cliente do CRM.
+model Invoice {
+  id                 String    @id @default(uuid())
+  customer_id        String
+  lead_id            String?
+  created_by         String    // usuário do CRM que fechou a venda
+  stripe_invoice_id  String    @unique
+  stripe_customer_id String
+  description        String?
+  amount_due         Decimal   @default(0)
+  amount_paid        Decimal   @default(0)
+  currency            String   @default("brl")
+  status              String   @default("draft") // draft | open | paid | uncollectible | void
+  hosted_invoice_url  String?
+  invoice_pdf         String?
+  created_at          DateTime @default(now())
+  paid_at             DateTime?
+
+  customer            Customer @relation(fields: [customer_id], references: [id])
+
+  @@index([customer_id])
+  @@index([status])
 }
 
 model Message {
