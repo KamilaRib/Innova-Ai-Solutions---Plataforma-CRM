@@ -10,6 +10,11 @@ const { authenticate, authorize } = require('./middleware/auth.middleware');
 
 const app = express();
 
+// O app roda atrás do proxy/CDN da Hostinger. Sem isso, o Express enxerga o IP do
+// proxy em vez do IP real do visitante, e o rate limiter (abaixo) acaba tratando
+// todo mundo como se fosse uma única pessoa.
+app.set('trust proxy', 1);
+
 const rateLimit = require('express-rate-limit');
 
 const authLimiter = rateLimit({
