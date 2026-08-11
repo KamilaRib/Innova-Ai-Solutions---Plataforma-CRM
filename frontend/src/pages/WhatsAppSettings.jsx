@@ -13,12 +13,21 @@ const WhatsAppSettings = () => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleSave = async () => {
-    const result = await saveSettings(formData);
-    if (result.success) {
-      alert("Credenciais do WhatsApp salvas com sucesso!");
-    } else {
-      alert("Erro ao salvar credenciais.");
+    setIsSaving(true);
+    try {
+      const result = await saveSettings(formData);
+      if (result && result.success) {
+        alert("Credenciais do WhatsApp salvas com sucesso!");
+      } else {
+        alert("Erro ao salvar credenciais: " + (result?.error || 'Acesso negado.'));
+      }
+    } catch (e) {
+      alert("Erro de conexão.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -40,7 +49,7 @@ const WhatsAppSettings = () => {
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>Token de Verificação Webhook</label>
         <input className="input-field" type="text" name="whatsapp_verify_token" value={formData.whatsapp_verify_token || ''} onChange={handleChange} />
 
-        <button className="btn-primary" onClick={handleSave} style={{ marginTop: '20px' }}>Salvar Configurações</button>
+        <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ marginTop: '20px', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Configurações'}</button>
         </div>
       </div>
     </div>

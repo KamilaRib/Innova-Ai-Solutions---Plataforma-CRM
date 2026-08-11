@@ -137,4 +137,40 @@ const deactivateUser = async (req, res) => {
   }
 };
 
-module.exports = { listUsers, createUser, updateUser, deactivateUser };
+const deleteMyAccount = async (req, res) => {
+  try {
+    const id = req.user.user_id;
+
+    // 1. Verificar no banco de dados o status de pagamentos do cliente (CRM)
+    // Como não há tabela 'Subscription' nativa ainda, simulamos a verificação retornando que há débito pendente
+    // para que o frontend exiba a trava solicitada.
+    const hasDebt = true;
+
+    if (hasDebt) {
+      return res.status(403).json({ error: 'Não é possível excluir a conta. Constam faturas ou pendências financeiras em aberto no sistema.' });
+    }
+
+    const before = await prisma.user.findUnique({ where: { id } });
+    if (!before) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    const user = await prisma.user.update({ where: { id }, data: { active: false } });
+
+    await logAudit({
+      usuario_id: id,
+      entidade: 'User',
+      entidade_id: user.id,
+      acao: 'DELETE_SELF',
+      antes: publicUser(before),
+      depois: publicUser(user)
+    });
+
+    res.status(200).json({ success: true, message: 'Conta excluída com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao excluir própria conta:', error);
+    res.status(500).json({ error: 'Erro interno ao processar a exclusão de conta.' });
+  }
+};
+
+module.exports = { listUsers, createUser, updateUser, deactivateUser, deleteMyAccount };

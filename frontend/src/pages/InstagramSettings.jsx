@@ -1,22 +1,63 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { SettingsContext } from '../context/SettingsContext';
+import React, { useState, useEffect } from 'react';
 import { Instagram, Users, TrendingUp, BarChart3 } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const InstagramSettings = () => {
-  const { settings, saveSettings } = useContext(SettingsContext);
-  const [formData, setFormData] = useState(settings);
+  const [formData, setFormData] = useState({
+    instagram_url: '',
+    n8n_autoreply_webhook: '',
+    n8n_autoreply_token: ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setFormData(settings);
-  }, [settings]);
+    const loadIntegration = async () => {
+      try {
+        const response = await apiFetch('/api/integrations/INSTAGRAM');
+        const result = await response.json();
+        if (result.success && result.data) {
+          setFormData({
+            instagram_url: result.data.credentials?.instagram_url || '',
+            n8n_autoreply_webhook: result.data.n8n_webhook || '',
+            n8n_autoreply_token: result.data.credentials?.api_key || ''
+          });
+        }
+      } catch (e) {
+        console.error("Erro ao carregar Instagram", e);
+      }
+    };
+    loadIntegration();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   const handleSave = async () => {
-    await saveSettings(formData);
-    alert("Instagram salvo!");
+    setIsSaving(true);
+    try {
+      const response = await apiFetch('/api/integrations', {
+        method: 'POST',
+        body: JSON.stringify({
+          provider: 'INSTAGRAM',
+          n8n_webhook: formData.n8n_autoreply_webhook,
+          credentials: {
+            instagram_url: formData.instagram_url,
+            api_key: formData.n8n_autoreply_token
+          }
+        })
+      });
+      const result = await response.json();
+      if (result.success) {
+        alert("Configurações do Instagram salvas!");
+      } else {
+        alert("Erro ao salvar Instagram.");
+      }
+    } catch (e) {
+      alert("Erro de conexão.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -67,7 +108,7 @@ const InstagramSettings = () => {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>URL do Perfil / @handle</label>
             <input className="input-field" type="url" name="instagram_url" value={formData.instagram_url || ''} onChange={handleChange} placeholder="https://instagram.com/..." />
           </div>
-          <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#E1306C' }}>Salvar Perfil</button>
+          <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ width: '100%', background: '#E1306C', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Perfil'}</button>
         </div>
 
         <div className="card" style={{ borderTop: '4px solid #E1306C' }}>
@@ -80,7 +121,7 @@ const InstagramSettings = () => {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>API Token</label>
             <input className="input-field" type="password" name="n8n_autoreply_token" value={formData.n8n_autoreply_token || ''} onChange={handleChange} autoComplete="off" />
           </div>
-          <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#E1306C' }}>Salvar Automação</button>
+          <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ width: '100%', background: '#E1306C', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Automação'}</button>
         </div>
       </div>
     </div>

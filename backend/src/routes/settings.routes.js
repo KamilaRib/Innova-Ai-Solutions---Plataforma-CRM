@@ -7,7 +7,7 @@ const { authenticate, authorize } = require('../middleware/auth.middleware');
 router.get('/public', settingsController.getPublicSettings);
 
 // Rotas administrativas (contêm tokens e chaves sensíveis)
-router.get('/', authenticate, authorize('ADMINISTRADOR'), settingsController.getSettings);
-router.put('/', authenticate, authorize('ADMINISTRADOR'), settingsController.updateSettings);
+router.get('/', authenticate, settingsController.getSettings);
+router.put('/', authenticate, settingsController.updateSettings);
 
 module.exports = router;

@@ -28,10 +28,23 @@ const ROIReport = () => {
 
     // Dados da Tabela por Canal (Simulando variação por mês)
     const [tableData, setTableData] = useState([
-        { name: 'Instagram Ads', color: '#E1306C', invest: 1500, sales: 8500, status: 'Excelente' },
-        { name: 'Facebook Ads', color: '#1877F2', invest: 1200, sales: 4200, status: 'Estável' },
+        { name: 'Meta Ads', color: '#1877F2', invest: 1500, sales: 8500, status: 'Excelente' },
         { name: 'Google Ads', color: '#4285F4', invest: 2000, sales: 12000, status: 'Excelente' },
+        { name: 'LinkedIn Ads', color: '#0A66C2', invest: 1200, sales: 4200, status: 'Estável' },
         { name: 'TikTok Ads', color: '#00F5FF', invest: 800, sales: 1500, status: 'Atenção' },
+        { name: 'Instagram', color: '#E1306C', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'Facebook', color: '#1877F2', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'TikTok', color: '#000000', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'LinkedIn Pages', color: '#0A66C2', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'LinkedIn Pessoal', color: '#0A66C2', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'YouTube', color: '#FF0000', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'Google Meu Negócio', color: '#4285F4', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'Google Analytics 4', color: '#F4B400', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'Threads', color: '#000000', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'Pinterest', color: '#E60023', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'X', color: '#000000', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'WhatsApp Oficial (Cloud API)', color: '#25D366', invest: 0, sales: 0, status: 'Atenção' },
+        { name: 'WhatsApp Evolution API', color: '#128C7E', invest: 0, sales: 0, status: 'Atenção' },
     ]);
 
     // Atualiza os cards e gráfico quando o mês muda

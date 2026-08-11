@@ -1,22 +1,63 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { SettingsContext } from '../context/SettingsContext';
+import React, { useState, useEffect } from 'react';
 import { Youtube, Users, TrendingUp, BarChart3 } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const YoutubeSettings = () => {
-  const { settings, saveSettings } = useContext(SettingsContext);
-  const [formData, setFormData] = useState(settings);
+  const [formData, setFormData] = useState({
+    youtube_url: '',
+    n8n_youtube_webhook: '',
+    n8n_youtube_token: ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setFormData(settings);
-  }, [settings]);
+    const loadIntegration = async () => {
+      try {
+        const response = await apiFetch('/api/integrations/YOUTUBE');
+        const result = await response.json();
+        if (result.success && result.data) {
+          setFormData({
+            youtube_url: result.data.credentials?.youtube_url || '',
+            n8n_youtube_webhook: result.data.n8n_webhook || '',
+            n8n_youtube_token: result.data.credentials?.api_key || ''
+          });
+        }
+      } catch (e) {
+        console.error("Erro ao carregar YouTube", e);
+      }
+    };
+    loadIntegration();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   const handleSave = async () => {
-    await saveSettings(formData);
-    alert("YouTube salvo!");
+    setIsSaving(true);
+    try {
+      const response = await apiFetch('/api/integrations', {
+        method: 'POST',
+        body: JSON.stringify({
+          provider: 'YOUTUBE',
+          n8n_webhook: formData.n8n_youtube_webhook,
+          credentials: {
+            youtube_url: formData.youtube_url,
+            api_key: formData.n8n_youtube_token
+          }
+        })
+      });
+      const result = await response.json();
+      if (result.success) {
+        alert("Configurações do YouTube salvas!");
+      } else {
+        alert("Erro ao salvar YouTube.");
+      }
+    } catch (e) {
+      alert("Erro de conexão.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -67,7 +108,7 @@ const YoutubeSettings = () => {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>URL do Canal</label>
             <input className="input-field" type="url" name="youtube_url" value={formData.youtube_url || ''} onChange={handleChange} placeholder="https://youtube.com/c/..." />
           </div>
-          <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#FF0000' }}>Salvar Canal</button>
+          <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ width: '100%', background: '#FF0000', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Canal'}</button>
         </div>
 
         <div className="card" style={{ borderTop: '4px solid #FF0000' }}>
@@ -80,7 +121,7 @@ const YoutubeSettings = () => {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>API Token</label>
             <input className="input-field" type="password" name="n8n_youtube_token" value={formData.n8n_youtube_token || ''} onChange={handleChange} autoComplete="off" />
           </div>
-          <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#FF0000' }}>Salvar Automação</button>
+          <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ width: '100%', background: '#FF0000', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Automação'}</button>
         </div>
       </div>
     </div>

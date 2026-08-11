@@ -136,9 +136,63 @@ const updateLeadStatus = async (req, res) => {
   }
 };
 
+/**
+ * Cria um lead originado do catálogo público
+ */
+const createPublicLead = async (req, res) => {
+  try {
+    const { name, phone, email, productName } = req.body;
+
+    if (!name || !phone) {
+      return res.status(400).json({ error: 'Nome e WhatsApp são obrigatórios.' });
+    }
+
+    const lead = await prisma.lead.create({
+      data: {
+        name,
+        phone,
+        email: email || null,
+        source: 'Website',
+        pipeline_status: 'Início de Atendimento',
+        notes: productName ? `Interesse no produto: ${productName}` : null
+      }
+    });
+
+    // Dispara o Webhook para o n8n iniciar o atendimento
+    try {
+      await fetch('https://n8n.agency-innova-ai-solutions.cloud/webhook/CRM', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'novo_lead_catalogo',
+          lead_id: lead.id,
+          name: lead.name,
+          phone: lead.phone,
+          email: lead.email || '',
+          product: productName || 'Nenhum'
+        })
+      });
+      console.log(`[Webhook] Notificação enviada ao n8n para o lead: ${lead.name}`);
+    } catch (webhookError) {
+      console.error('Erro ao disparar webhook para o n8n:', webhookError);
+      // Não retorna erro pro frontend, pois o lead já foi salvo com sucesso no CRM.
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Interesse registrado com sucesso! Entraremos em contato.',
+      lead
+    });
+  } catch (error) {
+    console.error('Erro ao criar lead público:', error);
+    res.status(500).json({ error: 'Erro interno ao registrar interesse.' });
+  }
+};
+
 module.exports = {
   getStats,
   getAll,
   getLeadContextByPhone,
-  updateLeadStatus
+  updateLeadStatus,
+  createPublicLead
 };

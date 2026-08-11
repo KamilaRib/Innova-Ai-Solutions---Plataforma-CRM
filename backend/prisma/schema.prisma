@@ -10,18 +10,35 @@ datasource db {
 }
 
 model SystemSettings {
-  id                           String     @id @default("1")
-  business_name                String     @default("INNOVA AI")
+  id                           String   @id @default("1")
+  business_name                String   @default("INNOVA AI")
   logo_url                     String?
-  primary_color                String?    @default("#00F5FF")
+  primary_color                String?  @default("#00F5FF")
   whatsapp_phone_number_id     String?
   whatsapp_business_account_id String?
   whatsapp_access_token        String?
   whatsapp_verify_token        String?
+  evolution_api_url            String?  @default("http://localhost:8080")
   evolution_webhook_url        String?
   evolution_api_key            String?
   evolution_instance_name      String?
-  created_at                   DateTime   @default(now())
+  evolution_events             Json?
+  openai_api_key               String?
+  ai_behavior                  String?
+  ai_concierge_webhook         String?
+  store_data                   Json?
+  
+  // Parametrização Fiscal (NFS-e)
+  im                           String   @default("")
+  cnpj                         String?
+  ie                           String?
+  ibge_municipio               String?  @default("3550308")
+  codigo_servico_municipal     String?
+  codigo_item_lc116            String?
+  aliquota_iss                 Decimal?
+  regime_especial_tributacao   String?
+
+  created_at                   DateTime @default(now())
 }
 
 model UsageLog {
@@ -33,19 +50,20 @@ model UsageLog {
 }
 
 model User {
-  id                    String    @id @default(uuid())
-  name                  String
-  email                 String    @unique
-  password_hash         String
-  role                  String    @default("COMERCIAL") // ADMINISTRADOR | MARKETING | COMERCIAL | GESTOR
-  active                Boolean   @default(true)
-  recovery_token        String?   @unique
+  id                     String    @id @default(uuid())
+  name                   String
+  email                  String    @unique
+  password_hash          String
+  role                   String    @default("COMERCIAL") // ADMINISTRADOR | MARKETING | COMERCIAL | GESTOR
+  active                 Boolean   @default(true)
+  recovery_token         String?   @unique
   recovery_token_expires DateTime?
-  created_at            DateTime  @default(now())
+  created_at             DateTime  @default(now())
 
-  messages              Message[]
-  connections           SocialConnection[]
-  auditorias            Auditoria[]
+  messages    Message[]
+  connections SocialConnection[]
+  auditorias  Auditoria[]
+  posts       Post[]
 }
 
 // Trilha de auditoria imutável para alterações críticas (RN009 / RF-SEC-02).
@@ -53,14 +71,14 @@ model User {
 model Auditoria {
   id          String   @id @default(uuid())
   usuario_id  String
-  entidade    String   // Ex: "Lead", "Customer", "SystemSettings", "User"
-  entidade_id String?  // ID do registro afetado, quando aplicável
-  acao        String   // CREATE | UPDATE | DELETE
+  entidade    String // Ex: "Lead", "Customer", "SystemSettings", "User"
+  entidade_id String? // ID do registro afetado, quando aplicável
+  acao        String // CREATE | UPDATE | DELETE
   antes       Json?
   depois      Json?
   created_at  DateTime @default(now())
 
-  usuario     User     @relation(fields: [usuario_id], references: [id])
+  usuario User @relation(fields: [usuario_id], references: [id])
 
   @@index([entidade, entidade_id])
   @@index([usuario_id])
@@ -68,38 +86,38 @@ model Auditoria {
 }
 
 model SocialConnection {
-  id           String   @id @default(uuid())
-  user_id      String
-  provider     String   // WHATSAPP | INSTAGRAM | FACEBOOK
-  instance_id  String   @unique // ID da instância no Evolution ou Meta
-  api_key      String?
-  name         String   // Ex: "WhatsApp Comercial"
-  status       String   @default("CONNECTED")
-  created_at   DateTime @default(now())
-  
-  user         User     @relation(fields: [user_id], references: [id])
-  leads        Lead[]
+  id          String   @id @default(uuid())
+  user_id     String
+  provider    String // WHATSAPP | INSTAGRAM | FACEBOOK
+  instance_id String   @unique // ID da instância no Evolution ou Meta
+  api_key     String?
+  name        String // Ex: "WhatsApp Comercial"
+  status      String   @default("CONNECTED")
+  created_at  DateTime @default(now())
+
+  user  User   @relation(fields: [user_id], references: [id])
+  leads Lead[]
 }
 
 model Lead {
-  id                 String            @id @default(uuid())
+  id                 String    @id @default(uuid())
   name               String
   phone              String
   email              String?
-  source             String            // WhatsApp | Website
-  pipeline_status    String            @default("Início de Atendimento")
+  source             String // WhatsApp | Website
+  pipeline_status    String    @default("Início de Atendimento")
   notes              String?
   last_contacted_at  DateTime?
   next_followup_date DateTime?
-  is_bot_paused      Boolean           @default(false)
-  connection_id      String?           // Vínculo com a conta social específica
-  funnel_id          String?           // Vínculo com o funil
-  
-  social_connection  SocialConnection? @relation(fields: [connection_id], references: [id])
-  funnel             Funnel?           @relation(fields: [funnel_id], references: [id])
-  messages           Message[]
-  customer           Customer?         @relation(fields: [customer_id], references: [id])
-  customer_id        String?           @unique
+  is_bot_paused      Boolean   @default(false)
+  connection_id      String? // Vínculo com a conta social específica
+  funnel_id          String? // Vínculo com o funil
+
+  social_connection SocialConnection? @relation(fields: [connection_id], references: [id])
+  funnel            Funnel?           @relation(fields: [funnel_id], references: [id])
+  messages          Message[]
+  customer          Customer?         @relation(fields: [customer_id], references: [id])
+  customer_id       String?           @unique
 }
 
 model Funnel {
@@ -109,7 +127,7 @@ model Funnel {
   is_default  Boolean  @default(false)
   created_at  DateTime @default(now())
 
-  leads       Lead[]
+  leads Lead[]
 }
 
 model Customer {
@@ -117,7 +135,7 @@ model Customer {
   name               String
   phone              String   @unique
   email              String?
-  document           String?  // CPF ou CNPJ
+  document           String? // CPF ou CNPJ
   address            String?
   city               String?
   state              String?
@@ -128,8 +146,8 @@ model Customer {
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
-  lead               Lead?
-  invoices           Invoice[]
+  lead     Lead?
+  invoices Invoice[]
 }
 
 // Fatura emitida via Stripe (Invoicing + Tax) a partir de um Lead/Cliente do CRM.
@@ -137,20 +155,28 @@ model Invoice {
   id                 String    @id @default(uuid())
   customer_id        String
   lead_id            String?
-  created_by         String    // usuário do CRM que fechou a venda
+  created_by         String // usuário do CRM que fechou a venda
   stripe_invoice_id  String    @unique
   stripe_customer_id String
   description        String?
   amount_due         Decimal   @default(0)
   amount_paid        Decimal   @default(0)
-  currency            String   @default("brl")
-  status              String   @default("draft") // draft | open | paid | uncollectible | void
-  hosted_invoice_url  String?
-  invoice_pdf         String?
-  created_at          DateTime @default(now())
-  paid_at             DateTime?
+  currency           String    @default("brl")
+  status             String    @default("draft") // draft | open | paid | uncollectible | void
+  hosted_invoice_url String?
+  invoice_pdf        String?
 
-  customer            Customer @relation(fields: [customer_id], references: [id])
+  // Controle Fiscal da Fatura (NFS-e)
+  fiscal_status      String    @default("NÃO EMITIDA")
+  nfse_xml_url       String?
+  nfse_pdf_url       String?
+  nfse_number        String?
+  nfse_gateway_id    String?
+
+  created_at         DateTime  @default(now())
+  paid_at            DateTime?
+
+  customer Customer @relation(fields: [customer_id], references: [id])
 
   @@index([customer_id])
   @@index([status])
@@ -163,25 +189,25 @@ model Message {
   sender_type String // client | agent | bot
   content     String
   created_at  DateTime @default(now())
-  
-  lead        Lead     @relation(fields: [lead_id], references: [id])
-  user        User?    @relation(fields: [user_id], references: [id])
+
+  lead Lead  @relation(fields: [lead_id], references: [id])
+  user User? @relation(fields: [user_id], references: [id])
 }
 
 model YoutubeAgenda {
-  id               String    @id @default(uuid())
-  video_file_url   String    // Link público para download temporário do vídeo 
-  theme            String    // Sobre o que é o vídeo
-  post_date        DateTime  // Data que queremos postar
-  status           String    @default("PENDING") // PENDING | POSTED
-  created_at       DateTime  @default(now())
+  id             String   @id @default(uuid())
+  video_file_url String // Link público para download temporário do vídeo 
+  theme          String // Sobre o que é o vídeo
+  post_date      DateTime // Data que queremos postar
+  status         String   @default("PENDING") // PENDING | POSTED
+  created_at     DateTime @default(now())
 }
 
 model Creative {
   id          String   @id @default(uuid())
   title       String
   desc        String?
-  type        String   // IDENTIDADE | SOCIAL | VÍDEO | BANNER
+  type        String // IDENTIDADE | SOCIAL | VÍDEO | BANNER
   format      String?
   size        String?
   recommended String?
@@ -190,11 +216,77 @@ model Creative {
 }
 
 model Product {
+  id         String   @id @default(uuid())
+  name       String
+  desc       String?
+  price      Decimal  @default(0)
+  category   String?
+  image_url  String?
+  created_at DateTime @default(now())
+}
+
+// --- MÓDULO DE REDES SOCIAIS (AGENDAMENTO E APROVAÇÃO) ---
+
+model Integration {
+  id          String   @id @default(uuid())
+  provider    String // INSTAGRAM | FACEBOOK | TIKTOK | LINKEDIN | YOUTUBE | X | GMN | META_ADS ...
+  status      String   @default("CONNECTED")
+  n8n_webhook String? // Webhook específico do n8n para este canal, se aplicável
+  credentials Json? // Guarda tokens, ids de conta, etc.
+  profile_id  String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  profile       Profile?      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  post_channels PostChannel[]
+}
+
+model Post {
+  id           String    @id @default(uuid())
+  title        String?
+  content      String?   @db.Text
+  scheduled_at DateTime?
+  status       String    @default("DRAFT") // DRAFT, CONTENT, INTERNAL_APPROVAL, CLIENT_APPROVAL, ADJUSTMENTS, WAITING_SCHEDULE, SCHEDULED, PUBLISHED
+  user_id      String
+  profile_id   String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  user     User          @relation(fields: [user_id], references: [id])
+  profile  Profile?      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  media    PostMedia[]
+  channels PostChannel[]
+}
+
+model PostMedia {
+  id         String   @id @default(uuid())
+  post_id    String
+  url        String
+  type       String // IMAGE | VIDEO
+  created_at DateTime @default(now())
+
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+}
+
+model PostChannel {
+  id             String   @id @default(uuid())
+  post_id        String
+  integration_id String
+  status         String   @default("PENDING") // PENDING | SUCCESS | FAILED
+  error_message  String?
+  created_at     DateTime @default(now())
+
+  post        Post        @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  integration Integration @relation(fields: [integration_id], references: [id])
+}
+
+model Profile {
   id          String   @id @default(uuid())
   name        String
-  desc        String?
-  price       Decimal  @default(0)
-  category    String?
-  image_url   String?
+  logo_url    String?
   created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  integrations Integration[]
+  posts        Post[]
 }

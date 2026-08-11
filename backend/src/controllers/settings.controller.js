@@ -1,26 +1,21 @@
-const fs = require('fs');
-const path = require('path');
+const prisma = require('../lib/prisma');
 const { logAudit } = require('../services/audit.service');
 
-const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
-
-const readSettings = () => {
-  try {
-    const data = fs.readFileSync(SETTINGS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return { business_name: 'INNOVA AI', logo_url: null, primary_color: '#00F5FF' };
+// Garantir que a configuração exista (Singleton)
+const getOrCreateSettings = async () => {
+  let settings = await prisma.systemSettings.findUnique({ where: { id: "1" } });
+  if (!settings) {
+    settings = await prisma.systemSettings.create({
+      data: { id: "1" }
+    });
   }
-};
-
-const writeSettings = (settings) => {
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+  return settings;
 };
 
 // Retorna as configurações públicas (cor, logo e nome)
 const getPublicSettings = async (req, res) => {
   try {
-    const settings = readSettings();
+    const settings = await getOrCreateSettings();
     res.status(200).json({
       success: true,
       data: {
@@ -38,7 +33,7 @@ const getPublicSettings = async (req, res) => {
 // Retorna todas as configurações (uso administrativo)
 const getSettings = async (req, res) => {
   try {
-    const settings = readSettings();
+    const settings = await getOrCreateSettings();
     res.status(200).json({ success: true, data: settings });
   } catch (error) {
     console.error("Erro ao buscar configurações gerais:", error);
@@ -49,9 +44,31 @@ const getSettings = async (req, res) => {
 // Atualiza configurações globais
 const updateSettings = async (req, res) => {
   try {
-    const currentSettings = readSettings();
-    const newSettings = { ...currentSettings, ...req.body };
-    writeSettings(newSettings);
+    const currentSettings = await getOrCreateSettings();
+    
+    // Filtra apenas campos válidos para não quebrar o Prisma
+    const allowedFields = [
+      'business_name', 'logo_url', 'primary_color', 
+      'whatsapp_phone_number_id', 'whatsapp_business_account_id', 
+      'whatsapp_access_token', 'whatsapp_verify_token',
+      'evolution_api_url', 'evolution_webhook_url', 'evolution_api_key', 
+      'evolution_instance_name', 'evolution_events',
+      'openai_api_key', 'ai_behavior', 'ai_concierge_webhook',
+      'store_data', 'im', 'cnpj', 'ie', 'ibge_municipio',
+      'codigo_servico_municipal', 'codigo_item_lc116', 'aliquota_iss', 'regime_especial_tributacao'
+    ];
+    
+    const updateData = {};
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined) {
+        updateData[key] = req.body[key];
+      }
+    }
+
+    const newSettings = await prisma.systemSettings.update({
+      where: { id: "1" },
+      data: updateData
+    });
 
     await logAudit({
       usuario_id: req.user.user_id,
@@ -73,4 +90,3 @@ module.exports = {
   getSettings,
   updateSettings
 };
-

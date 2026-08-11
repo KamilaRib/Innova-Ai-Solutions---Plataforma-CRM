@@ -240,15 +240,36 @@ const Kanban = () => {
                   }}
                 >
                   <strong style={{ display: 'block', fontSize: '1.05rem', color: 'var(--color-light)', marginBottom: '8px' }}>{lead.name}</strong>
+                  
+                  {/* TAGS DE ORIGEM E INTERESSE */}
+                  <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                    {lead.source && (
+                      <span style={{ 
+                        background: lead.source === 'Website' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255,255,255,0.1)', 
+                        color: lead.source === 'Website' ? 'var(--color-accent-green)' : '#fff',
+                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold', textTransform: 'uppercase'
+                      }}>
+                        {lead.source === 'Website' ? '🌐 CATÁLOGO' : lead.source}
+                      </span>
+                    )}
+                  </div>
+
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem', opacity: 0.5, marginBottom: '8px', fontFamily: 'monospace', wordBreak: 'break-all' }}>
                      ID: {lead.id}
                   </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', opacity: 0.8, marginBottom: '4px' }}>
-                     👤 {lead.contact || 'Contato'}
-                  </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', opacity: 0.8, marginBottom: '10px' }}>
                      📱 {lead.phone}
                   </span>
+
+                  {lead.notes && (
+                    <div style={{ 
+                      background: 'rgba(0,0,0,0.3)', padding: '8px', borderRadius: '6px', 
+                      fontSize: '0.75rem', color: '#ccc', marginBottom: '10px',
+                      borderLeft: '2px solid var(--color-accent-cyan)'
+                    }}>
+                      {lead.notes}
+                    </div>
+                  )}
 
                   {/* ETIQUETA DE FOLLOW UP */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'rgba(34, 197, 94, 0.1)', padding: '4px 8px', borderRadius: '4px', marginBottom: '12px', width: 'fit-content' }}>

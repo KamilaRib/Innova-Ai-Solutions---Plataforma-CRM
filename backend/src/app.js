@@ -29,8 +29,9 @@ const authLimiter = rateLimit({
 // Por isso é registrada ANTES do express.json() global.
 app.post('/webhook/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Rotas da API
 app.use('/auth', authLimiter, authRoutes); // Proteção contra força bruta no Login/Recuperação
@@ -40,7 +41,11 @@ app.use('/api/funnels', require('./routes/funnels.routes')); // Gestão de Funis
 app.use('/api/leads', require('./routes/leads.routes')); // Gestão de Leads e Kanban
 app.use('/api/customers', require('./routes/customers.routes')); // Gestão de Clientes (Cadastro) — consumido também pelo n8n
 app.use('/api/catalog', require('./routes/catalog.routes')); // Catálogo de Criativos e Produtos
+app.use('/api/social-auth', require('./routes/auth.social.routes')); // Hub de Conexões (OAuth)
+app.use('/api/integrations', require('./routes/integrations.routes')); // Integrações de Redes Sociais
 app.use('/api/billing', require('./routes/billing.routes')); // Faturas via Stripe (Invoicing + Tax)
+app.use('/api/posts', require('./routes/posts.routes')); // Módulo de Redes Sociais
+app.use('/api/v1/webhooks', require('./routes/webhooks.routes')); // Webhooks Passivos (NFS-e, etc)
 app.use('/api/users', authenticate, authorize('ADMINISTRADOR'), require('./routes/users.routes')); // Gestão de Acessos (RBAC)
 app.use('/api/auditoria', authenticate, authorize('ADMINISTRADOR'), require('./routes/audit.routes')); // Trilha de auditoria (RN009)
 

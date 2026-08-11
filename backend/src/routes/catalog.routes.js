@@ -16,5 +16,6 @@ router.get('/products', authenticate, catalogController.getProducts);
 router.post('/products', authenticate, canEdit, catalogController.createProduct);
 router.patch('/products/:id', authenticate, canEdit, catalogController.updateProduct);
 router.delete('/products/:id', authenticate, canEdit, catalogController.deleteProduct);
+router.post('/products/:id/nfse', authenticate, canEdit, catalogController.emitDemoNFSe);
 
 module.exports = router;

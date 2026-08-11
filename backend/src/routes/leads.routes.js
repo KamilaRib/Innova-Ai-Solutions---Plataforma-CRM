@@ -11,6 +11,9 @@ router.get('/', leadsController.getAll);
 // Rota para o n8n buscar o contexto do lead antes de classificar
 router.get('/context/:phone', leadsController.getLeadContextByPhone);
 
+// Rota pública para captura de leads do catálogo
+router.post('/public', leadsController.createPublicLead);
+
 // Rota para o n8n (ou frontend) atualizar o estágio do Kanban
 router.patch('/:id', leadsController.updateLeadStatus);
 

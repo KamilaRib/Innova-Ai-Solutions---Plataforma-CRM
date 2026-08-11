@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, ChevronUp, ChevronsUpDown, Sun, Moon, Monitor, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 import { AuthContext } from '../context/AuthContext';
 
@@ -24,6 +24,7 @@ export default function ClientLayout() {
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const closeMobile = () => setIsMobileOpen(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const [expandedGroups, setExpandedGroups] = useState({
     social: false,
@@ -165,11 +166,6 @@ export default function ClientLayout() {
           </div>
 
 
-          <NavLink onClick={closeMobile} to="/app/calendar" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-            <CalendarDays size={20} />
-            <span>Calendário</span>
-          </NavLink>
-
           <NavLink onClick={closeMobile} to="/app/chats" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <MessageSquare size={20} />
             <span>Chats</span>
@@ -195,83 +191,131 @@ export default function ClientLayout() {
 
             {expandedGroups.social && (
               <div className="sub-menu">
-                <NavLink onClick={closeMobile} to="/app/social/facebook" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Facebook size={16} />
-                  <span>Facebook</span>
+                <NavLink onClick={closeMobile} to="/app/social/hub" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <Share2 size={16} />
+                  <span>Conectar Contas</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/social/instagram" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Instagram size={16} />
-                  <span>Instagram</span>
+                <NavLink onClick={closeMobile} to="/app/social/schedule" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <CalendarCheck size={16} />
+                  <span>Agendar Post</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/social/tiktok" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <TikTokIcon size={16} />
-                  <span>TikTok</span>
+                <NavLink onClick={closeMobile} to="/app/social/calendar" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <CalendarDays size={16} />
+                  <span>Calendário</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/social/youtube" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Youtube size={16} />
-                  <span>YouTube</span>
+                <NavLink onClick={closeMobile} to="/app/social/creatives" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <Palette size={16} />
+                  <span>Criativos</span>
                 </NavLink>
               </div>
             )}
           </div>
 
-          <NavLink onClick={closeMobile} to="/app/creatives" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-            <Palette size={20} />
-            <span>Criativos</span>
-          </NavLink>
+
 
           <NavLink onClick={closeMobile} to="/app/products" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <ShoppingBag size={20} />
             <span>Produtos</span>
           </NavLink>
 
-          <div className="nav-group">
-            <div
-              className={`menu-item ${location.pathname.includes('settings') ? 'active' : ''}`}
-              onClick={() => toggleGroup('settings')}
-              style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Settings size={20} />
-                <span>Configurações</span>
-              </div>
-              {expandedGroups.settings ? <ChevronDown size={14} opacity={0.5} /> : <ChevronRight size={14} opacity={0.5} />}
-            </div>
-
-            {expandedGroups.settings && (
-              <div className="sub-menu">
-                {userRole === 'ADMINISTRADOR' && (
-                  <NavLink onClick={closeMobile} to="/app/settings/users" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                    <Shield size={16} color="var(--color-accent-green)" />
-                    <span>Gestão de Usuários</span>
-                  </NavLink>
-                )}
-                <NavLink onClick={closeMobile} to="/app/settings/branding" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Palette size={16} />
-                  <span>Identidade Visual</span>
-                </NavLink>
-                <NavLink onClick={closeMobile} to="/app/settings/whatsapp" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <MessageCircle size={16} />
-                  <span>WhatsApp API</span>
-                </NavLink>
-                <NavLink onClick={closeMobile} to="/app/settings/evolution" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Zap size={16} color="var(--color-accent-green)" />
-                  <span>Evolution API (Local)</span>
-                </NavLink>
-              </div>
-            )}
-          </div>
-
         </nav>
 
-        <button
-          onClick={handleLogout}
-          className="menu-item"
-          style={{ background: 'transparent', border: 'none', width: '100%', cursor: 'pointer', opacity: 0.7, marginTop: 'auto' }}
-        >
-          <LogOut size={20} color="var(--color-accent-cyan)" />
-          <span>Sair do Sistema</span>
-        </button>
+        {/* PROFILE WIDGET NO RODAPÉ */}
+        <div style={{ position: 'relative', marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px' }}>
+          
+          {/* POPOVER MENU */}
+          {isProfileMenuOpen && (
+            <div style={{
+              position: 'absolute',
+              bottom: 'calc(100% + 10px)',
+              left: 0,
+              width: '100%',
+              background: '#2d2d2d',
+              borderRadius: '12px',
+              padding: '12px',
+              boxShadow: '0 -4px 20px rgba(0,0,0,0.5)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              zIndex: 100,
+              color: '#fff',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              {/* User Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '12px' }}>
+                <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', border: '1px solid rgba(255,255,255,0.2)' }}>
+                  {user?.name ? user.name.substring(0, 2).toUpperCase() : 'KG'}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <span style={{ fontWeight: 'bold', fontSize: '0.9rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user?.name || 'Kamila Ribeiro Gomes'}</span>
+                  <span style={{ color: '#aaa', fontSize: '0.75rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user?.email || 'Kamilarib@yahoo.com.br'}</span>
+                </div>
+              </div>
+
+              {/* Theme Switcher */}
+              <div style={{ paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '12px' }}>
+                <span style={{ fontSize: '0.7rem', color: '#888', fontWeight: 'bold', letterSpacing: '1px', display: 'block', marginBottom: '8px' }}>TEMA</span>
+                <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '4px' }}>
+                  <button style={{ flex: 1, padding: '6px', background: 'transparent', border: 'none', color: '#aaa', cursor: 'pointer', borderRadius: '6px', display: 'flex', justifyContent: 'center' }}>
+                    <Sun size={16} />
+                  </button>
+                  <button style={{ flex: 1, padding: '6px', background: 'transparent', border: 'none', color: '#aaa', cursor: 'pointer', borderRadius: '6px', display: 'flex', justifyContent: 'center' }}>
+                    <Moon size={16} />
+                  </button>
+                  <button style={{ flex: 1, padding: '6px', background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '6px', display: 'flex', justifyContent: 'center' }}>
+                    <Monitor size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Links */}
+              <Link 
+                to="/app/settings/profile" 
+                onClick={() => { closeMobile(); setIsProfileMenuOpen(false); }}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 4px', color: '#fff', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500' }}
+              >
+                <Settings size={18} color="#aaa" />
+                Configurações
+              </Link>
+              
+              <button 
+                onClick={handleLogout}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 4px', color: '#fff', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+              >
+                <LogOut size={18} color="#aaa" />
+                Sair
+              </button>
+            </div>
+          )}
+
+          {/* User Button */}
+          <button 
+            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              width: '100%',
+              padding: '10px 12px',
+              background: isProfileMenuOpen ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              color: '#fff',
+              transition: 'background 0.2s'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '6px', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem' }}>
+                {user?.name ? user.name.substring(0, 2).toUpperCase() : 'KG'}
+              </div>
+              <span style={{ fontWeight: '500', fontSize: '0.9rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', maxWidth: '120px', textAlign: 'left' }}>
+                {user?.name || 'Kamila Ribeiro Go...'}
+              </span>
+            </div>
+            <ChevronsUpDown size={16} color="#aaa" />
+          </button>
+        </div>
+
       </aside>
 
       {/* ÁREA CENTRAL DAS PÁGINAS */}

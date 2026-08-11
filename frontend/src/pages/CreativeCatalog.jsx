@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, Download, Plus, FileText, ExternalLink, Trash2, Eye, Video, Edit, X, Save } from 'lucide-react';
+import { Image, Download, Plus, FileText, ExternalLink, Trash2, Eye, Video, Edit, X, Save, Sparkles, Cloud } from 'lucide-react';
 import { apiFetch } from '../utils/api';
 
 const CreativeCatalog = () => {
@@ -211,10 +211,14 @@ const CreativeCatalog = () => {
         </div>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
         <div>
           <h1 style={{ color: 'var(--color-accent-green)', fontSize: '2.2rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '8px' }}>Biblioteca de Ativos</h1>
-          <p style={{ opacity: 0.6, fontSize: '0.95rem' }}>Gerenciamento centralizado de criativos, logos e manuais de marca.</p>
+          <p style={{ opacity: 0.6, fontSize: '0.95rem', marginBottom: '15px' }}>Gerenciamento centralizado de criativos, logos e manuais de marca.</p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 215, 0, 0.1)', border: '1px solid rgba(255, 215, 0, 0.3)', padding: '8px 15px', borderRadius: '8px', color: '#FFD700', fontSize: '0.8rem' }}>
+             <Cloud size={16} />
+             <span><strong>Plano Premium:</strong> Gere criativos e legendas automatizadas com Inteligência Artificial nesta aba (Requer conexão com nuvem específica).</span>
+          </div>
         </div>
         
         <button 

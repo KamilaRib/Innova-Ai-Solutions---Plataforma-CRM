@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { SettingsContext } from '../context/SettingsContext';
-import { Instagram, Facebook, Youtube, Share2, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Plus, Sparkles, X, Send } from 'lucide-react';
+import { Instagram, Facebook, Youtube, Share2, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Plus, Sparkles, X, Send, Filter, ChevronDown, List } from 'lucide-react';
 
 const TikTokIcon = ({ size = 20, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" style={{ verticalAlign: 'middle' }}>
@@ -20,6 +20,33 @@ const ContentCalendar = () => {
     const [tone, setTone] = useState("profissional");
     const [generatedContent, setGeneratedContent] = useState(null);
     const [scheduledPosts, setScheduledPosts] = useState([]); // Vazio para produção
+
+    const [showStatusFilter, setShowStatusFilter] = useState(false);
+    const [showChannelsFilter, setShowChannelsFilter] = useState(false);
+    const [viewMode, setViewMode] = useState('calendar');
+
+    // Filter states
+    const allStatusList = ['Rascunho', 'Em pause', 'Publicados', 'Agendados', 'Não publicadas', 'Em aprovação', 'Para alteração'];
+    const allChannelsList = ['Facebook', 'X', 'Instagram', 'Instagram Stories', 'LinkedIn Pages', 'YouTube', 'Pinterest', 'Facebook Stories', 'Google Meu Negócio', 'Reels', 'TikTok', 'Threads', 'WhatsApp'];
+    
+    const [selectedStatus, setSelectedStatus] = useState([...allStatusList]);
+    const [selectedChannels, setSelectedChannels] = useState([...allChannelsList]);
+
+    const handleStatusToggle = (status) => {
+        if (status === 'Todos') {
+            setSelectedStatus(selectedStatus.length === allStatusList.length ? [] : [...allStatusList]);
+        } else {
+            setSelectedStatus(prev => prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]);
+        }
+    };
+
+    const handleChannelToggle = (channel) => {
+        if (channel === 'Todos') {
+            setSelectedChannels(selectedChannels.length === allChannelsList.length ? [] : [...allChannelsList]);
+        } else {
+            setSelectedChannels(prev => prev.includes(channel) ? prev.filter(c => c !== channel) : [...prev, channel]);
+        }
+    };
 
     // Funções de Navegação
     const handlePrevMonth = () => {
@@ -128,6 +155,22 @@ const ContentCalendar = () => {
                         </div>
                         <button className="btn-icon" style={{ padding: '8px' }} onClick={handleNextMonth}><ChevronRight size={20} /></button>
                     </div>
+                    
+                    <div style={{ display: 'flex', gap: '5px', alignItems: 'center', margin: '0 10px' }}>
+                        <button 
+                            onClick={() => setViewMode('list')} 
+                            style={{ background: 'transparent', border: 'none', color: viewMode === 'list' ? 'var(--color-accent-green)' : 'var(--color-text-muted)', cursor: 'pointer', padding: '5px', borderBottom: viewMode === 'list' ? '2px solid var(--color-accent-green)' : '2px solid transparent' }}
+                        >
+                            <List size={20} />
+                        </button>
+                        <button 
+                            onClick={() => setViewMode('calendar')} 
+                            style={{ background: 'transparent', border: 'none', color: viewMode === 'calendar' ? 'var(--color-accent-green)' : 'var(--color-text-muted)', cursor: 'pointer', padding: '5px', borderBottom: viewMode === 'calendar' ? '2px solid var(--color-accent-green)' : '2px solid transparent' }}
+                        >
+                            <CalendarIcon size={20} />
+                        </button>
+                    </div>
+
                     <button className="btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Plus size={18} />
                         <span>Novo Post</span>
@@ -135,73 +178,134 @@ const ContentCalendar = () => {
                 </div>
             </header>
 
-            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', fontSize: '0.8rem', opacity: 0.6 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1877F2' }}></div> Facebook</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E1306C' }}></div> Instagram</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22C55E' }}></div> TikTok</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF0000' }}></div> YouTube</div>
-            </div>
-
-            <div style={{ 
-                flex: 1, 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(7, 1fr)', 
-                gridTemplateRows: 'auto repeat(6, 1fr)',
-                border: '1px solid rgba(255,255,255,0.05)',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                background: 'rgba(255,255,255,0.02)'
-            }}>
-                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-                    <div key={day} style={{ 
-                        padding: '12px', textAlign: 'center', fontSize: '0.75rem', fontWeight: '800', 
-                        opacity: 0.4, textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.05)',
-                        background: 'rgba(255,255,255,0.03)'
-                    }}>
-                        {day}
-                    </div>
-                ))}
-
-                {calendarDays.map((d, i) => {
-                    const isToday = d.currentMonth && d.day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
-                    const dayPosts = scheduledPosts.filter(p => p.day === d.day && d.currentMonth);
-
-                    return (
-                        <div key={i} style={{ 
-                            padding: '10px', 
-                            borderRight: '1px solid rgba(255,255,255,0.05)', 
-                            borderBottom: '1px solid rgba(255,255,255,0.05)',
-                            opacity: d.currentMonth ? 1 : 0.15,
-                            backgroundColor: isToday ? 'rgba(0, 245, 255, 0.03)' : 'transparent',
-                            minHeight: '100px',
-                            display: 'flex', flexDirection: 'column', gap: '6px'
-                        }}>
-                            <div style={{ 
-                                fontSize: '0.85rem', fontWeight: isToday ? '900' : '400',
-                                color: isToday ? 'var(--color-accent-cyan)' : 'inherit'
-                            }}>
-                                {d.day}
-                            </div>
-
-                            {dayPosts.map(post => (
-                                <div key={post.id} style={{
-                                    background: `${post.color}15`, borderLeft: `3px solid ${post.color}`,
-                                    padding: '6px 8px', borderRadius: '4px', cursor: 'pointer',
-                                    display: 'flex', flexDirection: 'column', gap: '2px'
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        {getPlatformIcon(post.platform)}
-                                        <span style={{ fontSize: '0.65rem', fontWeight: '800', textTransform: 'uppercase', opacity: 0.8 }}>{post.time}</span>
-                                    </div>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {post.title}
-                                    </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <div style={{ display: 'flex', gap: '10px', position: 'relative' }}>
+                    <button type="button" style={{ display: 'flex', gap: '5px', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', background: 'transparent', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer' }}>
+                       Filtros:
+                    </button>
+                    
+                    <div style={{ position: 'relative' }}>
+                        <button type="button" onClick={() => {setShowStatusFilter(!showStatusFilter); setShowChannelsFilter(false);}} style={{ display: 'flex', gap: '5px', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', border: '1px solid #f97316', color: '#f97316', background: 'rgba(249, 115, 22, 0.1)', padding: '4px 10px', borderRadius: '15px', cursor: 'pointer' }}>
+                           <Plus size={14} /> Status <ChevronDown size={14} />
+                        </button>
+                        {showStatusFilter && (
+                            <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '5px', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', width: '220px', zIndex: 50, color: '#fff', padding: '15px' }}>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '15px', paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Status do post</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '200px', overflowY: 'auto', paddingRight: '5px' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
+                                        <input type="checkbox" checked={selectedStatus.length === allStatusList.length} onChange={() => handleStatusToggle('Todos')} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> Todos
+                                    </label>
+                                    {allStatusList.map(s => (
+                                        <label key={s} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
+                                            <input type="checkbox" checked={selectedStatus.includes(s)} onChange={() => handleStatusToggle(s)} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> {s}
+                                        </label>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    );
-                })}
+                                <button type="button" className="btn-primary" onClick={() => setShowStatusFilter(false)} style={{ width: '100%', marginTop: '15px', padding: '8px', fontSize: '0.8rem' }}>Aplicar</button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div style={{ position: 'relative' }}>
+                        <button type="button" onClick={() => {setShowChannelsFilter(!showChannelsFilter); setShowStatusFilter(false);}} style={{ display: 'flex', gap: '5px', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', border: '1px solid #3b82f6', color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)', padding: '4px 10px', borderRadius: '15px', cursor: 'pointer' }}>
+                           <Share2 size={14} /> Canais <ChevronDown size={14} />
+                        </button>
+                        {showChannelsFilter && (
+                            <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '5px', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', width: '250px', zIndex: 50, color: '#fff', padding: '15px' }}>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '15px', paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Selecionar canais</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '250px', overflowY: 'auto', paddingRight: '5px' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
+                                        <input type="checkbox" checked={selectedChannels.length === allChannelsList.length} onChange={() => handleChannelToggle('Todos')} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> Todos
+                                    </label>
+                                    {allChannelsList.map(c => (
+                                        <label key={c} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
+                                            <input type="checkbox" checked={selectedChannels.includes(c)} onChange={() => handleChannelToggle(c)} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> {c}
+                                        </label>
+                                    ))}
+                                </div>
+                                <button type="button" className="btn-primary" onClick={() => setShowChannelsFilter(false)} style={{ width: '100%', marginTop: '15px', padding: '8px', fontSize: '0.8rem' }}>Aplicar</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '15px', fontSize: '0.8rem', opacity: 0.6 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1877F2' }}></div> Facebook</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E1306C' }}></div> Instagram</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22C55E' }}></div> TikTok</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF0000' }}></div> YouTube</div>
+                </div>
             </div>
+
+            {viewMode === 'calendar' ? (
+                <div style={{ 
+                    flex: 1, 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(7, 1fr)', 
+                    gridTemplateRows: 'auto repeat(6, 1fr)',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    background: 'rgba(255,255,255,0.02)'
+                }}>
+                    {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                        <div key={day} style={{ 
+                            padding: '12px', textAlign: 'center', fontSize: '0.75rem', fontWeight: '800', 
+                            opacity: 0.4, textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.05)',
+                            background: 'rgba(255,255,255,0.03)'
+                        }}>
+                            {day}
+                        </div>
+                    ))}
+
+                    {calendarDays.map((d, i) => {
+                        const isToday = d.currentMonth && d.day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+                        const dayPosts = scheduledPosts.filter(p => p.day === d.day && d.currentMonth);
+
+                        return (
+                            <div key={i} style={{ 
+                                padding: '10px', 
+                                borderRight: '1px solid rgba(255,255,255,0.05)', 
+                                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                opacity: d.currentMonth ? 1 : 0.15,
+                                backgroundColor: isToday ? 'rgba(0, 245, 255, 0.03)' : 'transparent',
+                                minHeight: '100px',
+                                display: 'flex', flexDirection: 'column', gap: '6px'
+                            }}>
+                                <div style={{ 
+                                    fontSize: '0.85rem', fontWeight: isToday ? '900' : '400',
+                                    color: isToday ? 'var(--color-accent-cyan)' : 'inherit'
+                                }}>
+                                    {d.day}
+                                </div>
+
+                                {dayPosts.map(post => (
+                                    <div key={post.id} style={{
+                                        background: `${post.color}15`, borderLeft: `3px solid ${post.color}`,
+                                        padding: '6px 8px', borderRadius: '4px', cursor: 'pointer',
+                                        display: 'flex', flexDirection: 'column', gap: '2px'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            {getPlatformIcon(post.platform)}
+                                            <span style={{ fontSize: '0.65rem', fontWeight: '800', textTransform: 'uppercase', opacity: 0.8 }}>{post.time}</span>
+                                        </div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {post.title}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                <div style={{ flex: 1, overflowY: 'auto', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px' }}>
+                    <div style={{ textAlign: 'center', color: 'var(--color-text-muted)', marginTop: '40px' }}>
+                        <List size={40} style={{ opacity: 0.3, marginBottom: '10px', margin: '0 auto' }} />
+                        <p>Nenhum post agendado para exibir na visualização em lista.</p>
+                    </div>
+                </div>
+            )}
 
             {/* MODAL DE GERAÇÃO IA */}
             {isModalOpen && (

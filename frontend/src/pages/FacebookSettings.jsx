@@ -1,22 +1,63 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { SettingsContext } from '../context/SettingsContext';
+import React, { useState, useEffect } from 'react';
 import { Facebook, Users, TrendingUp, BarChart3 } from 'lucide-react';
+import { apiFetch } from '../utils/api';
 
 const FacebookSettings = () => {
-  const { settings, saveSettings } = useContext(SettingsContext);
-  const [formData, setFormData] = useState(settings);
+  const [formData, setFormData] = useState({
+    facebook_url: '',
+    n8n_social_webhook: '',
+    n8n_social_api_key: ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setFormData(settings);
-  }, [settings]);
+    const loadIntegration = async () => {
+      try {
+        const response = await apiFetch('/api/integrations/FACEBOOK');
+        const result = await response.json();
+        if (result.success && result.data) {
+          setFormData({
+            facebook_url: result.data.credentials?.facebook_url || '',
+            n8n_social_webhook: result.data.n8n_webhook || '',
+            n8n_social_api_key: result.data.credentials?.api_key || ''
+          });
+        }
+      } catch (e) {
+        console.error("Erro ao carregar Facebook", e);
+      }
+    };
+    loadIntegration();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   const handleSave = async () => {
-    await saveSettings(formData);
-    alert("Facebook salvo!");
+    setIsSaving(true);
+    try {
+      const response = await apiFetch('/api/integrations', {
+        method: 'POST',
+        body: JSON.stringify({
+          provider: 'FACEBOOK',
+          n8n_webhook: formData.n8n_social_webhook,
+          credentials: {
+            facebook_url: formData.facebook_url,
+            api_key: formData.n8n_social_api_key
+          }
+        })
+      });
+      const result = await response.json();
+      if (result.success) {
+        alert("Configurações do Facebook salvas!");
+      } else {
+        alert("Erro ao salvar Facebook.");
+      }
+    } catch (e) {
+      alert("Erro de conexão.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -67,7 +108,7 @@ const FacebookSettings = () => {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>URL do Perfil / Página</label>
             <input className="input-field" type="url" name="facebook_url" value={formData.facebook_url || ''} onChange={handleChange} placeholder="https://facebook.com/..." />
           </div>
-          <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#1877F2' }}>Salvar Perfil</button>
+          <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ width: '100%', background: '#1877F2', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Perfil'}</button>
         </div>
 
         <div className="card" style={{ borderTop: '4px solid #1877F2' }}>
@@ -80,7 +121,7 @@ const FacebookSettings = () => {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', opacity: 0.7 }}>API Token</label>
             <input className="input-field" type="password" name="n8n_social_api_key" value={formData.n8n_social_api_key || ''} onChange={handleChange} autoComplete="new-password" />
           </div>
-          <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#1877F2' }}>Salvar Automação</button>
+          <button className="btn-primary" onClick={handleSave} disabled={isSaving} style={{ width: '100%', background: '#1877F2', opacity: isSaving ? 0.7 : 1 }}>{isSaving ? 'Salvando...' : 'Salvar Automação'}</button>
         </div>
       </div>
     </div>
