@@ -126,10 +126,6 @@ export default function ClientLayout() {
                   <DollarSign size={16} />
                   <span>ROI</span>
                 </NavLink>
-                <NavLink onClick={closeMobile} to="/app/analysis/activities" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <ClipboardList size={16} />
-                  <span>Relatório por atividades</span>
-                </NavLink>
                 <NavLink onClick={closeMobile} to="/app/analysis/goals" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Target size={16} />
                   <span>Relatório de metas</span>

@@ -14,7 +14,20 @@ router.get('/context/:phone', leadsController.getLeadContextByPhone);
 // Rota pública para captura de leads do catálogo
 router.post('/public', leadsController.createPublicLead);
 
-// Rota para o n8n (ou frontend) atualizar o estágio do Kanban
+// Rota para o n8n atualizar o estágio do Kanban
 router.patch('/:id', leadsController.updateLeadStatus);
+
+// ==========================================
+// ROTAS EXCLUSIVAS PARA O AGENTE DE IA (N8N)
+// ==========================================
+
+// Criar ou atualizar lead
+router.post('/n8n/clientes', leadsController.upsertN8nLead);
+
+// Mover etapa do lead
+router.patch('/n8n/clientes/:id/etapa', leadsController.updateN8nStatus);
+
+// Registrar nota
+router.post('/n8n/clientes/:id/notas', leadsController.addN8nNote);
 
 module.exports = router;

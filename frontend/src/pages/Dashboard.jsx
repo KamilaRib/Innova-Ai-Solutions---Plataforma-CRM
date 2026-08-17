@@ -164,7 +164,7 @@ const Dashboard = () => {
 
       </div>
 
-      {/* SEGUNDA LINHA: ESTATÍSTICAS E TAREFAS */}
+      {/* SEGUNDA LINHA: ESTATÍSTICAS E AGENDAMENTOS */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1.5fr', gap: '20px' }}>
         
         {/* LEADS E STATUS */}
@@ -203,16 +203,16 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* TAREFAS */}
+        {/* AGENDAMENTOS MÊS */}
         <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4 }}>TAREFAS</span>
-            <span style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem' }}>Hoje</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4 }}>AGENDAMENTOS</span>
+            <span style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem' }}>Mês</span>
           </div>
           <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#F8F9FA', marginBottom: '15px' }}>0</div>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(57, 255, 20, 0.05)', padding: '10px', borderRadius: '8px' }}>
-            <CheckCircle size={18} color="#39FF14" />
-            <span style={{ fontSize: '0.8rem' }}>Você tem <strong>12 tarefas</strong> críticas para hoje.</span>
+            <Calendar size={18} color="#39FF14" />
+            <span style={{ fontSize: '0.8rem' }}>0 agendamentos pendentes este mês.</span>
           </div>
         </div>
 

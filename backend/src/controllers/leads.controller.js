@@ -189,10 +189,122 @@ const createPublicLead = async (req, res) => {
   }
 };
 
+// ==========================================
+// FUNÇÕES EXCLUSIVAS PARA O AGENTE DE IA (N8N)
+// ==========================================
+
+/**
+ * Cria ou atualiza um lead via telefone (Usado pelo n8n crm_criar_ou_atualizar_lead)
+ */
+const upsertN8nLead = async (req, res) => {
+  try {
+    const { nome, telefone, origem, etapa, observacao } = req.body;
+
+    if (!nome || !telefone) {
+      return res.status(400).json({ error: 'Nome e telefone são obrigatórios.' });
+    }
+
+    let lead = await prisma.lead.findFirst({ where: { phone: telefone } });
+
+    // Mapeia etapa enviada pelo n8n para o formato do CRM (se necessário)
+    let pipeline_status = 'Início de Atendimento';
+    if (etapa === 'qualificando') pipeline_status = 'Conversando';
+    else if (etapa === 'qualificado') pipeline_status = 'Conversando';
+    else if (etapa === 'sessao_agendada') pipeline_status = 'Agendamento';
+    else if (etapa === 'perdido') pipeline_status = 'Perdidos';
+
+    if (lead) {
+      lead = await prisma.lead.update({
+        where: { id: lead.id },
+        data: {
+          name: nome,
+          pipeline_status,
+          notes: observacao ? `${lead.notes || ''}\n[IA] Observação: ${observacao}` : lead.notes,
+          last_contacted_at: new Date()
+        }
+      });
+    } else {
+      lead = await prisma.lead.create({
+        data: {
+          name: nome,
+          phone: telefone,
+          source: origem || 'WhatsApp - Agente IA',
+          pipeline_status,
+          notes: observacao ? `[IA] Observação: ${observacao}` : null,
+          last_contacted_at: new Date()
+        }
+      });
+    }
+
+    res.status(200).json({ success: true, cliente_id: lead.id, lead });
+  } catch (error) {
+    console.error('Erro ao upsertN8nLead:', error);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+};
+
+/**
+ * Atualiza a etapa do lead (Usado pelo n8n crm_mover_card)
+ */
+const updateN8nStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { etapa, motivo } = req.body;
+
+    let pipeline_status = 'Início de Atendimento';
+    if (etapa === 'qualificando') pipeline_status = 'Conversando';
+    else if (etapa === 'qualificado') pipeline_status = 'Conversando'; // Pode criar uma coluna separada se quiser
+    else if (etapa === 'sessao_agendada') pipeline_status = 'Agendamento';
+    else if (etapa === 'perdido') pipeline_status = 'Perdidos';
+
+    const lead = await prisma.lead.update({
+      where: { id },
+      data: {
+        pipeline_status,
+        last_contacted_at: new Date(),
+        notes: motivo ? `[IA] Mudança para ${etapa}: ${motivo}` : undefined
+      }
+    });
+
+    res.status(200).json({ success: true, lead });
+  } catch (error) {
+    console.error('Erro ao updateN8nStatus:', error);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+};
+
+/**
+ * Registra uma nota no lead (Usado pelo n8n crm_registrar_nota)
+ */
+const addN8nNote = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nota, autor } = req.body;
+
+    const lead = await prisma.lead.findUnique({ where: { id } });
+    if (!lead) return res.status(404).json({ error: 'Lead não encontrado' });
+
+    await prisma.lead.update({
+      where: { id },
+      data: {
+        notes: lead.notes ? `${lead.notes}\n[${autor || 'IA'}] ${nota}` : `[${autor || 'IA'}] ${nota}`
+      }
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Erro ao addN8nNote:', error);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+};
+
 module.exports = {
   getStats,
   getAll,
   getLeadContextByPhone,
   updateLeadStatus,
-  createPublicLead
+  createPublicLead,
+  upsertN8nLead,
+  updateN8nStatus,
+  addN8nNote
 };
