@@ -191,6 +191,10 @@ export default function ClientLayout() {
                   <Share2 size={16} />
                   <span>Conectar Contas</span>
                 </NavLink>
+                <NavLink onClick={closeMobile} to="/app/settings/evolution" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                  <Zap size={16} />
+                  <span>WhatsApp Evolution</span>
+                </NavLink>
                 <NavLink onClick={closeMobile} to="/app/social/schedule" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <CalendarCheck size={16} />
                   <span>Agendar Post</span>

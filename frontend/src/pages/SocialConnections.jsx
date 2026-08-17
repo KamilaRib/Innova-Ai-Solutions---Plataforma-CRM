@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Facebook, Instagram, Youtube, MapPin, Linkedin, BarChart, Twitter, Target, Megaphone, X as XIcon } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Facebook, Instagram, Youtube, MapPin, Linkedin, BarChart, Twitter, Target, Megaphone, X as XIcon, X } from 'lucide-react';
 
 const TikTokIcon = ({ size = 16, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
@@ -97,6 +97,7 @@ const ConnectionModal = ({ provider, onClose, onContinue }) => {
 };
 
 const SocialConnections = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [successMsg, setSuccessMsg] = useState('');
   const [selectedProvider, setSelectedProvider] = useState(null);
@@ -124,8 +125,8 @@ const SocialConnections = () => {
     { id: 'google_ads', name: 'Google Ads', icon: <Target size={28} />, hexColor: '#4285F4', connected: false },
     { id: 'linkedin_ads', name: 'LinkedIn Ads', icon: <Linkedin size={28} />, hexColor: '#0A66C2', connected: false },
     { id: 'tiktok_ads', name: 'TikTok Ads', icon: <TikTokIcon size={28} />, hexColor: '#00F2FE', connected: false },
-    { id: 'whatsapp_cloud', name: 'WhatsApp Oficial (Cloud API)', icon: <WhatsAppIcon size={28} />, hexColor: '#25D366', connected: false },
     { id: 'whatsapp_evolution', name: 'WhatsApp Evolution API', icon: <WhatsAppIcon size={28} />, hexColor: '#128C7E', connected: false },
+    { id: 'whatsapp_cloud', name: 'WhatsApp Oficial (Cloud API)', icon: <WhatsAppIcon size={28} />, hexColor: '#25D366', connected: false },
   ]);
 
   useEffect(() => {
@@ -138,6 +139,14 @@ const SocialConnections = () => {
   }, [location]);
 
   const handleConnectClick = (provider) => {
+    if (provider.id === 'whatsapp_evolution') {
+      navigate('/app/settings/evolution');
+      return;
+    }
+    if (provider.id === 'whatsapp_cloud') {
+      navigate('/app/settings/whatsapp');
+      return;
+    }
     setSelectedProvider(provider);
   };
 

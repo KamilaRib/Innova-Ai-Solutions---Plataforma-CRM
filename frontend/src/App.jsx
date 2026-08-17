@@ -89,6 +89,8 @@ const App = () => {
             <Route path="settings/security" element={<SecuritySettings />} />
             <Route path="settings/branding" element={<BrandingSettings />} />
             <Route path="settings/ai" element={<AISettings />} />
+            <Route path="settings/evolution" element={<EvolutionSettings />} />
+            <Route path="settings/whatsapp" element={<WhatsAppSettings />} />
             <Route
               path="settings/users"
               element={

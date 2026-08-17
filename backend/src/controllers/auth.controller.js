@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const prisma = require('../lib/prisma');
+const mailService = require('../services/mail.service');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'chave-super-segura-white-label';
 
@@ -102,9 +103,21 @@ const forgotPassword = async (req, res) => {
       }
     });
 
-    // TODO: Integrar com provedor de e-mail (NodeMailer/Resend)
-    console.log(`[EMAIL SIMULADO] Para: ${email}`);
-    console.log(`Link de recuperação: http://localhost:5173/reset-password?token=${token}`);
+    // Constrói URL base dinamicamente com base no origin da requisição ou variáveis de ambiente
+    const baseUrl = process.env.FRONTEND_URL || process.env.APP_URL || req.headers.origin || 'http://localhost:5173';
+    const resetLink = `${baseUrl}/reset-password?token=${token}`;
+
+    // Disparo real via SMTP
+    try {
+      await mailService.sendPasswordResetEmail({
+        to: user.email,
+        name: user.name,
+        resetLink
+      });
+    } catch (mailError) {
+      console.error('Erro ao enviar e-mail via SMTP:', mailError);
+      // Mantém a resposta amigável para não vazar detalhes ou travar a requisição
+    }
 
     res.status(200).json({ success: true, message: 'Se o e-mail existir, um link de recuperação será enviado.' });
   } catch (error) {
