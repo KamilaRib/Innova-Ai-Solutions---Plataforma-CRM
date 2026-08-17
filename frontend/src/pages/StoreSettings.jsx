@@ -115,7 +115,7 @@ const StoreSettings = () => {
             <p style={{ fontSize: '0.8rem', color: '#888', margin: 0 }}>Link direto para compartilhamento do seu estoque atualizado com clientes:</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <input type="text" value="HTTPS://INNOVAAI.NET.BR/C/LOJA" readOnly style={{ padding: '12px 15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#ccc', fontSize: '0.75rem', width: '320px', outline: 'none' }} />
+            <input type="text" value="https://lp.innovaaisolutions.com.br" readOnly style={{ padding: '12px 15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#ccc', fontSize: '0.75rem', width: '320px', outline: 'none' }} />
             <button style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', padding: '0 25px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
               <Copy size={16} /> Copiar
             </button>
