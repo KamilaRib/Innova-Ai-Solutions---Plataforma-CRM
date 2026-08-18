@@ -40,6 +40,7 @@ app.use('/api/settings', require('./routes/settings.routes')); // Configuraçõe
 app.use('/api/funnels', require('./routes/funnels.routes')); // Gestão de Funis
 app.use('/api/leads', require('./routes/leads.routes')); // Gestão de Leads e Kanban
 app.use('/api/customers', require('./routes/customers.routes')); // Gestão de Clientes (Cadastro) — consumido também pelo n8n
+app.use('/api/clientes', require('./routes/customers.routes')); // Alias para integrações n8n em português
 app.use('/api/catalog', require('./routes/catalog.routes')); // Catálogo de Criativos e Produtos
 app.use('/api/social-auth', require('./routes/auth.social.routes')); // Hub de Conexões (OAuth)
 app.use('/api/integrations', require('./routes/integrations.routes')); // Integrações de Redes Sociais
