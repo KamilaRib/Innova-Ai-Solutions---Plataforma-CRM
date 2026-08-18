@@ -55,6 +55,12 @@ const getAll = async (req, res) => {
 
     const leads = await prisma.lead.findMany({
       where: whereClause,
+      include: {
+        messages: {
+          orderBy: { created_at: 'desc' },
+          take: 1
+        }
+      },
       orderBy: { last_contacted_at: 'desc' }
     });
     res.status(200).json({ success: true, data: leads });
@@ -298,6 +304,71 @@ const addN8nNote = async (req, res) => {
   }
 };
 
+/**
+ * Busca o histórico de mensagens de um lead específico
+ */
+const getLeadMessages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const messages = await prisma.message.findMany({
+      where: { lead_id: id },
+      orderBy: { created_at: 'asc' }
+    });
+    res.status(200).json({ success: true, data: messages });
+  } catch (error) {
+    console.error('Erro ao buscar mensagens do lead:', error);
+    res.status(500).json({ error: 'Erro ao buscar mensagens' });
+  }
+};
+
+/**
+ * Envia uma mensagem manual do CRM para o WhatsApp e salva no histórico
+ */
+const sendLeadMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content, sender_type } = req.body;
+
+    if (!content) return res.status(400).json({ error: 'Conteúdo obrigatório' });
+
+    const lead = await prisma.lead.findUnique({ where: { id } });
+    if (!lead) return res.status(404).json({ error: 'Lead não encontrado' });
+
+    const message = await prisma.message.create({
+      data: {
+        lead_id: id,
+        sender_type: sender_type || 'agent',
+        content
+      }
+    });
+
+    // Se tiver Evolution configurada, pode disparar a mensagem via WhatsApp
+    const settings = await prisma.systemSettings.findFirst();
+    if (settings?.evolution_api_url && settings?.evolution_instance_name && lead.phone) {
+      try {
+        await fetch(`${settings.evolution_api_url}/message/sendText/${settings.evolution_instance_name}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': settings.evolution_api_key
+          },
+          body: JSON.stringify({
+            number: lead.phone,
+            text: content
+          })
+        });
+      } catch (evoErr) {
+        console.error('Erro ao enviar via Evolution:', evoErr);
+      }
+    }
+
+    res.status(201).json({ success: true, data: message });
+  } catch (error) {
+    console.error('Erro ao enviar mensagem:', error);
+    res.status(500).json({ error: 'Erro ao enviar mensagem' });
+  }
+};
+
 module.exports = {
   getStats,
   getAll,
@@ -306,5 +377,7 @@ module.exports = {
   createPublicLead,
   upsertN8nLead,
   updateN8nStatus,
-  addN8nNote
+  addN8nNote,
+  getLeadMessages,
+  sendLeadMessage
 };

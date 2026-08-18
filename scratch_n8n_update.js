@@ -11,91 +11,10 @@ async function updateWorkflow() {
   
   const wf = data;
 
-  // Find the node
-  const nodeIndex = wf.nodes.findIndex(n => n.name === 'Normaliza Mensagem');
-  if (nodeIndex === -1) {
-    console.error("Node not found!");
-    process.exit(1);
+  const nodeIndex = wf.nodes.findIndex(n => n.name === 'Formata Resposta');
+  if (nodeIndex !== -1) {
+    wf.nodes[nodeIndex].parameters.mode = 'runOnceForAllItems';
   }
-
-  // Update JS Code
-  const jsCode = `// Normaliza o payload da Evolution API (messages.upsert) ou do CRM
-// e decide se a mensagem deve ser processada.
-
-const raw = $input.item.json;
-const body = raw.body ?? raw;
-
-// Novo: Se for evento do CRM (novo_lead_catalogo)
-if (body.event === 'novo_lead_catalogo') {
-  return {
-    json: {
-      processar: true,
-      motivoDescarte: null,
-      telefone: body.phone,
-      remoteJid: body.phone + '@s.whatsapp.net',
-      nome: body.name,
-      mensagem: \`Olá, tenho interesse no produto \${body.product}\`,
-      messageId: \`crm_\${Date.now()}\`,
-      recebidoEm: new Date().toISOString(),
-      EVOLUTION_URL: raw.EVOLUTION_URL,
-      EVOLUTION_INSTANCE: raw.EVOLUTION_INSTANCE,
-      CRM_URL: raw.CRM_URL,
-      CALENDAR_ID: raw.CALENDAR_ID,
-    }
-  };
-}
-
-const data = body.data ?? {};
-const key = data.key ?? {};
-const msg = data.message ?? {};
-
-const remoteJid = key.remoteJid ?? '';
-const fromMe = key.fromMe === true;
-const isGrupo = remoteJid.includes('@g.us');
-const isStatus = remoteJid.includes('status@broadcast');
-
-// Extrai texto de todos os formatos comuns da Evolution
-const texto = (
-  msg.conversation ??
-  msg.extendedTextMessage?.text ??
-  msg.imageMessage?.caption ??
-  msg.videoMessage?.caption ??
-  msg.buttonsResponseMessage?.selectedDisplayText ??
-  msg.listResponseMessage?.title ??
-  msg.templateButtonReplyMessage?.selectedDisplayText ??
-  ''
-).toString().trim();
-
-const temAudio = Boolean(msg.audioMessage);
-const telefone = remoteJid.split('@')[0] ?? '';
-
-// Regras de descarte
-let motivoDescarte = null;
-if (fromMe) motivoDescarte = 'mensagem enviada por nos';
-else if (isGrupo) motivoDescarte = 'mensagem de grupo';
-else if (isStatus) motivoDescarte = 'status broadcast';
-else if (temAudio && !texto) motivoDescarte = 'audio sem transcricao';
-else if (!texto) motivoDescarte = 'sem conteudo de texto';
-else if (!telefone) motivoDescarte = 'telefone ausente';
-
-return {
-  json: {
-    processar: motivoDescarte === null,
-    motivoDescarte,
-    telefone,
-    remoteJid,
-    nome: data.pushName ?? 'Lead',
-    mensagem: texto,
-    messageId: key.id ?? '',
-    recebidoEm: new Date().toISOString(),
-    EVOLUTION_URL: raw.EVOLUTION_URL,
-    EVOLUTION_INSTANCE: raw.EVOLUTION_INSTANCE,
-    CRM_URL: raw.CRM_URL,
-    CALENDAR_ID: raw.CALENDAR_ID,
-  },
-};`;
-
-  wf.nodes[nodeIndex].parameters.jsCode = jsCode;
 
   // Make request
   const validWf = {

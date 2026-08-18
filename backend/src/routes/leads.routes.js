@@ -17,6 +17,10 @@ router.post('/public', leadsController.createPublicLead);
 // Rota para o n8n atualizar o estágio do Kanban
 router.patch('/:id', leadsController.updateLeadStatus);
 
+// Rotas de Mensagens (Chat em tempo real)
+router.get('/:id/messages', leadsController.getLeadMessages);
+router.post('/:id/messages', leadsController.sendLeadMessage);
+
 // ==========================================
 // ROTAS EXCLUSIVAS PARA O AGENTE DE IA (N8N)
 // ==========================================
