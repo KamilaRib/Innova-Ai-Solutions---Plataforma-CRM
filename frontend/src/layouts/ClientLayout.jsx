@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, Columns, Users, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, ChevronUp, ChevronsUpDown, Sun, Moon, Monitor, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Columns, Users, Building2, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, ChevronUp, ChevronsUpDown, Sun, Moon, Monitor, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 import { AuthContext } from '../context/AuthContext';
 
@@ -165,6 +165,11 @@ export default function ClientLayout() {
           <NavLink onClick={closeMobile} to="/app/chats" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
             <MessageSquare size={20} />
             <span>Chats</span>
+          </NavLink>
+
+          <NavLink onClick={closeMobile} to="/app/clients" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+            <Building2 size={20} />
+            <span>Clientes</span>
           </NavLink>
 
           <NavLink onClick={closeMobile} to="/app/leads" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>

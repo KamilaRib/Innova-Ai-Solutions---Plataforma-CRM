@@ -11,16 +11,8 @@ const Chats = () => {
   // Cores dinâmicas do Branding
   const accentColor = settings?.primary_color || '#00F5FF';
 
-  // Simulação de histórico
-  const [chatHistory, setChatHistory] = useState({
-    1: [
-      { id: 101, sender: 'client', text: 'Poderia me ajudar?', time: '11:57 AM' },
-      { id: 102, sender: 'bot', text: 'Claro! 😊\n\nEu sou o assistente virtual da ' + (settings?.business_name || 'Innova AI') + '.\nComo posso ser útil hoje?', time: '11:58 AM', sentByBot: true },
-    ],
-    2: [
-      { id: 201, sender: 'client', text: 'Oi, o robô parou de responder.', time: '10:15 AM' },
-    ]
-  });
+  // Histórico de conversas (limpo / tempo real)
+  const [chatHistory, setChatHistory] = useState({});
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -173,32 +165,40 @@ const Chats = () => {
           gap: '20px',
           background: 'radial-gradient(circle at center, rgba(255,255,255,0.01) 0%, transparent 70%)'
         }}>
-          {(chatHistory[selectedLead?.id] || []).map((msg, idx) => (
-            <div key={idx} style={{ 
-              alignSelf: msg.sender === 'client' ? 'flex-start' : 'flex-end',
-              maxWidth: '75%',
-              display: 'flex',
-              flexDirection: 'column'
-            }}>
-              {msg.sentByBot && <span style={{ fontSize: '0.65rem', color: accentColor, fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Response</span>}
-              <div style={{
-                background: msg.sender === 'client' ? 'rgba(255,255,255,0.04)' : `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)`,
-                color: msg.sender === 'client' ? '#fff' : '#000',
-                padding: '14px 20px',
-                borderRadius: msg.sender === 'client' ? '4px 20px 20px 20px' : '20px 20px 4px 20px',
-                boxShadow: msg.sender === 'client' ? '0 4px 15px rgba(0,0,0,0.1)' : `0 8px 25px ${accentColor}20`,
-                position: 'relative',
-                whiteSpace: 'pre-wrap',
-                border: msg.sender === 'client' ? '1px solid rgba(255,255,255,0.05)' : 'none'
+          {(chatHistory[selectedLead?.id] || []).length === 0 ? (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.4, gap: '8px' }}>
+              <span style={{ fontSize: '2.2rem' }}>💬</span>
+              <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: '600' }}>Nenhuma mensagem nesta conversa.</p>
+              <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>Envie uma mensagem abaixo ou aguarde novos eventos via WhatsApp.</span>
+            </div>
+          ) : (
+            (chatHistory[selectedLead?.id] || []).map((msg, idx) => (
+              <div key={idx} style={{ 
+                alignSelf: msg.sender === 'client' ? 'flex-start' : 'flex-end',
+                maxWidth: '75%',
+                display: 'flex',
+                flexDirection: 'column'
               }}>
-                <p style={{ margin: 0, fontSize: '0.92rem', fontWeight: msg.sender === 'client' ? '400' : '500' }}>{msg.text}</p>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
-                  <span style={{ fontSize: '0.6rem', opacity: 0.5 }}>{msg.time}</span>
-                  {msg.sender !== 'client' && <span style={{ fontSize: '0.7rem' }}>✓✓</span>}
+                {msg.sentByBot && <span style={{ fontSize: '0.65rem', color: accentColor, fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Response</span>}
+                <div style={{
+                  background: msg.sender === 'client' ? 'rgba(255,255,255,0.04)' : `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)`,
+                  color: msg.sender === 'client' ? '#fff' : '#000',
+                  padding: '14px 20px',
+                  borderRadius: msg.sender === 'client' ? '4px 20px 20px 20px' : '20px 20px 4px 20px',
+                  boxShadow: msg.sender === 'client' ? '0 4px 15px rgba(0,0,0,0.1)' : `0 8px 25px ${accentColor}20`,
+                  position: 'relative',
+                  whiteSpace: 'pre-wrap',
+                  border: msg.sender === 'client' ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                }}>
+                  <p style={{ margin: 0, fontSize: '0.92rem', fontWeight: msg.sender === 'client' ? '400' : '500' }}>{msg.text}</p>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
+                    <span style={{ fontSize: '0.6rem', opacity: 0.5 }}>{msg.time}</span>
+                    {msg.sender !== 'client' && <span style={{ fontSize: '0.7rem' }}>✓✓</span>}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Input & Copilot (Glassmorphism) */}

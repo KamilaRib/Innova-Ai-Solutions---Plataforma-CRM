@@ -30,9 +30,9 @@ const EvolutionSettings = () => {
           },
           body: JSON.stringify({
             webhook: {
-              url: formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2',
+              url: formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/CRM',
               enabled: true,
-              events: formData.evolution_events || ['MESSAGES_UPSERT']
+              events: formData.evolution_events || ['MESSAGES_UPSERT', 'MESSAGES_UPDATE', 'CONTACTS_UPSERT', 'PRESENCE_UPDATE']
             }
           })
         });
@@ -148,7 +148,7 @@ const EvolutionSettings = () => {
               className="input-field"
               type="url"
               name="evolution_webhook_url"
-              value={formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/lead-message-v2'}
+              value={formData.evolution_webhook_url || 'https://n8n.agency-innova-ai-solutions.cloud/webhook/CRM'}
               onChange={handleChange}
               placeholder="https://n8n.agency-innova-ai-solutions.cloud/webhook/..."
             />

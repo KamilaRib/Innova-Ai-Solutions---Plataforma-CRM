@@ -64,7 +64,7 @@ export class AiAgentConciergeLeadClassificationWorkflow {
     })
     Webhook = {
         httpMethod: 'POST',
-        path: 'lead-message-v2',
+        path: 'CRM',
         options: {},
     };
 

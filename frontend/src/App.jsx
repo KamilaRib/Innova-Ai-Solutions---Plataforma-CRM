@@ -17,6 +17,7 @@ import GoalsReport from './pages/GoalsReport';
 import SalesReport from './pages/SalesReport';
 import ActivitiesReport from './pages/ActivitiesReport';
 import BaseContatos from './pages/BaseContatos';
+import Clientes from './pages/Clientes';
 import Chats from './pages/Chats';
 import BrandingSettings from './pages/BrandingSettings';
 import WhatsAppSettings from './pages/WhatsAppSettings';
@@ -79,6 +80,7 @@ const App = () => {
             <Route path="products/costs" element={<ProductCosts />} />
             <Route path="sales/new" element={<RegisterSale />} />
             <Route path="chats" element={<Chats />} />
+            <Route path="clients" element={<Clientes />} />
             <Route path="leads" element={<BaseContatos />} />
             <Route path="social" element={<Navigate to="social/hub" replace />} />
             <Route path="social/hub" element={<SocialConnections />} />

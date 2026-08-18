@@ -67,7 +67,7 @@ export class MyWorkflow {
     })
     Webhook = {
         httpMethod: 'POST',
-        path: '9ca628b7-b9ae-4edc-9694-0254b3312c4d',
+        path: 'CRM',
         options: {},
     };
 
@@ -163,10 +163,10 @@ return [{ json: { formattedText } }];
     })
     SendWhatsappResponse = {
         method: 'POST',
-        url: '={{ ($env.EVOLUTION_API_URL || "https://evolution.agency-innova-ai-solutions.cloud") + "/message/sendText/" + ($env.EVOLUTION_INSTANCE_NAME || "F64EE7FB7560-4ABD-82FA-2356ADD1AE00") }}',
+        url: '={{ ($env.EVOLUTION_API_URL || "https://evolution.agency-innova-ai-solutions.cloud") + "/message/sendText/" + ($env.EVOLUTION_INSTANCE_NAME || "AgênciaCrm") }}',
         sendHeaders: true,
         specifyHeaders: 'json',
-        jsonHeaders: '={ "apikey": "{{ $env.EVOLUTION_API_KEY || "innova_secret_key" }}" }',
+        jsonHeaders: '={ "apikey": "{{ $env.EVOLUTION_API_KEY || "044DA500348E-457D-B0C4-07E991A58162" }}" }',
         sendBody: true,
         contentType: 'json',
         specifyBody: 'json',
@@ -257,11 +257,31 @@ return [{ json: { formattedText } }];
     };
 
     @node({
+        id: 'c518b760-449e-4e89-a29e-83df24ef7d99',
+        name: 'Send AI WhatsApp Response',
+        type: 'n8n-nodes-base.httpRequest',
+        version: 4.4,
+        position: [480, 50],
+    })
+    SendAiWhatsappResponse = {
+        method: 'POST',
+        url: '={{ ($env.EVOLUTION_API_URL || "https://evolution.agency-innova-ai-solutions.cloud") + "/message/sendText/" + ($env.EVOLUTION_INSTANCE_NAME || "AgênciaCrm") }}',
+        sendHeaders: true,
+        specifyHeaders: 'json',
+        jsonHeaders: '={ "apikey": "{{ $env.EVOLUTION_API_KEY || "044DA500348E-457D-B0C4-07E991A58162" }}" }',
+        sendBody: true,
+        contentType: 'json',
+        specifyBody: 'json',
+        jsonBody:
+            '={ "number": "{{ $node["Webhook"].json.body.phone || $node["Webhook"].json.body.from || $node["Webhook"].json.body.key?.remoteJid || $node["Webhook"].json.body.data?.key?.remoteJid }}", "text": "{{ $node["AI Agent"].json.output }}", "textMessage": { "text": "{{ $node["AI Agent"].json.output }}" }, "options": { "delay": 1200, "presence": "composing", "linkPreview": false } }',
+    };
+
+    @node({
         id: '419d4608-5998-48d7-9d35-fbf2a349a87d',
         name: 'AI Classifier',
         type: '@n8n/n8n-nodes-langchain.chainLlm',
         version: 1.4,
-        position: [560, 50],
+        position: [680, 50],
     })
     AiClassifier = {
         promptType: 'define',
@@ -364,7 +384,8 @@ return [{ json: { formattedText } }];
         this.GetCrmStats.out(0).to(this.FormatMetricsMessage.in(0));
         this.FormatMetricsMessage.out(0).to(this.SendWhatsappResponse.in(0));
         this.GetLeadContext.out(0).to(this.AiAgent.in(0));
-        this.AiAgent.out(0).to(this.AiClassifier.in(0));
+        this.AiAgent.out(0).to(this.SendAiWhatsappResponse.in(0));
+        this.SendAiWhatsappResponse.out(0).to(this.AiClassifier.in(0));
         this.AiClassifier.out(0).to(this.CheckStageChange.in(0));
         this.CheckStageChange.out(0).to(this.UpdateLeadStatus.in(0));
         this.UpdateLeadStatus.out(0).to(this.GoogleCalendar.in(0));
