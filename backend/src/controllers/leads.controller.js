@@ -305,15 +305,55 @@ const addN8nNote = async (req, res) => {
 };
 
 /**
- * Busca o histórico de mensagens de um lead específico
+ * Busca o histórico de mensagens de um lead específico (sincronizado com o Supabase/n8n)
  */
 const getLeadMessages = async (req, res) => {
   try {
     const { id } = req.params;
-    const messages = await prisma.message.findMany({
+    const lead = await prisma.lead.findUnique({ where: { id } });
+    if (!lead) return res.status(404).json({ error: 'Lead não encontrado' });
+
+    let messages = await prisma.message.findMany({
       where: { lead_id: id },
       orderBy: { created_at: 'asc' }
     });
+
+    // Se não tiver mensagens locais no CRM, busca direto da memória do n8n no Postgres/Supabase
+    if (messages.length === 0 && lead.phone) {
+      try {
+        const cleanPhone = lead.phone.replace(/\D/g, '');
+        const n8nHistory = await prisma.$queryRawUnsafe(`
+          SELECT * FROM n8n_chat_histories 
+          WHERE session_id = $1 OR session_id = $2 OR session_id LIKE $3
+          ORDER BY id ASC
+        `, cleanPhone, `55${cleanPhone}`, `%${cleanPhone}%`);
+
+        if (n8nHistory && n8nHistory.length > 0) {
+          const parsedMessages = n8nHistory.map(row => {
+            let parsed = row.message;
+            if (typeof parsed === 'string') {
+              try { parsed = JSON.parse(parsed); } catch(e) {}
+            }
+            const isHuman = parsed?.type === 'human' || parsed?.id?.includes?.('human');
+            const content = parsed?.data?.content || parsed?.content || (typeof parsed === 'string' ? parsed : '');
+            return {
+              id: String(row.id),
+              lead_id: id,
+              sender_type: isHuman ? 'client' : 'bot',
+              content: content,
+              created_at: row.created_at || new Date().toISOString()
+            };
+          }).filter(m => m.content);
+
+          if (parsedMessages.length > 0) {
+            return res.status(200).json({ success: true, data: parsedMessages });
+          }
+        }
+      } catch (rawErr) {
+        // Tabela ainda não criada ou sem permissão direta, ignora silenciosamente
+      }
+    }
+
     res.status(200).json({ success: true, data: messages });
   } catch (error) {
     console.error('Erro ao buscar mensagens do lead:', error);
