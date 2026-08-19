@@ -76,10 +76,21 @@ const getAll = async (req, res) => {
 const getLeadContextByPhone = async (req, res) => {
   try {
     const { phone } = req.params;
+    const clean = (phone || '').replace(/\D/g, '');
+    const without55 = clean.startsWith('55') ? clean.slice(2) : clean;
+    const with55 = `55${without55}`;
 
-    // Busca o lead pelo telefone, incluindo as últimas 10 mensagens para contexto da IA
+    // Busca o lead pelo telefone com máxima flexibilidade (com ou sem DDD/55)
     const lead = await prisma.lead.findFirst({
-      where: { phone },
+      where: {
+        OR: [
+          { phone: phone },
+          { phone: clean },
+          { phone: without55 },
+          { phone: with55 },
+          { phone: { contains: without55 } }
+        ]
+      },
       include: {
         messages: {
           orderBy: { created_at: 'desc' },
@@ -89,15 +100,27 @@ const getLeadContextByPhone = async (req, res) => {
     });
 
     if (!lead) {
-      return res.status(404).json({ error: 'Lead não encontrado.' });
+      return res.status(404).json({ error: 'Lead não encontrado.', leadExiste: false });
     }
 
     // Inverte as mensagens para que fiquem em ordem cronológica
     lead.messages.reverse();
 
-    res.status(200).json(lead);
+    res.status(200).json({
+      success: true,
+      leadExiste: true,
+      lead,
+      pipeline_status: lead.pipeline_status,
+      name: lead.name,
+      phone: lead.phone,
+      id: lead.id,
+      notes: lead.notes
+    });
   } catch (error) {
     console.error('Erro ao buscar contexto do lead:', error);
+    res.status(500).json({ error: 'Erro interno ao buscar contexto.' });
+  }
+};
     res.status(500).json({ error: 'Erro interno ao buscar contexto.' });
   }
 };

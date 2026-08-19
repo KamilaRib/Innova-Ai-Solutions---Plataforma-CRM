@@ -10,6 +10,8 @@ router.get('/', leadsController.getAll);
 
 // Rota para o n8n buscar o contexto do lead antes de classificar
 router.get('/context/:phone', leadsController.getLeadContextByPhone);
+router.get('/n8n/clientes/:phone', leadsController.getLeadContextByPhone);
+router.get('/consulta/:phone', leadsController.getLeadContextByPhone);
 
 // Rota pública para captura de leads do catálogo
 router.post('/public', leadsController.createPublicLead);
