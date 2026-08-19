@@ -20,6 +20,7 @@ router.patch('/:id', leadsController.updateLeadStatus);
 // Rotas de Mensagens (Chat em tempo real)
 router.get('/:id/messages', leadsController.getLeadMessages);
 router.post('/:id/messages', leadsController.sendLeadMessage);
+router.post('/messages/sync', leadsController.syncIncomingMessage);
 
 // ==========================================
 // ROTAS EXCLUSIVAS PARA O AGENTE DE IA (N8N)

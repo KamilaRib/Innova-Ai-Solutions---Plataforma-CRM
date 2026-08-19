@@ -318,8 +318,9 @@ const getLeadMessages = async (req, res) => {
       orderBy: { created_at: 'asc' }
     });
 
-    // Se não tiver mensagens locais no CRM, busca direto da memória do n8n no Postgres/Supabase
-    if (messages.length === 0 && lead.phone) {
+    // Busca também mensagens gravadas pelo n8n no Supabase/Postgres
+    let combinedMessages = [...messages];
+    if (lead.phone) {
       try {
         const cleanPhone = lead.phone.replace(/\D/g, '');
         const n8nHistory = await prisma.$queryRawUnsafe(`
@@ -329,7 +330,7 @@ const getLeadMessages = async (req, res) => {
         `, cleanPhone, `55${cleanPhone}`, `%${cleanPhone}%`);
 
         if (n8nHistory && n8nHistory.length > 0) {
-          const parsedMessages = n8nHistory.map(row => {
+          const parsedFromN8n = n8nHistory.map(row => {
             let parsed = row.message;
             if (typeof parsed === 'string') {
               try { parsed = JSON.parse(parsed); } catch(e) {}
@@ -337,27 +338,69 @@ const getLeadMessages = async (req, res) => {
             const isHuman = parsed?.type === 'human' || parsed?.id?.includes?.('human');
             const content = parsed?.data?.content || parsed?.content || (typeof parsed === 'string' ? parsed : '');
             return {
-              id: String(row.id),
+              id: `n8n_${row.id}`,
               lead_id: id,
               sender_type: isHuman ? 'client' : 'bot',
               content: content,
               created_at: row.created_at || new Date().toISOString()
             };
-          }).filter(m => m.content);
+          }).filter(m => m.content && !combinedMessages.some(cm => cm.content === m.content));
 
-          if (parsedMessages.length > 0) {
-            return res.status(200).json({ success: true, data: parsedMessages });
-          }
+          combinedMessages = [...combinedMessages, ...parsedFromN8n];
         }
       } catch (rawErr) {
         // Tabela ainda não criada ou sem permissão direta, ignora silenciosamente
       }
     }
 
-    res.status(200).json({ success: true, data: messages });
+    // Ordena por data de criação
+    combinedMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+    res.status(200).json({ success: true, data: combinedMessages });
   } catch (error) {
     console.error('Erro ao buscar mensagens do lead:', error);
     res.status(500).json({ error: 'Erro ao buscar mensagens' });
+  }
+};
+
+/**
+ * Sincroniza uma mensagem recebida ou enviada via n8n/Evolution
+ */
+const syncIncomingMessage = async (req, res) => {
+  try {
+    const { phone, content, sender_type, name } = req.body;
+    if (!phone || !content) return res.status(400).json({ error: 'Telefone e conteúdo obrigatórios' });
+
+    let lead = await prisma.lead.findFirst({ where: { phone } });
+    if (!lead) {
+      lead = await prisma.lead.create({
+        data: {
+          name: name || 'Novo Lead WhatsApp',
+          phone,
+          source: 'WhatsApp Evolution',
+          pipeline_status: 'Início de Atendimento',
+          last_contacted_at: new Date()
+        }
+      });
+    } else {
+      await prisma.lead.update({
+        where: { id: lead.id },
+        data: { last_contacted_at: new Date() }
+      });
+    }
+
+    const message = await prisma.message.create({
+      data: {
+        lead_id: lead.id,
+        sender_type: sender_type || 'client',
+        content
+      }
+    });
+
+    res.status(201).json({ success: true, lead_id: lead.id, message });
+  } catch (error) {
+    console.error('Erro ao sincronizar mensagem:', error);
+    res.status(500).json({ error: 'Erro interno ao sincronizar mensagem' });
   }
 };
 
@@ -419,5 +462,6 @@ module.exports = {
   updateN8nStatus,
   addN8nNote,
   getLeadMessages,
-  sendLeadMessage
+  sendLeadMessage,
+  syncIncomingMessage
 };
