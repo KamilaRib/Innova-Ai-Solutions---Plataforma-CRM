@@ -121,9 +121,6 @@ const getLeadContextByPhone = async (req, res) => {
     res.status(500).json({ error: 'Erro interno ao buscar contexto.' });
   }
 };
-    res.status(500).json({ error: 'Erro interno ao buscar contexto.' });
-  }
-};
 
 /**
  * Atualiza o status do lead no Kanban
