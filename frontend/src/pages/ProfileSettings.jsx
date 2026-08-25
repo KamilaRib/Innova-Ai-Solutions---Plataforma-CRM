@@ -64,7 +64,7 @@ const ProfileSettings = () => {
                 gap: '8px',
                 padding: '8px 16px',
                 borderRadius: '20px',
-                background: isActive ? 'var(--color-accent-green)' : 'transparent',
+                background: isActive ? 'var(--color-accent)' : 'transparent',
                 color: isActive ? '#000' : '#888',
                 textDecoration: 'none',
                 fontSize: '0.85rem',
@@ -98,12 +98,12 @@ const ProfileSettings = () => {
                 width: '100%',
                 padding: '14px 15px',
                 background: focusedInput === 'name' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.03)',
-                border: focusedInput === 'name' ? '1px solid var(--color-accent-green)' : '1px solid rgba(255,255,255,0.1)',
+                border: focusedInput === 'name' ? '1px solid var(--color-accent)' : '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '8px',
                 color: '#fff',
                 fontSize: '0.95rem',
                 outline: 'none',
-                boxShadow: focusedInput === 'name' ? '0 0 0 1px var(--color-accent-green)' : 'none',
+                boxShadow: focusedInput === 'name' ? '0 0 0 1px var(--color-accent)' : 'none',
                 transition: 'all 0.2s ease'
               }}
             />
@@ -121,12 +121,12 @@ const ProfileSettings = () => {
                 width: '100%',
                 padding: '14px 15px',
                 background: focusedInput === 'email' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.03)',
-                border: focusedInput === 'email' ? '1px solid var(--color-accent-green)' : '1px solid rgba(255,255,255,0.1)',
+                border: focusedInput === 'email' ? '1px solid var(--color-accent)' : '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '8px',
                 color: '#fff',
                 fontSize: '0.95rem',
                 outline: 'none',
-                boxShadow: focusedInput === 'email' ? '0 0 0 1px var(--color-accent-green)' : 'none',
+                boxShadow: focusedInput === 'email' ? '0 0 0 1px var(--color-accent)' : 'none',
                 transition: 'all 0.2s ease'
               }}
             />
@@ -134,7 +134,7 @@ const ProfileSettings = () => {
 
           <button 
             style={{
-              background: 'var(--color-accent-green)',
+              background: 'var(--color-accent)',
               color: '#000',
               border: 'none',
               padding: '12px 24px',

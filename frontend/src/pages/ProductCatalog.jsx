@@ -92,8 +92,8 @@ const ProductCatalog = () => {
       {/* MODAL DE PRODUTO */}
       {showModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
-          <div className="card" style={{ width: '450px', padding: '30px', borderTop: '4px solid var(--color-accent-green)', background: '#0a0a0a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
-            <h2 style={{ marginBottom: '20px', color: 'var(--color-accent-green)' }}>{editingProduct ? 'Editar Produto' : 'Novo Produto'}</h2>
+          <div className="card" style={{ width: '450px', padding: '30px', borderTop: '4px solid var(--color-accent)', background: '#0a0a0a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+            <h2 style={{ marginBottom: '20px', color: 'var(--color-accent)' }}>{editingProduct ? 'Editar Produto' : 'Novo Produto'}</h2>
             
             <label style={{ display: 'block', marginBottom: '8px', opacity: 0.6 }}>Nome do Produto</label>
             <input className="input-field" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ marginBottom: '15px' }} />
@@ -118,7 +118,7 @@ const ProductCatalog = () => {
       {/* MODAL DE NF-E */}
       {showNfeModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
-          <div className="card" style={{ width: '500px', padding: '30px', borderTop: '4px solid var(--color-accent-green)', background: '#12151a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', borderRadius: '12px' }}>
+          <div className="card" style={{ width: '500px', padding: '30px', borderTop: '4px solid var(--color-accent)', background: '#12151a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', borderRadius: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
               <div>
                 <h2 style={{ margin: 0, color: '#fff', fontSize: '1.2rem' }}>Gerenciar NFS-e de Serviço</h2>
@@ -128,7 +128,7 @@ const ProductCatalog = () => {
             </div>
             
             <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '20px' }}>
-              <button style={{ background: 'transparent', border: 'none', color: 'var(--color-accent-green)', paddingBottom: '10px', borderBottom: '2px solid var(--color-accent-green)', fontWeight: 'bold' }}>Visão Geral / Emissão</button>
+              <button style={{ background: 'transparent', border: 'none', color: 'var(--color-accent)', paddingBottom: '10px', borderBottom: '2px solid var(--color-accent)', fontWeight: 'bold' }}>Visão Geral / Emissão</button>
             </div>
             
             {nfseStatus === 'AUTORIZADA' ? (
@@ -142,8 +142,8 @@ const ProductCatalog = () => {
             ) : (
               <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '25px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                  <div style={{ width: '0', height: '0', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '8px solid var(--color-accent-green)' }}></div>
-                  <h4 style={{ margin: 0, color: 'var(--color-accent-green)' }}>Emitir NFS-e (Serviço)</h4>
+                  <div style={{ width: '0', height: '0', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '8px solid var(--color-accent)' }}></div>
+                  <h4 style={{ margin: 0, color: 'var(--color-accent)' }}>Emitir NFS-e (Serviço)</h4>
                 </div>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7, lineHeight: '1.5', margin: 0 }}>
                   Será gerada e enviada uma **NFS-e de Serviço** para a Prefeitura. O valor da nota corresponderá ao preço do serviço cadastrado (R$ {Number(showNfeModal.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}).
@@ -206,7 +206,7 @@ const ProductCatalog = () => {
                     setIsEmitting(false);
                   }
                 }}
-                style={{ background: nfseStatus === 'AUTORIZADA' ? 'rgba(255,255,255,0.1)' : 'var(--color-accent-green)', color: nfseStatus === 'AUTORIZADA' ? '#fff' : '#000', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: nfseStatus === 'AUTORIZADA' ? 'default' : 'pointer', fontSize: '0.9rem', opacity: isEmitting ? 0.7 : 1 }}
+                style={{ background: nfseStatus === 'AUTORIZADA' ? 'rgba(255,255,255,0.1)' : 'var(--color-accent)', color: nfseStatus === 'AUTORIZADA' ? '#fff' : '#000', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: nfseStatus === 'AUTORIZADA' ? 'default' : 'pointer', fontSize: '0.9rem', opacity: isEmitting ? 0.7 : 1 }}
               >
                 {isEmitting ? 'Transmitindo...' : (nfseStatus === 'AUTORIZADA' ? 'Nota Autorizada' : 'Transmitir NFS-e para Prefeitura')}
               </button>
@@ -217,14 +217,14 @@ const ProductCatalog = () => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '35px' }}>
         <div>
-          <h1 style={{ color: 'var(--color-accent-green)', marginBottom: '5px' }}>Catálogo de Produtos</h1>
+          <h1 style={{ color: 'var(--color-accent)', marginBottom: '5px' }}>Catálogo de Produtos</h1>
           <p style={{ opacity: 0.8 }}>Gerencie seus produtos, serviços e precificações.</p>
         </div>
         
         <button 
           onClick={() => navigate('/app/products/new')}
           style={{ 
-            background: 'var(--color-accent-green)', border: 'none', color: '#000', 
+            background: 'var(--color-accent)', border: 'none', color: '#000', 
             padding: '12px 24px', borderRadius: '10px', fontWeight: 'bold', 
             display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer'
           }}
@@ -264,7 +264,7 @@ const ProductCatalog = () => {
                 {item.desc || 'Sem descrição.'}
               </p>
               
-              <div style={{ color: 'var(--color-accent-green)', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '15px' }}>
+              <div style={{ color: 'var(--color-accent)', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '15px' }}>
                 <span style={{ fontSize: '0.8rem', opacity: 0.6, marginRight: '4px' }}>R$</span>
                 {Number(item.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </div>
@@ -272,12 +272,12 @@ const ProductCatalog = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px' }}>
                 <button 
                   onClick={() => navigate(`/app/products/edit?productId=${item.id}`)}
-                  style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', padding: '8px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}>
+                  style={{ background: 'var(--color-accent)', color: '#000', border: 'none', padding: '8px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}>
                   <Edit size={14} /> Editar
                 </button>
                 <button 
                   onClick={() => navigate(`/app/sales/new?productId=${item.id}`)}
-                  style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', padding: '8px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}>
+                  style={{ background: 'var(--color-accent)', color: '#000', border: 'none', padding: '8px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}>
                   Vender
                 </button>
                 <button 

@@ -121,9 +121,9 @@ const CreativeCatalog = () => {
               <X size={20} />
             </button>
             <div style={{ background: '#111', borderRadius: '24px', padding: '30px', boxShadow: '0 20px 60px rgba(0,0,0,0.8)' }}>
-              <h2 style={{ marginBottom: '25px', color: 'var(--color-accent-green)', letterSpacing: '-1px', fontSize: '1.8rem' }}>{previewItem.title}</h2>
+              <h2 style={{ marginBottom: '25px', color: 'var(--color-accent)', letterSpacing: '-1px', fontSize: '1.8rem' }}>{previewItem.title}</h2>
               <div style={{ width: '100%', height: '450px', background: 'linear-gradient(135deg, #1a1a1a, #0d0d0d)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.05)' }}>
-                {previewItem.type.includes('VÍDEO') ? <Video size={80} color="var(--color-accent-green)" /> : <Image size={80} opacity={0.2} />}
+                {previewItem.type.includes('VÍDEO') ? <Video size={80} color="var(--color-accent)" /> : <Image size={80} opacity={0.2} />}
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '30px' }}>
                 <div>
@@ -147,9 +147,9 @@ const CreativeCatalog = () => {
       {/* MODAL DE CADASTRO / EDIÇÃO */}
       {showModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)' }}>
-          <div className="card" style={{ width: '500px', padding: '40px', borderTop: '4px solid var(--color-accent-green)', background: '#0d1117', boxShadow: '0 30px 70px rgba(0,0,0,0.7)', borderRadius: '24px' }}>
+          <div className="card" style={{ width: '500px', padding: '40px', borderTop: '4px solid var(--color-accent)', background: '#0d1117', boxShadow: '0 30px 70px rgba(0,0,0,0.7)', borderRadius: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-              <h2 style={{ color: 'var(--color-accent-green)', fontSize: '1.8rem', fontWeight: '900' }}>
+              <h2 style={{ color: 'var(--color-accent)', fontSize: '1.8rem', fontWeight: '900' }}>
                 {editingItem ? 'Editar Ativo' : 'Novo Ativo'}
               </h2>
               <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', opacity: 0.5 }}><X size={24} /></button>
@@ -213,7 +213,7 @@ const CreativeCatalog = () => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
         <div>
-          <h1 style={{ color: 'var(--color-accent-green)', fontSize: '2.2rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '8px' }}>Biblioteca de Ativos</h1>
+          <h1 style={{ color: 'var(--color-accent)', fontSize: '2.2rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '8px' }}>Biblioteca de Ativos</h1>
           <p style={{ opacity: 0.6, fontSize: '0.95rem', marginBottom: '15px' }}>Gerenciamento centralizado de criativos, logos e manuais de marca.</p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 215, 0, 0.1)', border: '1px solid rgba(255, 215, 0, 0.3)', padding: '8px 15px', borderRadius: '8px', color: '#FFD700', fontSize: '0.8rem' }}>
              <Cloud size={16} />
@@ -238,7 +238,7 @@ const CreativeCatalog = () => {
             key={filter} 
             onClick={() => setActiveFilter(filter)}
             style={{ 
-              background: activeFilter === filter ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.03)', 
+              background: activeFilter === filter ? 'var(--color-accent)' : 'rgba(255,255,255,0.03)', 
               border: 'none', 
               color: activeFilter === filter ? '#000' : '#fff', 
               padding: '8px 20px', 
@@ -269,8 +269,8 @@ const CreativeCatalog = () => {
               display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
               borderBottom: '1px solid rgba(255,255,255,0.05)'
             }}>
-              {item.type.includes('VÍDEO') ? <Video size={32} color="var(--color-accent-green)" /> : <Image size={32} opacity={0.2} />}
-              <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold', color: 'var(--color-accent-green)', textTransform: 'uppercase' }}>
+              {item.type.includes('VÍDEO') ? <Video size={32} color="var(--color-accent)" /> : <Image size={32} opacity={0.2} />}
+              <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold', color: 'var(--color-accent)', textTransform: 'uppercase' }}>
                 {item.type}
               </div>
               
@@ -295,7 +295,7 @@ const CreativeCatalog = () => {
               <p style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '20px', height: '36px', overflow: 'hidden' }}>{item.desc}</p>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>{item.format || 'N/A'}</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-accent)' }}>{item.format || 'N/A'}</span>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
                     onClick={() => setPreviewItem(item)}
@@ -305,7 +305,7 @@ const CreativeCatalog = () => {
                   </button>
                   <button 
                     onClick={() => handleDownload(item.url)}
-                    style={{ background: 'var(--color-accent-green)', border: 'none', color: '#000', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '800' }}
+                    style={{ background: 'var(--color-accent)', border: 'none', color: '#000', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '800' }}
                   >
                     <Download size={14} style={{ marginRight: '6px' }} />
                     BAIXAR

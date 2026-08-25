@@ -106,7 +106,7 @@ const SchedulePost = () => {
                ].map(ch => {
                  const isSelected = selectedChannels.includes(ch);
                  const isHovered = hoveredChannel === ch;
-                 const brandColor = brandColors[ch] || 'var(--color-accent-green)';
+                 const brandColor = brandColors[ch] || 'var(--color-accent)';
                  
                  return (
                    <button 
@@ -182,7 +182,7 @@ const SchedulePost = () => {
                cursor: 'pointer',
                transition: 'all 0.3s'
              }}
-             onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-accent-green)'; e.currentTarget.style.background = 'rgba(34, 197, 94, 0.05)'; }}
+             onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-accent)'; e.currentTarget.style.background = 'rgba(0, 132, 255, 0.05)'; }}
              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.background = 'rgba(0,0,0,0.2)'; }}
              >
                <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>Arraste a imagem ou clique para fazer upload</p>
@@ -194,8 +194,8 @@ const SchedulePost = () => {
                <label style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--color-text-muted)' }}>5. Data e horário das publicações</label>
                <button style={{ 
                  display: 'flex', alignItems: 'center', gap: '5px', 
-                 background: 'transparent', border: '1px solid var(--color-accent-green)', 
-                 color: 'var(--color-accent-green)', borderRadius: '15px', 
+                 background: 'transparent', border: '1px solid var(--color-accent-cyan)', 
+                 color: 'var(--color-accent-cyan)', borderRadius: '15px', 
                  padding: '4px 10px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' 
                }}>
                  Melhores horários - IA <Sparkles size={12} />

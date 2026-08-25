@@ -213,12 +213,12 @@ const Kanban = () => {
               background: 'rgba(18, 21, 26, 0.8)',
               backdropFilter: 'blur(15px)',
               border: '1px solid rgba(255, 255, 255, 0.05)',
-              borderTop: '2px solid rgba(34, 197, 94, 0.2)',
+              borderTop: '2px solid rgba(0, 132, 255, 0.2)',
               borderRadius: '20px',
               position: 'relative'
             }}
           >
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '5px', background: 'linear-gradient(90deg, #22c55e, #4ade80, #22c55e)', opacity: 0.9 }}></div>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '5px', background: 'linear-gradient(90deg, #0084FF, #00D4FF, #0084FF)', opacity: 0.9 }}></div>
             <h3 style={{ fontSize: '0.9rem', marginBottom: '20px', borderBottom: '2px solid rgba(255,255,255,0.1)', paddingBottom: '15px', display: 'flex', justifyContent: 'space-between' }}>
               <span>{col}</span>
               <span style={{ opacity: 0.5 }}>{leads.filter(l => l.pipeline_status === col).length}</span>
@@ -232,7 +232,7 @@ const Kanban = () => {
                   onDragStart={(e) => onDragStart(e, lead.id)}
                   style={{
                     background: 'rgba(20,24,31,1)', padding: '18px', borderRadius: '12px',
-                    borderLeft: `5px solid var(--color-accent-green)`,
+                    borderLeft: `5px solid var(--color-accent)`,
                     cursor: 'grab',
                     transition: 'all 0.2s',
                     boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
@@ -272,9 +272,9 @@ const Kanban = () => {
                   )}
 
                   {/* ETIQUETA DE FOLLOW UP */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'rgba(34, 197, 94, 0.1)', padding: '4px 8px', borderRadius: '4px', marginBottom: '12px', width: 'fit-content' }}>
-                    <Clock size={12} color="var(--color-accent-green)" />
-                    <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>FOLLOW UP</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'rgba(0, 132, 255, 0.1)', padding: '4px 8px', borderRadius: '4px', marginBottom: '12px', width: 'fit-content' }}>
+                    <Clock size={12} color="var(--color-accent)" />
+                    <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'var(--color-accent)' }}>FOLLOW UP</span>
                   </div>
 
                   {/* FEEDBACK DO CLIENTE (ESTRELAS) */}
@@ -291,8 +291,8 @@ const Kanban = () => {
                     onClick={() => openBillingModal(lead)}
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                      background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)',
-                      color: 'var(--color-accent-green)', padding: '8px', borderRadius: '8px',
+                      background: 'rgba(0, 132, 255, 0.1)', border: '1px solid rgba(0, 132, 255, 0.2)',
+                      color: 'var(--color-accent)', padding: '8px', borderRadius: '8px',
                       fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer'
                     }}
                   >
@@ -307,9 +307,9 @@ const Kanban = () => {
 
       {billingLead && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
-          <div className="card" style={{ width: '450px', padding: '30px', borderTop: '4px solid var(--color-accent-green)', background: '#0a0a0a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+          <div className="card" style={{ width: '450px', padding: '30px', borderTop: '4px solid var(--color-accent)', background: '#0a0a0a', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ color: 'var(--color-accent-green)', margin: 0 }}>Fechar Venda</h2>
+              <h2 style={{ color: 'var(--color-accent)', margin: 0 }}>Fechar Venda</h2>
               <button onClick={closeBillingModal} style={{ background: 'none', border: 'none', color: '#fff', opacity: 0.5, cursor: 'pointer' }}>
                 <X size={20} />
               </button>

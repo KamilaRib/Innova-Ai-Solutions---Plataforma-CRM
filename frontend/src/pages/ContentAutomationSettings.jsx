@@ -24,8 +24,8 @@ const ContentAutomationSettings = () => {
             <h1 style={{ color: 'var(--color-light)', marginBottom: '10px' }}>Automação de Conteúdo</h1>
             <p style={{ opacity: 0.8, marginBottom: '30px' }}>Configure o motor de IA via n8n para geração automática de postagens.</p>
 
-            <div className="card" style={{ maxWidth: '600px', borderTop: '4px solid #22C55E' }}>
-                <h3 style={{ color: '#22C55E', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="card" style={{ maxWidth: '600px', borderTop: '4px solid #0084FF' }}>
+                <h3 style={{ color: '#0084FF', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Sparkles size={20} /> motor de Geração IA
                 </h3>
                 
@@ -43,11 +43,11 @@ const ContentAutomationSettings = () => {
                     <input className="input-field" type="password" name="n8n_generation_token" value={formData.n8n_generation_token || ''} onChange={handleChange} autoComplete="off" />
                 </div>
 
-                <div style={{ background: 'rgba(34, 197, 94, 0.05)', padding: '15px', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '20px', border: '1px solid rgba(34, 197, 94, 0.1)' }}>
+                <div style={{ background: 'rgba(0, 132, 255, 0.05)', padding: '15px', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '20px', border: '1px solid rgba(0, 132, 255, 0.1)' }}>
                     <strong>Dica:</strong> Este webhook será chamado pelo Calendário de Conteúdo quando você solicitar uma "Geração via IA". O n8n deve processar a ideia e retornar os textos e sugestões de imagem.
                 </div>
 
-                <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#22C55E' }}>Salvar Configurações</button>
+                <button className="btn-primary" onClick={handleSave} style={{ width: '100%', background: '#0084FF' }}>Salvar Configurações</button>
             </div>
         </div>
     );

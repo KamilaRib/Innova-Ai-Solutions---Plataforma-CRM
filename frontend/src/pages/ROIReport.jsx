@@ -248,7 +248,7 @@ const ROIReport = () => {
                                             type="number"
                                             value={item.sales}
                                             onChange={(e) => handleUpdate(i, 'sales', e.target.value)}
-                                            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-accent-green)', borderRadius: '6px', padding: '8px 12px', width: '110px', fontSize: '0.85rem', fontWeight: 'bold' }}
+                                            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-accent)', borderRadius: '6px', padding: '8px 12px', width: '110px', fontSize: '0.85rem', fontWeight: 'bold' }}
                                         />
                                     </td>
                                     <td style={{ padding: '18px 10px', fontSize: '1rem', fontWeight: '800', color: roi > 100 ? 'var(--color-accent-cyan)' : '#fff' }}>

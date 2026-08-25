@@ -90,8 +90,8 @@ const ProductRegistration = () => {
 
   const SectionHeader = ({ icon: Icon, title, subtitle }) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
-      <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '12px', borderRadius: '10px' }}>
-        <Icon color="var(--color-accent-green)" size={24} />
+      <div style={{ background: 'rgba(0, 132, 255, 0.1)', padding: '12px', borderRadius: '10px' }}>
+        <Icon color="var(--color-accent)" size={24} />
       </div>
       <div>
         <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700 }}>{title}</h3>
@@ -217,7 +217,7 @@ const ProductRegistration = () => {
             borderRadius: '12px', textAlign: 'center', cursor: 'pointer',
             transition: 'border 0.2s', background: 'rgba(255,255,255,0.01)'
           }}
-          onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--color-accent-green)'}
+          onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--color-accent)'}
           onMouseOut={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}
           >
             <FileText size={32} opacity={0.5} style={{ marginBottom: '10px' }} />
@@ -234,11 +234,11 @@ const ProductRegistration = () => {
           onClick={handleSave}
           disabled={loading}
           style={{ 
-            background: 'var(--color-accent-green)', color: '#000', border: 'none', 
+            background: 'var(--color-accent)', color: '#000', border: 'none', 
             padding: '12px 30px', borderRadius: '8px', fontWeight: 800, fontSize: '1rem',
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px',
             opacity: loading ? 0.7 : 1, transition: '0.2s',
-            boxShadow: '0 4px 15px rgba(34,197,94,0.3)'
+            boxShadow: '0 4px 15px rgba(0, 132, 255,0.3)'
           }}
         >
           <Save size={20} />

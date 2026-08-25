@@ -77,7 +77,7 @@ const UserManagement = () => {
         <button 
           onClick={() => setIsModalOpen(true)}
           style={{ 
-            background: 'var(--color-accent-green)', 
+            background: 'var(--color-accent)', 
             color: '#000', 
             border: 'none', 
             padding: '10px 20px', 
@@ -88,7 +88,7 @@ const UserManagement = () => {
             gap: '8px',
             cursor: 'pointer',
             transition: '0.2s',
-            boxShadow: '0 4px 15px rgba(34,197,94,0.3)'
+            boxShadow: '0 4px 15px rgba(0, 132, 255,0.3)'
           }}
           onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
           onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
@@ -116,7 +116,7 @@ const UserManagement = () => {
             outline: 'none',
             transition: 'border 0.3s'
           }}
-          onFocus={(e) => e.currentTarget.style.border = '1px solid rgba(34,197,94,0.5)'}
+          onFocus={(e) => e.currentTarget.style.border = '1px solid rgba(0, 132, 255,0.5)'}
           onBlur={(e) => e.currentTarget.style.border = '1px solid rgba(255,255,255,0.05)'}
         />
       </div>
@@ -164,7 +164,7 @@ const UserManagement = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                   <div style={{ 
                     width: '38px', height: '38px', borderRadius: '50%', 
-                    background: 'var(--color-accent-green)', color: '#000', 
+                    background: 'var(--color-accent)', color: '#000', 
                     display: 'flex', alignItems: 'center', justifyContent: 'center', 
                     fontWeight: 800, fontSize: '0.9rem' 
                   }}>
@@ -208,7 +208,7 @@ const UserManagement = () => {
                   <button style={{ 
                     background: 'none', border: 'none', color: '#888', cursor: 'pointer', transition: '0.2s' 
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-accent-green)'}
+                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
                   onMouseOut={(e) => e.currentTarget.style.color = '#888'}
                   title="Editar usuário (Em breve)"
                   >
@@ -260,7 +260,7 @@ const UserManagement = () => {
                     width: '100%', padding: '12px 15px', background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', outline: 'none' 
                   }}
-                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                   onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 />
               </div>
@@ -277,7 +277,7 @@ const UserManagement = () => {
                     width: '100%', padding: '12px 15px', background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', outline: 'none' 
                   }}
-                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                   onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 />
               </div>
@@ -294,7 +294,7 @@ const UserManagement = () => {
                     width: '100%', padding: '12px 15px', background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', outline: 'none' 
                   }}
-                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                   onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 />
               </div>
@@ -309,7 +309,7 @@ const UserManagement = () => {
                     border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', outline: 'none',
                     cursor: 'pointer', appearance: 'none'
                   }}
-                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                   onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 >
                   <option value="ADMINISTRADOR" style={{ color: '#000' }}>ADMINISTRADOR – ACESSO TOTAL</option>
@@ -332,7 +332,7 @@ const UserManagement = () => {
                   type="submit" 
                   disabled={submitting}
                   style={{ 
-                    background: 'var(--color-accent-green)', color: '#000', border: 'none', 
+                    background: 'var(--color-accent)', color: '#000', border: 'none', 
                     padding: '10px 25px', borderRadius: '8px', fontWeight: 700, cursor: 'pointer',
                     opacity: submitting ? 0.7 : 1
                   }}

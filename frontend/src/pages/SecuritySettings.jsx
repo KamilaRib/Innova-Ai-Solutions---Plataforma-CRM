@@ -96,7 +96,7 @@ const SecuritySettings = () => {
           type={show ? 'text' : 'password'} 
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onFocus={(e) => e.target.style.borderColor = 'var(--color-accent-green)'}
+          onFocus={(e) => e.target.style.borderColor = 'var(--color-accent)'}
           onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
           style={inputStyle} 
         />
@@ -122,7 +122,7 @@ const SecuritySettings = () => {
           const Icon = tab.icon;
           const isActive = location.pathname.includes(tab.path);
           return (
-            <Link key={tab.id} to={tab.path} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '20px', background: isActive ? 'var(--color-accent-green)' : 'transparent', color: isActive ? '#000' : '#888', textDecoration: 'none', fontSize: '0.85rem', fontWeight: isActive ? '800' : '500', transition: 'all 0.2s ease', whiteSpace: 'nowrap' }}>
+            <Link key={tab.id} to={tab.path} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '20px', background: isActive ? 'var(--color-accent)' : 'transparent', color: isActive ? '#000' : '#888', textDecoration: 'none', fontSize: '0.85rem', fontWeight: isActive ? '800' : '500', transition: 'all 0.2s ease', whiteSpace: 'nowrap' }}>
               <Icon size={16} />
               {tab.label}
             </Link>
@@ -175,7 +175,7 @@ const SecuritySettings = () => {
                   onBlur={() => setIsGateFocused(false)}
                   style={{ 
                     width: '100%', padding: '12px 15px', background: 'rgba(255,255,255,0.05)', 
-                    border: isGateFocused ? '1px solid var(--color-accent-green)' : '1px solid rgba(255,255,255,0.1)', 
+                    border: isGateFocused ? '1px solid var(--color-accent)' : '1px solid rgba(255,255,255,0.1)', 
                     borderRadius: '8px', color: '#fff', fontSize: '0.9rem', outline: 'none',
                     transition: 'border-color 0.2s'
                   }} 
@@ -190,7 +190,7 @@ const SecuritySettings = () => {
               </div>
             </div>
 
-            <button onClick={handlePasswordSubmit} style={{ width: '100%', padding: '12px', background: 'var(--color-accent-green)', border: 'none', borderRadius: '8px', color: '#000', fontSize: '0.95rem', fontWeight: '800', cursor: 'pointer', transition: 'all 0.2s' }}>
+            <button onClick={handlePasswordSubmit} style={{ width: '100%', padding: '12px', background: 'var(--color-accent)', border: 'none', borderRadius: '8px', color: '#000', fontSize: '0.95rem', fontWeight: '800', cursor: 'pointer', transition: 'all 0.2s' }}>
               Confirmar
             </button>
           </div>
@@ -208,7 +208,7 @@ const SecuritySettings = () => {
             {renderPasswordInput('Nova senha', newPassword, setNewPassword, showNewPassword, setShowNewPassword)}
             {renderPasswordInput('Confirmar senha', confirmPassword, setConfirmPassword, showConfirmPassword, setShowConfirmPassword)}
 
-            <button onClick={handleUpdatePassword} style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', padding: '10px 25px', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem', marginTop: '10px' }}>
+            <button onClick={handleUpdatePassword} style={{ background: 'var(--color-accent)', color: '#000', border: 'none', borderRadius: '8px', padding: '10px 25px', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem', marginTop: '10px' }}>
               Salvar
             </button>
           </div>
@@ -219,7 +219,7 @@ const SecuritySettings = () => {
             <p style={{ fontSize: '0.85rem', color: '#888', marginBottom: '5px' }}>Gerencie suas configurações de autenticação de dois fatores</p>
             <p style={{ fontSize: '0.85rem', color: '#888', marginBottom: '20px' }}>Ao ativar a autenticação de dois fatores, você será solicitado a fornecer um PIN seguro durante o login. Este PIN pode ser obtido em um aplicativo compatível com TOTP no seu telefone.</p>
             
-            <button onClick={handleActivate2FA} style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', padding: '10px 25px', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem' }}>
+            <button onClick={handleActivate2FA} style={{ background: 'var(--color-accent)', color: '#000', border: 'none', borderRadius: '8px', padding: '10px 25px', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem' }}>
               Ativar 2FA
             </button>
           </div>
@@ -237,7 +237,7 @@ const SecuritySettings = () => {
               <p style={{ fontSize: '0.8rem', color: '#888', margin: 0 }}>Adicione uma chave de acesso para entrar sem senha</p>
             </div>
 
-            <button onClick={handleAddPasskey} style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', padding: '10px 20px', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button onClick={handleAddPasskey} style={{ background: 'var(--color-accent)', color: '#000', border: 'none', borderRadius: '8px', padding: '10px 20px', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Plus size={16} /> Adicionar chave de acesso
             </button>
           </div>

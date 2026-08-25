@@ -62,7 +62,7 @@ const ProductCosts = () => {
         </button>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>Custos do Serviço (Despesas)</h1>
-          <p style={{ opacity: 0.6, margin: 0, fontSize: '0.9rem', color: 'var(--color-accent-green)' }}>
+          <p style={{ opacity: 0.6, margin: 0, fontSize: '0.9rem', color: 'var(--color-accent)' }}>
             Serviço: {productName}
           </p>
         </div>
@@ -86,10 +86,10 @@ const ProductCosts = () => {
 
         <div className="card" style={{ background: '#12151a', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '0.8rem', opacity: 0.8, textTransform: 'uppercase', marginBottom: '10px', color: 'var(--color-accent-green)', fontWeight: 'bold' }}>Lucro Líquido Real</div>
-            <Wallet size={24} color="var(--color-accent-green)" opacity={0.8} />
+            <div style={{ fontSize: '0.8rem', opacity: 0.8, textTransform: 'uppercase', marginBottom: '10px', color: 'var(--color-accent)', fontWeight: 'bold' }}>Lucro Líquido Real</div>
+            <Wallet size={24} color="var(--color-accent)" opacity={0.8} />
           </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--color-accent-green)' }}>
+          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--color-accent)' }}>
             R$ {realProfit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </div>
         </div>
@@ -101,8 +101,8 @@ const ProductCosts = () => {
         <div style={{ flex: 1 }}>
           <div className="card" style={{ background: '#12151a', borderRadius: '12px', padding: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '25px' }}>
-              <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '8px', borderRadius: '8px' }}>
-                <PlusCircle color="var(--color-accent-green)" size={20} />
+              <div style={{ background: 'rgba(0, 132, 255, 0.1)', padding: '8px', borderRadius: '8px' }}>
+                <PlusCircle color="var(--color-accent)" size={20} />
               </div>
               <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Lançar Nova Despesa</h3>
             </div>
@@ -130,9 +130,9 @@ const ProductCosts = () => {
                         key={cat.id}
                         onClick={() => setFormData({...formData, category: cat.id})}
                         style={{
-                          background: isSelected ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.05)',
+                          background: isSelected ? 'var(--color-accent)' : 'rgba(255,255,255,0.05)',
                           color: isSelected ? '#000' : '#fff',
-                          border: `1px solid ${isSelected ? 'var(--color-accent-green)' : 'rgba(255,255,255,0.1)'}`,
+                          border: `1px solid ${isSelected ? 'var(--color-accent)' : 'rgba(255,255,255,0.1)'}`,
                           padding: '8px 12px',
                           borderRadius: '20px',
                           fontSize: '0.75rem',
@@ -178,7 +178,7 @@ const ProductCosts = () => {
                 onClick={handleAddExpense}
                 style={{ 
                   marginTop: '10px', width: '100%',
-                  background: 'var(--color-accent-green)', color: '#000', border: 'none', 
+                  background: 'var(--color-accent)', color: '#000', border: 'none', 
                   padding: '14px', borderRadius: '8px', fontWeight: 800, fontSize: '1rem',
                   cursor: 'pointer', transition: '0.2s', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
                 }}

@@ -41,7 +41,7 @@ const BaseContatos = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <div>
-          <h1 style={{ color: 'var(--color-accent-green)', marginBottom: '5px' }}>Carteira de Cliente</h1>
+          <h1 style={{ color: 'var(--color-accent)', marginBottom: '5px' }}>Carteira de Cliente</h1>
           <p style={{ opacity: 0.8 }}>Gerencie sua base estratégica e importe contatos em massa.</p>
         </div>
         
@@ -56,15 +56,15 @@ const BaseContatos = () => {
           <button 
             onClick={handleImportClick}
             style={{ 
-              background: 'rgba(34, 197, 94, 0.1)', border: '1px solid var(--color-accent-green)', 
-              color: 'var(--color-accent-green)', padding: '10px 20px', borderRadius: '8px', 
+              background: 'rgba(0, 132, 255, 0.1)', border: '1px solid var(--color-accent)', 
+              color: 'var(--color-accent)', padding: '10px 20px', borderRadius: '8px', 
               cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px'
             }}
           >
             <FileUp size={18} />
             IMPORTAR PLANILHA
           </button>
-          <button style={{ background: 'var(--color-accent-green)', border: 'none', color: '#000', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button style={{ background: 'var(--color-accent)', border: 'none', color: '#000', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <UserPlus size={18} />
             NOVO CLIENTE
           </button>
@@ -122,17 +122,17 @@ const BaseContatos = () => {
                   <a 
                     href={`mailto:${lead.email || '#'}`} 
                     style={{ 
-                      color: 'var(--color-accent-green)', 
+                      color: 'var(--color-accent)', 
                       textDecoration: 'none', 
                       display: 'inline-flex', 
                       alignItems: 'center', 
                       gap: '8px',
-                      background: 'rgba(34, 197, 94, 0.08)',
+                      background: 'rgba(0, 132, 255, 0.08)',
                       padding: '8px 12px',
                       borderRadius: '8px',
                       fontSize: '0.85rem',
                       fontWeight: '500',
-                      border: '1px solid rgba(34, 197, 94, 0.2)',
+                      border: '1px solid rgba(0, 132, 255, 0.2)',
                       transition: '0.2s'
                     }}
                   >

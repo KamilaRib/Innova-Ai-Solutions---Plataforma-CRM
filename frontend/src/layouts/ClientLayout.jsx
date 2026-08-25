@@ -50,7 +50,7 @@ export default function ClientLayout() {
             ) : (
               <>
                 INNOVA
-                <span style={{ color: 'var(--color-accent-green)', marginLeft: '6px' }}>AI</span>
+                <span style={{ color: 'var(--color-accent)', marginLeft: '6px' }}>AI</span>
                 <span style={{ color: '#fff', marginLeft: '6px' }}>SOLUTIONS</span>
               </>
             )}
@@ -76,7 +76,7 @@ export default function ClientLayout() {
             ) : (
               <>
                 {settings?.business_name ? settings.business_name.split(' ')[0].toUpperCase() : 'INNOVA'}
-                <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
+                <span style={{ color: 'var(--color-accent)', marginLeft: '8px' }}>
                   {settings?.business_name ? settings.business_name.split(' ')[1]?.toUpperCase() : 'AI'}
                 </span>
                 <span style={{ color: '#fff', marginLeft: '8px' }}>

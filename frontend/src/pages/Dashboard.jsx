@@ -153,12 +153,12 @@ const Dashboard = () => {
         </div>
 
         {/* NOVO: CARD PRODUTOS VENDIDOS */}
-        <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid var(--color-accent-green)' }}>
+        <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid var(--color-accent)' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '800', opacity: 0.4, textTransform: 'uppercase' }}>Produtos Vendidos</span>
-          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: 'var(--color-accent-green)' }}>0</div>
+          <div style={{ fontSize: '2.4rem', fontWeight: '900', color: 'var(--color-accent)' }}>0</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
             <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>+12% vs mês anterior</span>
-            <ShoppingBag size={16} color="var(--color-accent-green)" />
+            <ShoppingBag size={16} color="var(--color-accent)" />
           </div>
         </div>
 

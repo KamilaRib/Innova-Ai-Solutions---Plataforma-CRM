@@ -68,7 +68,7 @@ export default function ResetPassword() {
         ) : (
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '15px' }}>
             {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} 
-            <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
+            <span style={{ color: 'var(--color-accent)', marginLeft: '8px' }}>
               {settings?.business_name ? settings.business_name.split(' ')[1] : 'AI'}
             </span>
             <span style={{ color: '#fff', marginLeft: '8px' }}>
@@ -92,7 +92,7 @@ export default function ResetPassword() {
         {!token && error ? (
            <div style={{ textAlign: 'center' }}>
              <p style={{ color: '#f87171', marginBottom: '20px' }}>{error}</p>
-             <Link to="/forgot-password" style={{ color: 'var(--color-accent-green)', textDecoration: 'none', fontWeight: 600 }}>Solicitar novo link</Link>
+             <Link to="/forgot-password" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 600 }}>Solicitar novo link</Link>
            </div>
         ) : (
           <form onSubmit={handleReset}>
@@ -105,7 +105,7 @@ export default function ResetPassword() {
                     border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff',
                     fontSize: '0.9rem', outline: 'none', transition: 'border 0.2s'
                   }}
-                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                  onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                   onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
@@ -130,7 +130,7 @@ export default function ResetPassword() {
                   border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff',
                   fontSize: '0.9rem', outline: 'none', transition: 'border 0.2s'
                 }}
-                onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                 onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 type="password"
                 placeholder="••••••••"
@@ -151,7 +151,7 @@ export default function ResetPassword() {
             <button 
               type="submit" 
               style={{ 
-                width: '100%', padding: '14px', background: 'var(--color-accent-green)', color: '#000', 
+                width: '100%', padding: '14px', background: 'var(--color-accent)', color: '#000', 
                 border: 'none', borderRadius: '8px', fontSize: '1rem', fontWeight: 700, cursor: 'pointer',
                 opacity: loading || success ? 0.7 : 1, transition: 'opacity 0.2s'
               }} 

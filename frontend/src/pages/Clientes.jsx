@@ -119,7 +119,7 @@ export default function Clientes() {
       {/* HEADER DA PÁGINA */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 style={{ color: 'var(--color-accent-green)', margin: 0, fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <h1 style={{ color: 'var(--color-accent)', margin: 0, fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Building2 size={28} />
             Módulo de Clientes & Empresas
           </h1>
@@ -131,7 +131,7 @@ export default function Clientes() {
         <button 
           onClick={() => setIsModalOpen(true)}
           style={{
-            background: 'var(--color-accent-green)',
+            background: 'var(--color-accent)',
             color: '#000',
             border: 'none',
             padding: '10px 20px',
@@ -141,7 +141,7 @@ export default function Clientes() {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            boxShadow: '0 4px 15px rgba(34, 197, 94, 0.3)'
+            boxShadow: '0 4px 15px rgba(0, 132, 255, 0.3)'
           }}
         >
           <Plus size={18} />
@@ -211,16 +211,16 @@ export default function Clientes() {
                     marginBottom: '8px',
                     cursor: 'pointer',
                     background: isSelected 
-                      ? 'linear-gradient(90deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.03))' 
+                      ? 'linear-gradient(90deg, rgba(0, 132, 255, 0.15), rgba(0, 132, 255, 0.03))' 
                       : 'rgba(255, 255, 255, 0.02)',
                     border: isSelected 
-                      ? '1px solid rgba(34, 197, 94, 0.5)' 
+                      ? '1px solid rgba(0, 132, 255, 0.5)' 
                       : '1px solid rgba(255, 255, 255, 0.04)',
                     transition: 'all 0.2s ease',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-                    <h4 style={{ margin: 0, fontSize: '0.95rem', color: isSelected ? 'var(--color-accent-green)' : '#fff' }}>
+                    <h4 style={{ margin: 0, fontSize: '0.95rem', color: isSelected ? 'var(--color-accent)' : '#fff' }}>
                       {client.name}
                     </h4>
                     <span style={{
@@ -329,8 +329,8 @@ export default function Clientes() {
                     style={{
                       background: 'none',
                       border: 'none',
-                      borderBottom: active ? '2px solid var(--color-accent-green)' : '2px solid transparent',
-                      color: active ? 'var(--color-accent-green)' : 'rgba(255, 255, 255, 0.6)',
+                      borderBottom: active ? '2px solid var(--color-accent)' : '2px solid transparent',
+                      color: active ? 'var(--color-accent)' : 'rgba(255, 255, 255, 0.6)',
                       padding: '14px 0',
                       cursor: 'pointer',
                       fontWeight: active ? '600' : '400',
@@ -371,7 +371,7 @@ export default function Clientes() {
 
                   <div className="card" style={{ padding: '16px', background: 'rgba(255, 255, 255, 0.02)' }}>
                     <div style={{ opacity: 0.5, fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '6px' }}>Website Oficial</div>
-                    <a href={selectedClient.website} target="_blank" rel="noreferrer" style={{ color: 'var(--color-accent-green)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <a href={selectedClient.website} target="_blank" rel="noreferrer" style={{ color: 'var(--color-accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       {selectedClient.website} <ArrowUpRight size={14} />
                     </a>
                   </div>
@@ -379,7 +379,7 @@ export default function Clientes() {
                   <div className="card" style={{ gridColumn: 'span 2', padding: '16px', background: 'rgba(255, 255, 255, 0.02)' }}>
                     <div style={{ opacity: 0.5, fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '6px' }}>Endereço Completo</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <MapPin size={16} color="var(--color-accent-green)" /> {selectedClient.address}
+                      <MapPin size={16} color="var(--color-accent)" /> {selectedClient.address}
                     </div>
                   </div>
                 </div>
@@ -393,7 +393,7 @@ export default function Clientes() {
                       width: '50px',
                       height: '50px',
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                      background: 'linear-gradient(135deg, #0084FF, #003C74)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -416,7 +416,7 @@ export default function Clientes() {
                         href={`https://wa.me/${selectedClient.contactPhone.replace(/\D/g, '')}`} 
                         target="_blank" 
                         rel="noreferrer"
-                        style={{ color: '#22c55e', textDecoration: 'none', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}
+                        style={{ color: '#0084FF', textDecoration: 'none', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}
                       >
                         <Phone size={15} /> {selectedClient.contactPhone}
                       </a>
@@ -436,10 +436,10 @@ export default function Clientes() {
                   <div style={{
                     padding: '12px 16px',
                     borderRadius: '8px',
-                    background: 'rgba(34, 197, 94, 0.08)',
-                    border: '1px solid rgba(34, 197, 94, 0.2)',
+                    background: 'rgba(0, 132, 255, 0.08)',
+                    border: '1px solid rgba(0, 132, 255, 0.2)',
                     fontSize: '0.85rem',
-                    color: 'var(--color-accent-green)',
+                    color: 'var(--color-accent)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px'
@@ -502,7 +502,7 @@ export default function Clientes() {
             width: '550px',
             maxWidth: '90vw'
           }}>
-            <h2 style={{ margin: '0 0 15px', color: 'var(--color-accent-green)' }}>Cadastrar Nova Empresa</h2>
+            <h2 style={{ margin: '0 0 15px', color: 'var(--color-accent)' }}>Cadastrar Nova Empresa</h2>
             
             <form onSubmit={handleCreateClient} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input
@@ -576,7 +576,7 @@ export default function Clientes() {
                 </button>
                 <button 
                   type="submit"
-                  style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' }}
+                  style={{ background: 'var(--color-accent)', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' }}
                 >
                   Salvar Empresa
                 </button>

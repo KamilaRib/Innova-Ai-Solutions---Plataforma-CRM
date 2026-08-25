@@ -62,7 +62,7 @@ const FunnelsConfig = () => {
 
   return (
     <div style={{ padding: '30px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ color: 'var(--color-accent-green)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <h1 style={{ color: 'var(--color-accent)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
         <Filter size={28} /> Gestão de Funis
       </h1>
       <p style={{ opacity: 0.8, marginBottom: '30px' }}>

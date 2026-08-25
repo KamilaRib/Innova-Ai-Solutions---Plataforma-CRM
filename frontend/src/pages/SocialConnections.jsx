@@ -37,7 +37,7 @@ const ConnectionModal = ({ provider, onClose, onContinue }) => {
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
       backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
     }}>
-      <div className="card" style={{ width: '100%', maxWidth: '450px', margin: '20px', padding: 0, borderTop: `4px solid ${provider.hexColor || '#22c55e'}` }}>
+      <div className="card" style={{ width: '100%', maxWidth: '450px', margin: '20px', padding: 0, borderTop: `4px solid ${provider.hexColor || '#0084FF'}` }}>
         <div style={{ padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <h3 style={{ margin: 0, color: '#fff' }}>Conecte o {provider.name}</h3>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>
@@ -47,7 +47,7 @@ const ConnectionModal = ({ provider, onClose, onContinue }) => {
         
         <div style={{ padding: '30px 20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>1</div>
+            <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--color-accent)' }}>1</div>
             <div>
               <h4 style={{ color: '#fff', marginBottom: '4px' }}>Faça login no {provider.name}</h4>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Você será redirecionado para a página oficial.</p>
@@ -55,7 +55,7 @@ const ConnectionModal = ({ provider, onClose, onContinue }) => {
           </div>
           
           <div style={{ display: 'flex', gap: '15px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>2</div>
+            <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--color-accent)' }}>2</div>
             <div>
               <h4 style={{ color: '#fff', marginBottom: '4px' }}>Permita o gerenciamento</h4>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Autorize o CRM Innova AI a publicar e ler dados da sua conta.</p>
@@ -63,7 +63,7 @@ const ConnectionModal = ({ provider, onClose, onContinue }) => {
           </div>
 
           <div style={{ display: 'flex', gap: '15px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--color-accent-green)' }}>3</div>
+            <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--color-accent)' }}>3</div>
             <div>
               <h4 style={{ color: '#fff', marginBottom: '4px' }}>Finalize a conexão</h4>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Selecione a página desejada para concluir o processo.</p>
@@ -76,7 +76,7 @@ const ConnectionModal = ({ provider, onClose, onContinue }) => {
           <button 
             onClick={onContinue} 
             style={{ 
-              background: provider.hexColor || '#22c55e',
+              background: provider.hexColor || '#0084FF',
               border: 'none',
               color: '#fff',
               padding: '12px 24px',

@@ -54,7 +54,7 @@ export default function Register() {
         ) : (
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '15px' }}>
             {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} 
-            <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
+            <span style={{ color: 'var(--color-accent)', marginLeft: '8px' }}>
               {settings?.business_name ? settings.business_name.split(' ')[1] : 'AI'}
             </span>
             <span style={{ color: '#fff', marginLeft: '8px' }}>
@@ -84,7 +84,7 @@ export default function Register() {
                 border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff',
                 fontSize: '0.9rem', outline: 'none', transition: 'border 0.2s'
               }}
-              onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+              onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
               onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
               type="text" 
               placeholder="Sua Empresa LTDA" 
@@ -102,7 +102,7 @@ export default function Register() {
                 border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff',
                 fontSize: '0.9rem', outline: 'none', transition: 'border 0.2s'
               }}
-              onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+              onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
               onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
               type="email" 
               placeholder="admin@suaempresa.com" 
@@ -121,7 +121,7 @@ export default function Register() {
                   border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff',
                   fontSize: '0.9rem', outline: 'none', transition: 'border 0.2s'
                 }}
-                onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                 onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
@@ -149,7 +149,7 @@ export default function Register() {
           <button 
             type="submit" 
             style={{ 
-              width: '100%', padding: '14px', background: 'var(--color-accent-green)', color: '#000', 
+              width: '100%', padding: '14px', background: 'var(--color-accent)', color: '#000', 
               border: 'none', borderRadius: '8px', fontSize: '1rem', fontWeight: 700, cursor: 'pointer',
               opacity: loading || success ? 0.7 : 1, transition: 'opacity 0.2s'
             }} 
@@ -162,7 +162,7 @@ export default function Register() {
       </div>
 
       <div style={{ marginTop: '2rem', fontSize: '0.85rem', color: '#888' }}>
-        Já tem uma conta? <Link to="/login" style={{ color: 'var(--color-accent-green)', textDecoration: 'none', fontWeight: 600 }}>Faça Login</Link>
+        Já tem uma conta? <Link to="/login" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 600 }}>Faça Login</Link>
       </div>
 
     </div>

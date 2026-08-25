@@ -159,13 +159,13 @@ const ContentCalendar = () => {
                     <div style={{ display: 'flex', gap: '5px', alignItems: 'center', margin: '0 10px' }}>
                         <button 
                             onClick={() => setViewMode('list')} 
-                            style={{ background: 'transparent', border: 'none', color: viewMode === 'list' ? 'var(--color-accent-green)' : 'var(--color-text-muted)', cursor: 'pointer', padding: '5px', borderBottom: viewMode === 'list' ? '2px solid var(--color-accent-green)' : '2px solid transparent' }}
+                            style={{ background: 'transparent', border: 'none', color: viewMode === 'list' ? 'var(--color-accent)' : 'var(--color-text-muted)', cursor: 'pointer', padding: '5px', borderBottom: viewMode === 'list' ? '2px solid var(--color-accent)' : '2px solid transparent' }}
                         >
                             <List size={20} />
                         </button>
                         <button 
                             onClick={() => setViewMode('calendar')} 
-                            style={{ background: 'transparent', border: 'none', color: viewMode === 'calendar' ? 'var(--color-accent-green)' : 'var(--color-text-muted)', cursor: 'pointer', padding: '5px', borderBottom: viewMode === 'calendar' ? '2px solid var(--color-accent-green)' : '2px solid transparent' }}
+                            style={{ background: 'transparent', border: 'none', color: viewMode === 'calendar' ? 'var(--color-accent)' : 'var(--color-text-muted)', cursor: 'pointer', padding: '5px', borderBottom: viewMode === 'calendar' ? '2px solid var(--color-accent)' : '2px solid transparent' }}
                         >
                             <CalendarIcon size={20} />
                         </button>
@@ -193,11 +193,11 @@ const ContentCalendar = () => {
                                 <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '15px', paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Status do post</div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '200px', overflowY: 'auto', paddingRight: '5px' }}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
-                                        <input type="checkbox" checked={selectedStatus.length === allStatusList.length} onChange={() => handleStatusToggle('Todos')} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> Todos
+                                        <input type="checkbox" checked={selectedStatus.length === allStatusList.length} onChange={() => handleStatusToggle('Todos')} style={{ accentColor: 'var(--color-accent)', cursor: 'pointer' }} /> Todos
                                     </label>
                                     {allStatusList.map(s => (
                                         <label key={s} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
-                                            <input type="checkbox" checked={selectedStatus.includes(s)} onChange={() => handleStatusToggle(s)} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> {s}
+                                            <input type="checkbox" checked={selectedStatus.includes(s)} onChange={() => handleStatusToggle(s)} style={{ accentColor: 'var(--color-accent)', cursor: 'pointer' }} /> {s}
                                         </label>
                                     ))}
                                 </div>
@@ -215,11 +215,11 @@ const ContentCalendar = () => {
                                 <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '15px', paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Selecionar canais</div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '250px', overflowY: 'auto', paddingRight: '5px' }}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
-                                        <input type="checkbox" checked={selectedChannels.length === allChannelsList.length} onChange={() => handleChannelToggle('Todos')} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> Todos
+                                        <input type="checkbox" checked={selectedChannels.length === allChannelsList.length} onChange={() => handleChannelToggle('Todos')} style={{ accentColor: 'var(--color-accent)', cursor: 'pointer' }} /> Todos
                                     </label>
                                     {allChannelsList.map(c => (
                                         <label key={c} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', cursor: 'pointer', opacity: 0.8 }}>
-                                            <input type="checkbox" checked={selectedChannels.includes(c)} onChange={() => handleChannelToggle(c)} style={{ accentColor: 'var(--color-accent-green)', cursor: 'pointer' }} /> {c}
+                                            <input type="checkbox" checked={selectedChannels.includes(c)} onChange={() => handleChannelToggle(c)} style={{ accentColor: 'var(--color-accent)', cursor: 'pointer' }} /> {c}
                                         </label>
                                     ))}
                                 </div>

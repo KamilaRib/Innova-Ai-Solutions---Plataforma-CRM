@@ -77,7 +77,7 @@ const StoreSettings = () => {
     { id: 'appearance', label: 'Aparência', icon: Palette, path: '/app/settings/branding' },
   ];
 
-  const sectionHeaderStyle = { fontSize: '0.9rem', color: 'var(--color-accent-green)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontWeight: '700' };
+  const sectionHeaderStyle = { fontSize: '0.9rem', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontWeight: '700' };
   const cardStyle = { background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '25px', marginBottom: '30px' };
   const labelStyle = { display: 'block', fontSize: '0.75rem', fontWeight: '600', marginBottom: '8px', color: '#ccc' };
   const inputStyle = { width: '100%', padding: '12px 15px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '0.85rem', outline: 'none' };
@@ -93,7 +93,7 @@ const StoreSettings = () => {
           const Icon = tab.icon;
           const isActive = location.pathname.includes(tab.path);
           return (
-            <Link key={tab.id} to={tab.path} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '20px', background: isActive ? 'var(--color-accent-green)' : 'transparent', color: isActive ? '#000' : '#888', textDecoration: 'none', fontSize: '0.85rem', fontWeight: isActive ? '700' : '500', transition: 'all 0.2s ease', whiteSpace: 'nowrap' }}>
+            <Link key={tab.id} to={tab.path} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '20px', background: isActive ? 'var(--color-accent)' : 'transparent', color: isActive ? '#000' : '#888', textDecoration: 'none', fontSize: '0.85rem', fontWeight: isActive ? '700' : '500', transition: 'all 0.2s ease', whiteSpace: 'nowrap' }}>
               <Icon size={16} />
               {tab.label}
             </Link>
@@ -107,16 +107,16 @@ const StoreSettings = () => {
       {/* 1. Catálogo Público */}
       <div style={cardStyle}>
         
-        <div style={{ background: 'rgba(34, 197, 94, 0.03)', border: '1px solid rgba(34, 197, 94, 0.1)', borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '35px' }}>
+        <div style={{ background: 'rgba(0, 132, 255, 0.03)', border: '1px solid rgba(0, 132, 255, 0.1)', borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '35px' }}>
           <div>
-            <h3 style={{ fontSize: '0.85rem', color: 'var(--color-accent-green)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontWeight: '800', textTransform: 'uppercase' }}>
+            <h3 style={{ fontSize: '0.85rem', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontWeight: '800', textTransform: 'uppercase' }}>
               <Share2 size={16} /> CATÁLOGO PÚBLICO DA LOJA
             </h3>
             <p style={{ fontSize: '0.8rem', color: '#888', margin: 0 }}>Link direto para compartilhamento do seu estoque atualizado com clientes:</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <input type="text" value="https://lp.innovaaisolutions.com.br" readOnly style={{ padding: '12px 15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#ccc', fontSize: '0.75rem', width: '320px', outline: 'none' }} />
-            <button style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', padding: '0 25px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
+            <button style={{ background: 'var(--color-accent)', color: '#000', border: 'none', borderRadius: '8px', padding: '0 25px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
               <Copy size={16} /> Copiar
             </button>
           </div>
@@ -234,7 +234,7 @@ const StoreSettings = () => {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '80px' }}>
-        <button onClick={handleSave} disabled={isSaving} style={{ background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', padding: '15px 30px', fontWeight: '800', cursor: 'pointer', fontSize: '1rem', transition: 'all 0.2s', opacity: isSaving ? 0.7 : 1 }}>
+        <button onClick={handleSave} disabled={isSaving} style={{ background: 'var(--color-accent)', color: '#000', border: 'none', borderRadius: '8px', padding: '15px 30px', fontWeight: '800', cursor: 'pointer', fontSize: '1rem', transition: 'all 0.2s', opacity: isSaving ? 0.7 : 1 }}>
           {isSaving ? 'Salvando...' : 'Salvar Configurações Fiscais e da Loja'}
         </button>
       </div>

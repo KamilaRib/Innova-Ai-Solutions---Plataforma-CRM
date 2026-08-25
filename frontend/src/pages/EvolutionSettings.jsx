@@ -106,7 +106,7 @@ const EvolutionSettings = () => {
 
   return (
     <div style={{ padding: '30px' }}>
-      <h1 style={{ color: 'var(--color-accent-green)', marginBottom: '10px' }}>Evolution API</h1>
+      <h1 style={{ color: 'var(--color-accent)', marginBottom: '10px' }}>Evolution API</h1>
       <p style={{ opacity: 0.8, marginBottom: '30px' }}>Gerencie suas instâncias de WhatsApp e conecte novas contas.</p>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -114,7 +114,7 @@ const EvolutionSettings = () => {
 
           {/* CONFIGURAÇÕES TÉCNICAS */}
           <div className="card">
-            <h3 style={{ color: 'var(--color-accent-green)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <h3 style={{ color: 'var(--color-accent)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Send size={18} />
               Configurações do Servidor
             </h3>
@@ -193,7 +193,7 @@ const EvolutionSettings = () => {
         {/* QR CODE E STATUS */}
         {(qrCode || connectionStatus === 'conectado') && (
           <div className="card" style={{ marginTop: '30px', textAlign: 'center' }}>
-            <h3 style={{ color: 'var(--color-accent-green)', marginBottom: '20px' }}>
+            <h3 style={{ color: 'var(--color-accent)', marginBottom: '20px' }}>
               Conectar WhatsApp
             </h3>
 
@@ -202,7 +202,7 @@ const EvolutionSettings = () => {
                 <CheckCircle2 size={60} color="#22c55e" style={{ marginBottom: '15px' }} />
                 <h4 style={{ color: '#fff' }}>WhatsApp Conectado!</h4>
                 <p style={{ opacity: 0.7, fontSize: '0.9rem' }}>Sua instância está pronta para enviar e receber mensagens.</p>
-                <button className="btn-primary" onClick={() => { setQrCode(null); setConnectionStatus('desconectado'); fetchQRCode(); }} style={{ marginTop: '20px', background: 'transparent', border: '1px solid var(--color-accent-green)', color: 'var(--color-accent-green)' }}>
+                <button className="btn-primary" onClick={() => { setQrCode(null); setConnectionStatus('desconectado'); fetchQRCode(); }} style={{ marginTop: '20px', background: 'transparent', border: '1px solid var(--color-accent)', color: 'var(--color-accent)' }}>
                   RECONECTAR / TROCAR NÚMERO
                 </button>
               </div>

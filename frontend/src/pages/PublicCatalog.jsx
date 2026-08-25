@@ -65,7 +65,7 @@ export default function PublicCatalog() {
           {settings?.logo_url ? (
             <img src={settings.logo_url} alt="Logo" style={{ height: '40px', borderRadius: '4px' }} />
           ) : (
-            <div style={{ width: '40px', height: '40px', background: 'var(--color-accent-green)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#000' }}>
+            <div style={{ width: '40px', height: '40px', background: 'var(--color-accent)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#000' }}>
               In
             </div>
           )}
@@ -74,13 +74,13 @@ export default function PublicCatalog() {
               {settings?.business_name ? (
                 <>
                   {settings.business_name.split(' ')[0]} 
-                  <span style={{ color: 'var(--color-accent-green)', margin: '0 4px' }}>
+                  <span style={{ color: 'var(--color-accent)', margin: '0 4px' }}>
                     {settings.business_name.split(' ')[1]}
                   </span>
                   {settings.business_name.split(' ').slice(2).join(' ')}
                 </>
               ) : (
-                <>INNOVA <span style={{ color: 'var(--color-accent-green)' }}>AI</span> SOLUTIONS</>
+                <>INNOVA <span style={{ color: 'var(--color-accent)' }}>AI</span> SOLUTIONS</>
               )}
             </h1>
             <p style={{ fontSize: '0.75rem', color: '#888', margin: 0, textTransform: 'uppercase' }}>
@@ -92,12 +92,12 @@ export default function PublicCatalog() {
           onClick={handleWhatsAppClick}
           style={{ 
             display: 'flex', alignItems: 'center', gap: '8px',
-            background: 'transparent', border: '1px solid var(--color-accent-green)', 
-            color: 'var(--color-accent-green)', padding: '8px 16px', borderRadius: '8px',
+            background: 'transparent', border: '1px solid var(--color-accent)', 
+            color: 'var(--color-accent)', padding: '8px 16px', borderRadius: '8px',
             fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s'
           }}
-          onMouseEnter={(e) => { e.target.style.background = 'var(--color-accent-green)'; e.target.style.color = '#000'; }}
-          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = 'var(--color-accent-green)'; }}
+          onMouseEnter={(e) => { e.target.style.background = 'var(--color-accent)'; e.target.style.color = '#000'; }}
+          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = 'var(--color-accent)'; }}
         >
           <MessageCircle size={18} /> WhatsApp Loja
         </button>
@@ -110,7 +110,7 @@ export default function PublicCatalog() {
           border: '1px solid rgba(255,255,255,0.05)', marginBottom: '40px'
         }}>
           <h2 style={{ fontSize: '0.9rem', color: '#888', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', textTransform: 'uppercase' }}>
-            <Filter size={16} color="var(--color-accent-green)" /> Filtrar Catálogo
+            <Filter size={16} color="var(--color-accent)" /> Filtrar Catálogo
           </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
@@ -202,7 +202,7 @@ export default function PublicCatalog() {
                   <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--color-accent-green)', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--color-accent)', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '8px' }}>
                     {product.category} • {product.subcategory}
                   </span>
                   <h3 style={{ fontSize: '1.1rem', margin: '0 0 15px 0', fontWeight: '600' }}>{product.name}</h3>
@@ -212,7 +212,7 @@ export default function PublicCatalog() {
                   <button 
                     onClick={() => { setSelectedProduct(product); setSuccessMsg(''); }}
                     style={{ 
-                      width: '100%', padding: '12px', background: 'var(--color-accent-green)', color: '#000',
+                      width: '100%', padding: '12px', background: 'var(--color-accent)', color: '#000',
                       border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer'
                     }}>
                     Tenho Interesse
@@ -249,16 +249,16 @@ export default function PublicCatalog() {
             {settings?.business_name ? (
               <>
                 {settings.business_name.split(' ')[0]} 
-                <span style={{ color: 'var(--color-accent-green)', margin: '0 4px' }}>
+                <span style={{ color: 'var(--color-accent)', margin: '0 4px' }}>
                   {settings.business_name.split(' ')[1]}
                 </span>
                 {settings.business_name.split(' ').slice(2).join(' ')}
               </>
             ) : (
-              <>INNOVA <span style={{ color: 'var(--color-accent-green)' }}>AI</span> SOLUTIONS</>
+              <>INNOVA <span style={{ color: 'var(--color-accent)' }}>AI</span> SOLUTIONS</>
             )}
           </h2>
-          <p style={{ fontSize: '0.75rem', color: 'var(--color-accent-green)', margin: 0, display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--color-accent)', margin: 0, display: 'flex', alignItems: 'center', gap: '5px' }}>
             📍 LOJA OFICIAL DA PLATAFORMA
           </p>
         </div>
@@ -267,7 +267,7 @@ export default function PublicCatalog() {
           onClick={handleWhatsAppClick}
           style={{ 
             display: 'flex', alignItems: 'center', gap: '10px',
-            background: 'var(--color-accent-green)', border: 'none',
+            background: 'var(--color-accent)', border: 'none',
             color: '#000', padding: '12px 24px', borderRadius: '30px',
             fontWeight: '700', fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s'
           }}
@@ -339,7 +339,7 @@ export default function PublicCatalog() {
                     style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
                 </div>
                 <button type="submit" disabled={submitting}
-                  style={{ width: '100%', padding: '14px', background: 'var(--color-accent-green)', color: '#000', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', opacity: submitting ? 0.7 : 1 }}>
+                  style={{ width: '100%', padding: '14px', background: 'var(--color-accent)', color: '#000', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', opacity: submitting ? 0.7 : 1 }}>
                   {submitting ? 'Enviando...' : 'Enviar Interesse'}
                 </button>
               </form>

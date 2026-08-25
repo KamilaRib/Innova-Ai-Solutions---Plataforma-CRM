@@ -1,9 +1,11 @@
 :root {
-  --color-bg: #0a0b0d; /* Fundo Profundo e Elegante */
+  --color-bg: #05070a; /* Fundo Principal oficial Innova AI */
   --color-surface: #12151a; /* Superfície dos Cards com mais corpo */
   --color-surface-hover: #1b1f26;
-  --color-accent-green: #22c55e;
-  --color-accent-glow: rgba(34, 197, 94, 0.4);
+  --color-accent-green: #22c55e; /* Reservado para status/semântica (ex: "Ativo") — não é mais o brand accent */
+  --color-accent: #0084FF; /* Azul Principal — brand accent oficial Innova AI */
+  --color-accent-cyan: #00D4FF; /* Azul Claro / Ciano — destaques, glow, gradientes */
+  --color-accent-glow: rgba(0, 132, 255, 0.4);
   --color-border: rgba(255, 255, 255, 0.08); /* Borda sutil mas visível */
   --color-text-main: #f8fafc;
   --color-text-muted: #94a3b8;
@@ -70,9 +72,9 @@ body {
 }
 
 .menu-item.active {
-  background: linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
-  color: var(--color-accent-green);
-  border-left: 3px solid var(--color-accent-green);
+  background: linear-gradient(90deg, rgba(0, 132, 255, 0.1) 0%, transparent 100%);
+  color: var(--color-accent);
+  border-left: 3px solid var(--color-accent);
   border-radius: 4px 10px 10px 4px;
 }
 
@@ -80,7 +82,7 @@ body {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
-  background: radial-gradient(circle at top left, #12151a, #0a0b0d);
+  background: radial-gradient(circle at top left, #12151a, #05070a);
 }
 
 /* CARDS PREMIUM 3D - RELEVO FORTE */
@@ -88,7 +90,7 @@ body {
   background: rgba(18, 21, 26, 0.8) !important;
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 2px solid rgba(34, 197, 94, 0.2); /* Relevo sutil na borda toda */
+  border-top: 2px solid rgba(0, 132, 255, 0.2); /* Relevo sutil na borda toda */
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 24px;
@@ -109,8 +111,8 @@ body {
   left: 0;
   width: 100%;
   height: 5px; /* Mais grosso */
-  background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
-  box-shadow: 0 0 15px rgba(34, 197, 94, 0.8); /* Brilho neon intenso */
+  background: linear-gradient(90deg, #0084FF, #00D4FF, #0084FF);
+  box-shadow: 0 0 15px rgba(0, 132, 255, 0.8); /* Brilho neon intenso */
   opacity: 0.9;
   z-index: 10;
 }
@@ -119,7 +121,7 @@ body {
 
 /* BOTÕES PREMIUM */
 .btn-primary {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #0084FF 0%, #003C74 100%);
   color: #000;
   border: none;
   padding: 12px 30px;
@@ -127,7 +129,7 @@ body {
   font-weight: 800;
   cursor: pointer;
   transition: 0.3s;
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 132, 255, 0.3);
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -135,7 +137,7 @@ body {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 132, 255, 0.5);
   filter: brightness(1.1);
 }
 
@@ -152,8 +154,8 @@ body {
 }
 
 .input-field:focus {
-  border-color: var(--color-accent-green);
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(0, 132, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -193,9 +195,9 @@ select.input-field option {
 }
 
 .sub-menu-item.active {
-  color: var(--color-accent-green);
+  color: var(--color-accent);
   font-weight: 700;
-  background: rgba(34, 197, 94, 0.05);
+  background: rgba(0, 132, 255, 0.05);
 }
 
 /* SCROLLBAR CUSTOM */

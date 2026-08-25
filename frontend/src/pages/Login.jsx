@@ -49,7 +49,7 @@ export default function Login() {
         ) : (
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '15px' }}>
             {settings?.business_name ? settings.business_name.split(' ')[0] : 'INNOVA'} 
-            <span style={{ color: 'var(--color-accent-green)', marginLeft: '8px' }}>
+            <span style={{ color: 'var(--color-accent)', marginLeft: '8px' }}>
               {settings?.business_name ? settings.business_name.split(' ')[1] : 'AI'}
             </span>
             <span style={{ color: '#fff', marginLeft: '8px' }}>
@@ -86,7 +86,7 @@ export default function Login() {
                 outline: 'none',
                 transition: 'border 0.2s'
               }}
-              onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+              onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
               onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
               type="email" 
               placeholder="seu@email.com" 
@@ -115,7 +115,7 @@ export default function Login() {
                   outline: 'none',
                   transition: 'border 0.2s'
                 }}
-                onFocus={(e) => e.target.style.border = '1px solid var(--color-accent-green)'}
+                onFocus={(e) => e.target.style.border = '1px solid var(--color-accent)'}
                 onBlur={(e) => e.target.style.border = '1px solid rgba(255,255,255,0.1)'}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
@@ -152,7 +152,7 @@ export default function Login() {
             style={{ 
               width: '100%', 
               padding: '14px', 
-              background: 'var(--color-accent-green)', 
+              background: 'var(--color-accent)', 
               color: '#000', 
               border: 'none', 
               borderRadius: '8px', 
@@ -171,7 +171,7 @@ export default function Login() {
       </div>
 
       <div style={{ marginTop: '2rem', fontSize: '0.85rem', color: '#888' }}>
-        Não tem uma conta? <Link to="/register" style={{ color: 'var(--color-accent-green)', textDecoration: 'none', fontWeight: 600 }}>Cadastre sua Empresa</Link>
+        Não tem uma conta? <Link to="/register" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 600 }}>Cadastre sua Empresa</Link>
       </div>
 
     </div>

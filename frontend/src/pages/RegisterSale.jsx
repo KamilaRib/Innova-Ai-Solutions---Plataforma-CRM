@@ -83,7 +83,7 @@ const RegisterSale = () => {
 
   const SectionHeader = ({ icon: Icon, title }) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
-      <Icon color="var(--color-accent-green)" size={20} />
+      <Icon color="var(--color-accent)" size={20} />
       <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{title}</h3>
     </div>
   );
@@ -101,7 +101,7 @@ const RegisterSale = () => {
         </button>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>Registrar Venda</h1>
-          <p style={{ opacity: 0.6, margin: 0, fontSize: '0.9rem', color: 'var(--color-accent-green)' }}>
+          <p style={{ opacity: 0.6, margin: 0, fontSize: '0.9rem', color: 'var(--color-accent)' }}>
             {product ? product.name : 'Venda Avulsa'}
           </p>
         </div>
@@ -183,14 +183,14 @@ const RegisterSale = () => {
 
         {/* Coluna Direita: Composição de Pagamento (Sticky) */}
         <div style={{ flex: 1, position: 'sticky', top: '30px' }}>
-          <div className="card" style={{ background: '#12151a', borderRadius: '12px', padding: '25px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+          <div className="card" style={{ background: '#12151a', borderRadius: '12px', padding: '25px', border: '1px solid rgba(0, 132, 255, 0.2)' }}>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <CreditCard color="var(--color-accent-green)" size={20} />
+                <CreditCard color="var(--color-accent)" size={20} />
                 <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#fff', textTransform: 'uppercase' }}>Pagamentos</h3>
               </div>
-              <button onClick={addPaymentMethod} style={{ background: 'transparent', border: 'none', color: 'var(--color-accent-green)', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>
+              <button onClick={addPaymentMethod} style={{ background: 'transparent', border: 'none', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>
                 + Adicionar
               </button>
             </div>
@@ -258,11 +258,11 @@ const RegisterSale = () => {
               disabled={loading}
               style={{ 
                 width: '100%', marginTop: '20px',
-                background: 'var(--color-accent-green)', color: '#000', border: 'none', 
+                background: 'var(--color-accent)', color: '#000', border: 'none', 
                 padding: '15px', borderRadius: '8px', fontWeight: 800, fontSize: '1rem',
                 cursor: 'pointer', transition: '0.2s',
                 opacity: (loading || (!valuesMatch && totalSaleValue > 0)) ? 0.5 : 1,
-                boxShadow: valuesMatch ? '0 4px 15px rgba(34,197,94,0.3)' : 'none'
+                boxShadow: valuesMatch ? '0 4px 15px rgba(0, 132, 255,0.3)' : 'none'
               }}
             >
               {loading ? 'Processando...' : 'Confirmar e Registrar Venda'}
