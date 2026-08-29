@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, Columns, Users, Building2, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, ChevronUp, ChevronsUpDown, Sun, Moon, Monitor, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Columns, Users, Building2, MessageSquare, CalendarCheck, Settings, LogOut, Calendar, DollarSign, Share2, Facebook, Instagram, Youtube, Palette, MessageCircle, Zap, ChevronDown, ChevronRight, ChevronUp, ChevronsUpDown, Sun, Moon, Monitor, CalendarDays, Sparkles, Brain, BarChart, LineChart, Activity, ClipboardList, Target, ShoppingBag, Shield, Filter, Plus, Edit2, Check } from 'lucide-react';
 import { SettingsContext } from '../context/SettingsContext';
 import { AuthContext } from '../context/AuthContext';
+import { apiFetch } from '../utils/api';
 
 const TikTokIcon = ({ size = 16, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" style={{ verticalAlign: 'middle' }}>
@@ -30,8 +31,70 @@ export default function ClientLayout() {
     social: false,
     settings: false,
     statistics: false,
-    funnels: false
+    funnels: true
   });
+
+  const [funnels, setFunnels] = useState([]);
+  const [editingFunnelId, setEditingFunnelId] = useState(null);
+  const [editingFunnelName, setEditingFunnelName] = useState('');
+  const [savingFunnel, setSavingFunnel] = useState(false);
+
+  const fetchFunnels = async () => {
+    try {
+      const res = await apiFetch('/api/funnels');
+      const data = await res.json();
+      if (data.success && data.data && data.data.length > 0) {
+        setFunnels(data.data);
+      } else {
+        setFunnels([{ id: 'default', name: 'Funil Principal', is_default: true }]);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar funis no menu:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFunnels();
+    const handleFunnelUpdated = () => fetchFunnels();
+    window.addEventListener('funnelUpdated', handleFunnelUpdated);
+    return () => window.removeEventListener('funnelUpdated', handleFunnelUpdated);
+  }, []);
+
+  const handleStartEditFunnel = (e, funnel) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEditingFunnelId(funnel.id);
+    setEditingFunnelName(funnel.name);
+  };
+
+  const handleSaveEditFunnel = async (funnelId) => {
+    if (!editingFunnelName.trim() || savingFunnel) {
+      setEditingFunnelId(null);
+      return;
+    }
+    setSavingFunnel(true);
+    try {
+      const res = await apiFetch(`/api/funnels/${funnelId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ name: editingFunnelName.trim() })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFunnels(prev => prev.map(f => f.id === funnelId ? { ...f, name: editingFunnelName.trim() } : f));
+        window.dispatchEvent(new CustomEvent('funnelUpdated', { detail: { id: funnelId, name: editingFunnelName.trim() } }));
+      }
+    } catch (error) {
+      console.error('Erro ao salvar novo nome do funil:', error);
+    } finally {
+      setSavingFunnel(false);
+      setEditingFunnelId(null);
+    }
+  };
+
+  const handleCancelEditFunnel = () => {
+    setEditingFunnelId(null);
+  };
+
 
   const toggleGroup = (group) => {
     setExpandedGroups(prev => ({ ...prev, [group]: !prev[group] }));
@@ -136,7 +199,7 @@ export default function ClientLayout() {
 
           <div className="nav-group">
             <div
-              className={`menu-item ${location.pathname.includes('kanban') ? 'active' : ''}`}
+              className={`menu-item ${location.pathname.includes('kanban') || location.pathname.includes('funnels') ? 'active' : ''}`}
               onClick={() => toggleGroup('funnels')}
               style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
@@ -149,17 +212,127 @@ export default function ClientLayout() {
 
             {expandedGroups.funnels && (
               <div className="sub-menu">
-                <NavLink onClick={closeMobile} to="/app/kanban" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
-                  <Filter size={16} />
-                  <span>Funil Principal</span>
-                </NavLink>
+                {funnels.map(funnel => {
+                  const isEditing = editingFunnelId === funnel.id;
+                  const isSelected = location.pathname.includes('/app/kanban') && 
+                    (location.search.includes(funnel.id) || (!location.search && funnel.is_default));
+
+                  if (isEditing) {
+                    return (
+                      <div
+                        key={funnel.id}
+                        className="sub-menu-item"
+                        style={{
+                          padding: '6px 10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          background: 'rgba(0, 210, 255, 0.1)',
+                          border: '1px solid rgba(0, 210, 255, 0.3)',
+                          borderRadius: '6px',
+                          margin: '2px 0'
+                        }}
+                      >
+                        <Filter size={14} color="var(--color-accent-cyan, #00d2ff)" style={{ flexShrink: 0 }} />
+                        <input
+                          type="text"
+                          autoFocus
+                          value={editingFunnelName}
+                          onChange={(e) => setEditingFunnelName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSaveEditFunnel(funnel.id);
+                            if (e.key === 'Escape') handleCancelEditFunnel();
+                          }}
+                          onBlur={() => handleSaveEditFunnel(funnel.id)}
+                          style={{
+                            flex: 1,
+                            background: '#1a1f26',
+                            border: '1px solid var(--color-accent-cyan, #00d2ff)',
+                            borderRadius: '4px',
+                            color: '#fff',
+                            padding: '4px 8px',
+                            fontSize: '0.85rem',
+                            outline: 'none',
+                            width: '100%'
+                          }}
+                          placeholder="Nome do funil..."
+                        />
+                        <button
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSaveEditFunnel(funnel.id);
+                          }}
+                          title="Salvar (Enter)"
+                          style={{
+                            background: 'var(--color-accent-green, #10b981)',
+                            border: 'none',
+                            color: '#000',
+                            borderRadius: '4px',
+                            padding: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <Check size={12} strokeWidth={3} />
+                        </button>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <NavLink
+                      key={funnel.id}
+                      onClick={closeMobile}
+                      to={`/app/kanban?funnel_id=${funnel.id}`}
+                      className={`sub-menu-item ${isSelected ? 'active' : ''}`}
+                      onDoubleClick={(e) => handleStartEditFunnel(e, funnel)}
+                      title="Clique duas vezes para renomear este funil"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: 'pointer',
+                        userSelect: 'none'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <Filter size={16} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{funnel.name}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => handleStartEditFunnel(e, funnel)}
+                        title="Editar nome"
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          color: 'inherit',
+                          opacity: 0.4,
+                          cursor: 'pointer',
+                          padding: '2px',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                        onMouseLeave={(e) => e.currentTarget.style.opacity = '0.4'}
+                      >
+                        <Edit2 size={12} />
+                      </button>
+                    </NavLink>
+                  );
+                })}
+
                 <NavLink onClick={closeMobile} to="/app/funnels" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
                   <Plus size={16} />
-                  <span>Adicionar Funil</span>
+                  <span>+ Adicionar Funil</span>
                 </NavLink>
               </div>
             )}
           </div>
+
 
 
           <NavLink onClick={closeMobile} to="/app/chats" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>

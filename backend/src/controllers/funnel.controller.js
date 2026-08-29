@@ -44,6 +44,44 @@ exports.createFunnel = async (req, res) => {
   }
 };
 
+exports.updateFunnel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    
+    if (!name || !name.trim()) {
+      return res.status(400).json({ success: false, error: 'Name is required' });
+    }
+
+    const funnel = await prisma.funnel.findUnique({ where: { id } });
+    if (!funnel) {
+      return res.status(404).json({ success: false, error: 'Funnel not found' });
+    }
+
+    const updatedFunnel = await prisma.funnel.update({
+      where: { id },
+      data: {
+        name: name.trim(),
+        ...(description !== undefined && { description })
+      }
+    });
+
+    await logAudit({
+      usuario_id: req.user?.user_id,
+      entidade: 'Funnel',
+      entidade_id: id,
+      acao: 'UPDATE',
+      antes: funnel,
+      depois: updatedFunnel
+    });
+
+    res.json({ success: true, data: updatedFunnel });
+  } catch (error) {
+    console.error('Error updating funnel:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+};
+
 exports.deleteFunnel = async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,7 +101,7 @@ exports.deleteFunnel = async (req, res) => {
     await prisma.funnel.delete({ where: { id } });
 
     await logAudit({
-      usuario_id: req.user.user_id,
+      usuario_id: req.user?.user_id,
       entidade: 'Funnel',
       entidade_id: id,
       acao: 'DELETE',
@@ -77,3 +115,4 @@ exports.deleteFunnel = async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 };
+

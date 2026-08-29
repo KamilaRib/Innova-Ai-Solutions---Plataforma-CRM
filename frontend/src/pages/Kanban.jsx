@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { mockLeads } from '../data/mockData';
-import { Star, Clock, ShieldAlert, Zap, Settings2, DollarSign, X } from 'lucide-react';
+import { Star, Clock, ShieldAlert, Zap, Settings2, DollarSign, X, Edit2, Check } from 'lucide-react';
 import { apiFetch } from '../utils/api';
 
 const StatusLegend = () => (
@@ -25,16 +26,23 @@ const StatusLegend = () => (
 );
 
 const Kanban = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const funnelIdParam = searchParams.get('funnel_id');
+
   const [isManualMode, setIsManualMode] = useState(false);
   const [leads, setLeads] = useState([]);
   const [funnels, setFunnels] = useState([]);
-  const [selectedFunnel, setSelectedFunnel] = useState(null);
+  const [selectedFunnel, setSelectedFunnel] = useState(funnelIdParam || null);
   const [loading, setLoading] = useState(true);
   const [billingLead, setBillingLead] = useState(null);
   const [billingForm, setBillingForm] = useState({ description: '', amount: '' });
   const [billingLoading, setBillingLoading] = useState(false);
   const [billingError, setBillingError] = useState('');
   const [billingResult, setBillingResult] = useState(null);
+
+  const [isEditingFunnel, setIsEditingFunnel] = useState(false);
+  const [editingFunnelName, setEditingFunnelName] = useState('');
+  const [savingFunnel, setSavingFunnel] = useState(false);
   
   const columns = ['Início de Atendimento', 'Conversando', 'Agendamento', 'Formulário Enviado', 'Follow Up'];
 
@@ -45,9 +53,11 @@ const Kanban = () => {
       if (result.success && result.data.length > 0) {
         setFunnels(result.data);
         if (!selectedFunnel) {
-          // Seleciona o primeiro funil por padrão ou o funil principal
-          const defaultFunnel = result.data.find(f => f.is_default) || result.data[0];
-          setSelectedFunnel(defaultFunnel.id);
+          const currentParam = searchParams.get('funnel_id');
+          const target = (currentParam && result.data.find(f => f.id === currentParam)) 
+            || result.data.find(f => f.is_default) 
+            || result.data[0];
+          if (target) setSelectedFunnel(target.id);
         }
       }
     } catch (error) {
@@ -57,7 +67,56 @@ const Kanban = () => {
 
   useEffect(() => {
     fetchFunnels();
+    const handleFunnelUpdated = () => fetchFunnels();
+    window.addEventListener('funnelUpdated', handleFunnelUpdated);
+    return () => window.removeEventListener('funnelUpdated', handleFunnelUpdated);
   }, []);
+
+  useEffect(() => {
+    if (funnelIdParam && funnelIdParam !== selectedFunnel) {
+      setSelectedFunnel(funnelIdParam);
+    }
+  }, [funnelIdParam]);
+
+  const handleSelectFunnel = (id) => {
+    setSelectedFunnel(id);
+    setSearchParams({ funnel_id: id });
+  };
+
+  const handleStartEditCurrentFunnel = () => {
+    const current = funnels.find(f => f.id === selectedFunnel);
+    if (current) {
+      setEditingFunnelName(current.name);
+      setIsEditingFunnel(true);
+    }
+  };
+
+  const handleSaveCurrentFunnel = async () => {
+    if (!editingFunnelName.trim() || savingFunnel || !selectedFunnel) {
+      setIsEditingFunnel(false);
+      return;
+    }
+    setSavingFunnel(true);
+    try {
+      const res = await apiFetch(`/api/funnels/${selectedFunnel}`, {
+        method: 'PUT',
+        body: JSON.stringify({ name: editingFunnelName.trim() })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFunnels(prev => prev.map(f => f.id === selectedFunnel ? { ...f, name: editingFunnelName.trim() } : f));
+        window.dispatchEvent(new CustomEvent('funnelUpdated', { detail: { id: selectedFunnel, name: editingFunnelName.trim() } }));
+        setIsEditingFunnel(false);
+      } else {
+        alert(data.error || 'Erro ao renomear funil');
+      }
+    } catch (err) {
+      console.error('Erro ao salvar funil:', err);
+    } finally {
+      setSavingFunnel(false);
+    }
+  };
+
 
   const fetchLeads = async () => {
     try {
@@ -181,23 +240,105 @@ const Kanban = () => {
       </header>
 
       {funnels.length > 0 && (
-        <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <span style={{ fontSize: '0.85rem', opacity: 0.7, fontWeight: 'bold' }}>SELECIONAR FUNIL:</span>
-          <select 
-            value={selectedFunnel || ''} 
-            onChange={e => setSelectedFunnel(e.target.value)}
-            style={{ 
-              padding: '10px 15px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', 
-              color: '#fff', border: '1px solid rgba(255,255,255,0.1)', outline: 'none', cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            {funnels.map(f => (
-              <option key={f.id} value={f.id} style={{ color: '#000' }}>{f.name}</option>
-            ))}
-          </select>
+        <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.85rem', opacity: 0.7, fontWeight: 'bold' }}>FUNIL ATIVO:</span>
+          {isEditingFunnel ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input
+                type="text"
+                autoFocus
+                value={editingFunnelName}
+                onChange={(e) => setEditingFunnelName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSaveCurrentFunnel();
+                  if (e.key === 'Escape') setIsEditingFunnel(false);
+                }}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  background: '#1a1f26',
+                  color: '#fff',
+                  border: '1px solid var(--color-accent-cyan, #00d2ff)',
+                  outline: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '0.9rem'
+                }}
+              />
+              <button
+                onClick={handleSaveCurrentFunnel}
+                disabled={savingFunnel || !editingFunnelName.trim()}
+                title="Salvar (Enter)"
+                style={{
+                  background: 'var(--color-accent-green, #10b981)',
+                  border: 'none',
+                  color: '#000',
+                  borderRadius: '6px',
+                  padding: '8px 12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontWeight: 'bold',
+                  fontSize: '0.85rem'
+                }}
+              >
+                <Check size={14} /> Salvar
+              </button>
+              <button
+                onClick={() => setIsEditingFunnel(false)}
+                title="Cancelar (Esc)"
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  border: 'none',
+                  color: '#fff',
+                  borderRadius: '6px',
+                  padding: '8px 12px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <select 
+                value={selectedFunnel || ''} 
+                onChange={e => handleSelectFunnel(e.target.value)}
+                style={{ 
+                  padding: '10px 15px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', 
+                  color: '#fff', border: '1px solid rgba(255,255,255,0.1)', outline: 'none', cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
+              >
+                {funnels.map(f => (
+                  <option key={f.id} value={f.id} style={{ color: '#000' }}>{f.name}</option>
+                ))}
+              </select>
+              <button
+                onClick={handleStartEditCurrentFunnel}
+                title="Renomear este funil"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'var(--color-accent-cyan, #00d2ff)',
+                  borderRadius: '8px',
+                  padding: '9px 12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.8rem',
+                  fontWeight: '600'
+                }}
+              >
+                <Edit2 size={14} /> Renomear
+              </button>
+            </div>
+          )}
         </div>
       )}
+
       
       <StatusLegend />
       
