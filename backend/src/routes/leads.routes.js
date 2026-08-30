@@ -31,10 +31,16 @@ router.post('/messages/sync', leadsController.syncIncomingMessage);
 // Criar ou atualizar lead
 router.post('/n8n/clientes', leadsController.upsertN8nLead);
 
-// Mover etapa do lead
+// Atualizar status por telefone (POST e PATCH /leads/update-status)
+router.post('/update-status', leadsController.updateStatusByPhone);
+router.post('/n8n/update-status', leadsController.updateStatusByPhone);
+router.patch('/update-status', leadsController.updateStatusByPhone);
+
+// Mover etapa do lead por ID
 router.patch('/n8n/clientes/:id/etapa', leadsController.updateN8nStatus);
 
 // Registrar nota
 router.post('/n8n/clientes/:id/notas', leadsController.addN8nNote);
 
 module.exports = router;
+

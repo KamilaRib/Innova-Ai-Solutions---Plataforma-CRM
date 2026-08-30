@@ -300,8 +300,84 @@ const updateN8nStatus = async (req, res) => {
 };
 
 /**
+ * Atualiza a etapa do lead por telefone (Usado pelo n8n via POST /leads/update-status)
+ */
+const updateStatusByPhone = async (req, res) => {
+  try {
+    const { phone, kanban_stage, stage, status, notes } = req.body;
+    if (!phone) {
+      return res.status(400).json({ success: false, error: 'Phone is required' });
+    }
+
+    const clean = String(phone).replace(/\D/g, '');
+    const without55 = clean.startsWith('55') ? clean.slice(2) : clean;
+    const with55 = `55${without55}`;
+
+    let lead = await prisma.lead.findFirst({
+      where: {
+        OR: [
+          { phone: String(phone) },
+          { phone: clean },
+          { phone: without55 },
+          { phone: with55 },
+          { phone: { contains: without55 } }
+        ]
+      }
+    });
+
+    let newStatus = kanban_stage || stage || status || 'Início de Atendimento';
+    const statusMap = {
+      '1': 'Início de Atendimento',
+      '2': 'Conversando',
+      '3': 'Agendamento',
+      '4': 'Formulário Enviado',
+      '5': 'Follow Up',
+      'qualificando': 'Conversando',
+      'qualificado': 'Conversando',
+      'sessao_agendada': 'Agendamento',
+      'agendamento': 'Agendamento',
+      'follow_up': 'Follow Up',
+      'follow up': 'Follow Up',
+      'perdido': 'Perdidos'
+    };
+    const mapped = statusMap[String(newStatus).toLowerCase()];
+    if (mapped) {
+      newStatus = mapped;
+    }
+
+    if (!lead) {
+      lead = await prisma.lead.create({
+        data: {
+          name: 'Lead WhatsApp',
+          phone: clean,
+          source: 'WhatsApp - Agente IA',
+          pipeline_status: newStatus,
+          notes: notes ? `[IA] ${notes}` : null,
+          last_contacted_at: new Date()
+        }
+      });
+    } else {
+      lead = await prisma.lead.update({
+        where: { id: lead.id },
+        data: {
+          pipeline_status: newStatus,
+          notes: notes ? `${lead.notes || ''}\n[IA] ${notes}` : lead.notes,
+          last_contacted_at: new Date()
+        }
+      });
+    }
+
+    res.status(200).json({ success: true, lead });
+  } catch (error) {
+    console.error('Erro em updateStatusByPhone:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+};
+
+/**
  * Registra uma nota no lead (Usado pelo n8n crm_registrar_nota)
  */
+
 const addN8nNote = async (req, res) => {
   try {
     const { id } = req.params;
