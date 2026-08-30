@@ -8,7 +8,7 @@ const Chats = () => {
   const [selectedLead, setSelectedLead] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
-  const [showCopilot, setShowCopilot] = useState(true);
+  const [showCopilot, setShowCopilot] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
