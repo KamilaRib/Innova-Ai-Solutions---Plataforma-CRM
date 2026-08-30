@@ -219,8 +219,12 @@ export default function ClientLayout() {
               <div className="sub-menu">
                 {funnels.map(funnel => {
                   const isEditing = editingFunnelId === funnel.id;
-                  const isSelected = location.pathname.includes('/app/kanban') && 
-                    (location.search.includes(funnel.id) || (!location.search && funnel.is_default));
+                  
+                  // Identifica exatamente qual funil está ativo
+                  const currentQueryId = new URLSearchParams(location.search).get('funnel_id');
+                  const isThisSelected = location.pathname.includes('/app/kanban') && (
+                    currentQueryId ? currentQueryId === funnel.id : (funnel.is_default || funnel === funnels[0])
+                  );
 
                   if (isEditing) {
                     return (
@@ -288,11 +292,11 @@ export default function ClientLayout() {
                   }
 
                   return (
-                    <NavLink
+                    <Link
                       key={funnel.id}
                       onClick={closeMobile}
                       to={`/app/kanban?funnel_id=${funnel.id}`}
-                      className={`sub-menu-item ${isSelected ? 'active' : ''}`}
+                      className={`sub-menu-item ${isThisSelected ? 'active' : ''}`}
                       onDoubleClick={(e) => handleStartEditFunnel(e, funnel)}
                       title="Clique duas vezes para renomear este funil"
                       style={{
@@ -326,17 +330,22 @@ export default function ClientLayout() {
                       >
                         <Edit2 size={12} />
                       </button>
-                    </NavLink>
+                    </Link>
                   );
                 })}
 
-                <NavLink onClick={closeMobile} to="/app/funnels" className={({ isActive }) => `sub-menu-item ${isActive ? 'active' : ''}`}>
+                <Link 
+                  onClick={closeMobile} 
+                  to="/app/funnels" 
+                  className={`sub-menu-item ${location.pathname === '/app/funnels' ? 'active' : ''}`}
+                >
                   <Plus size={16} />
                   <span>+ Adicionar Funil</span>
-                </NavLink>
+                </Link>
               </div>
             )}
           </div>
+
 
 
 
