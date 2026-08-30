@@ -4,19 +4,34 @@ const { logAudit } = require('../services/audit.service');
 exports.getFunnels = async (req, res) => {
   try {
     let funnels = await prisma.funnel.findMany({
+      include: {
+        _count: {
+          select: { leads: true }
+        }
+      },
       orderBy: { created_at: 'asc' }
     });
 
-    // Se o banco estiver sem nenhum funil, garante a criação do Funil Principal no Postgres
+    // Se o banco estiver sem nenhum funil, garante a criação inicial
     if (funnels.length === 0) {
       const defaultFunnel = await prisma.funnel.create({
         data: {
-          name: 'Funil Principal',
-          description: 'Funil padrão de vendas',
+          name: 'Formulário',
+          description: 'Funil para leads de formulário / landing page',
           is_default: true
         }
       });
-      funnels = [defaultFunnel];
+      const whatsappFunnel = await prisma.funnel.create({
+        data: {
+          name: 'Whatsapp',
+          description: 'Funil para atendimento via WhatsApp',
+          is_default: false
+        }
+      });
+      funnels = [
+        { ...defaultFunnel, _count: { leads: 0 } },
+        { ...whatsappFunnel, _count: { leads: 0 } }
+      ];
     }
 
     res.json({ success: true, data: funnels });
@@ -26,13 +41,34 @@ exports.getFunnels = async (req, res) => {
   }
 };
 
+exports.getFunnelLeads = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const leads = await prisma.lead.findMany({
+      where: { funnel_id: id },
+      include: {
+        messages: {
+          orderBy: { created_at: 'desc' },
+          take: 1
+        }
+      },
+      orderBy: { last_contacted_at: 'desc' }
+    });
+    res.json({ success: true, data: leads });
+  } catch (error) {
+    console.error('Error fetching funnel leads:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+};
+
+
 exports.createFunnel = async (req, res) => {
   try {
     const { name, description } = req.body;
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, error: 'Name is required' });
     }
-    
+
     const newFunnel = await prisma.funnel.create({
       data: {
         name: name.trim(),
@@ -61,7 +97,7 @@ exports.updateFunnel = async (req, res) => {
   try {
     let { id } = req.params;
     const { name, description } = req.body;
-    
+
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, error: 'Name is required' });
     }
@@ -90,9 +126,9 @@ exports.updateFunnel = async (req, res) => {
 
     if (!funnel) {
       // Se não achar pelo ID fornecido, tenta atualizar o funil padrão
-      funnel = await prisma.funnel.findFirst({ where: { is_default: true } }) 
+      funnel = await prisma.funnel.findFirst({ where: { is_default: true } })
         || await prisma.funnel.findFirst({ orderBy: { created_at: 'asc' } });
-      
+
       if (!funnel) {
         funnel = await prisma.funnel.create({
           data: {
@@ -136,7 +172,7 @@ exports.deleteFunnel = async (req, res) => {
     const { id } = req.params;
     // Evitar deletar funil padrão ou funil com leads
     const funnel = await prisma.funnel.findUnique({ where: { id }, include: { _count: { select: { leads: true } } } });
-    
+
     if (!funnel) {
       return res.status(404).json({ success: false, error: 'Funnel not found' });
     }

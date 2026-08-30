@@ -45,17 +45,76 @@ const getStats = async (req, res) => {
   }
 };
 
+const resolveFunnelId = async (funnelId, funnelName, fallbackName) => {
+  try {
+    if (funnelId && funnelId !== 'default' && funnelId !== 'undefined') {
+      const existing = await prisma.funnel.findUnique({ where: { id: funnelId } });
+      if (existing) return existing.id;
+    }
+
+    const nameToSearch = funnelName || fallbackName;
+    if (nameToSearch) {
+      let funnel = await prisma.funnel.findFirst({
+        where: {
+          name: {
+            equals: nameToSearch,
+            mode: 'insensitive'
+          }
+        }
+      });
+      if (!funnel) {
+        funnel = await prisma.funnel.create({
+          data: {
+            name: nameToSearch,
+            is_default: false
+          }
+        });
+      }
+      return funnel.id;
+    }
+
+    const defaultFunnel = await prisma.funnel.findFirst({ where: { is_default: true } })
+      || await prisma.funnel.findFirst({ orderBy: { created_at: 'asc' } });
+    
+    if (defaultFunnel) return defaultFunnel.id;
+
+    const created = await prisma.funnel.create({
+      data: {
+        name: 'Funil Principal',
+        is_default: true
+      }
+    });
+    return created.id;
+  } catch (err) {
+    console.error('Erro em resolveFunnelId:', err);
+    return null;
+  }
+};
+
 /**
- * Lista todos os leads (Kanban)
+ * Lista todos os leads (Kanban) com suporte a filtro por funnel_id ou funnel_name
  */
 const getAll = async (req, res) => {
   try {
-    const { funnel_id } = req.query;
-    const whereClause = funnel_id ? { funnel_id } : {};
+    const { funnel_id, funnel_name, funil } = req.query;
+    let whereClause = {};
+
+    if (funnel_id && funnel_id !== 'default') {
+      whereClause.funnel_id = funnel_id;
+    } else if (funnel_name || funil) {
+      const targetName = funnel_name || funil;
+      const foundFunnel = await prisma.funnel.findFirst({
+        where: { name: { equals: targetName, mode: 'insensitive' } }
+      });
+      if (foundFunnel) {
+        whereClause.funnel_id = foundFunnel.id;
+      }
+    }
 
     const leads = await prisma.lead.findMany({
       where: whereClause,
       include: {
+        funnel: true,
         messages: {
           orderBy: { created_at: 'desc' },
           take: 1
@@ -69,6 +128,7 @@ const getAll = async (req, res) => {
     res.status(500).json({ error: 'Erro ao listar leads.' });
   }
 };
+
 
 /**
  * Busca o contexto de um lead pelo telefone (histórico de mensagens e status atual)
@@ -163,25 +223,30 @@ const updateLeadStatus = async (req, res) => {
 };
 
 /**
- * Cria um lead originado do catálogo público
+ * Cria um lead originado do catálogo público ou landing page / formulário
  */
 const createPublicLead = async (req, res) => {
   try {
-    const { name, phone, email, productName } = req.body;
+    const { name, phone, email, productName, funnel_id, funnel_name, funil } = req.body;
 
     if (!name || !phone) {
       return res.status(400).json({ error: 'Nome e WhatsApp são obrigatórios.' });
     }
 
+    const clean = String(phone).replace(/\D/g, '');
+    const targetFunnelId = await resolveFunnelId(funnel_id, funnel_name || funil, 'Formulário');
+
     const lead = await prisma.lead.create({
       data: {
         name,
-        phone,
+        phone: clean || phone,
         email: email || null,
-        source: 'Website',
+        source: 'Website / Formulário',
         pipeline_status: 'Início de Atendimento',
-        notes: productName ? `Interesse no produto: ${productName}` : null
-      }
+        funnel_id: targetFunnelId,
+        notes: productName ? `Interesse no produto: ${productName}` : 'Lead recebido via Formulário / Landing Page'
+      },
+      include: { funnel: true }
     });
 
     // Dispara o Webhook para o n8n iniciar o atendimento
@@ -195,13 +260,14 @@ const createPublicLead = async (req, res) => {
           name: lead.name,
           phone: lead.phone,
           email: lead.email || '',
-          product: productName || 'Nenhum'
+          product: productName || 'Nenhum',
+          funnel_id: targetFunnelId,
+          funnel_name: lead.funnel?.name || 'Formulário'
         })
       });
       console.log(`[Webhook] Notificação enviada ao n8n para o lead: ${lead.name}`);
     } catch (webhookError) {
       console.error('Erro ao disparar webhook para o n8n:', webhookError);
-      // Não retorna erro pro frontend, pois o lead já foi salvo com sucesso no CRM.
     }
 
     res.status(201).json({
@@ -220,45 +286,71 @@ const createPublicLead = async (req, res) => {
 // ==========================================
 
 /**
- * Cria ou atualiza um lead via telefone (Usado pelo n8n crm_criar_ou_atualizar_lead)
+ * Cria ou atualiza um lead via telefone (Usado pelo n8n crm_criar_ou_atualizar_lead e /leads/n8n/clientes)
  */
 const upsertN8nLead = async (req, res) => {
   try {
-    const { nome, telefone, origem, etapa, observacao } = req.body;
+    const { nome, name, telefone, phone, origem, source, etapa, observacao, notes, funnel_id, funnel_name, funil } = req.body;
 
-    if (!nome || !telefone) {
+    const leadName = nome || name;
+    const leadPhone = String(telefone || phone || '');
+
+    if (!leadName || !leadPhone) {
       return res.status(400).json({ error: 'Nome e telefone são obrigatórios.' });
     }
 
-    let lead = await prisma.lead.findFirst({ where: { phone: telefone } });
+    const clean = leadPhone.replace(/\D/g, '');
+    const without55 = clean.startsWith('55') ? clean.slice(2) : clean;
+    const with55 = `55${without55}`;
+
+    let lead = await prisma.lead.findFirst({
+      where: {
+        OR: [
+          { phone: leadPhone },
+          { phone: clean },
+          { phone: without55 },
+          { phone: with55 },
+          { phone: { contains: without55 } }
+        ]
+      }
+    });
+
+    const targetFunnelId = await resolveFunnelId(funnel_id, funnel_name || funil, 'Whatsapp');
 
     // Mapeia etapa enviada pelo n8n para o formato do CRM (se necessário)
     let pipeline_status = 'Início de Atendimento';
-    if (etapa === 'qualificando') pipeline_status = 'Conversando';
-    else if (etapa === 'qualificado') pipeline_status = 'Conversando';
-    else if (etapa === 'sessao_agendada') pipeline_status = 'Agendamento';
-    else if (etapa === 'perdido') pipeline_status = 'Perdidos';
+    const statusVal = String(etapa || '').toLowerCase();
+    if (statusVal === 'qualificando' || statusVal === 'conversando') pipeline_status = 'Conversando';
+    else if (statusVal === 'qualificado') pipeline_status = 'Conversando';
+    else if (statusVal === 'sessao_agendada' || statusVal === 'agendamento') pipeline_status = 'Agendamento';
+    else if (statusVal === 'perdido') pipeline_status = 'Perdidos';
+
+    const obsText = observacao || notes;
 
     if (lead) {
       lead = await prisma.lead.update({
         where: { id: lead.id },
         data: {
-          name: nome,
+          name: leadName,
           pipeline_status,
-          notes: observacao ? `${lead.notes || ''}\n[IA] Observação: ${observacao}` : lead.notes,
+          ...(targetFunnelId && { funnel_id: targetFunnelId }),
+          notes: obsText ? `${lead.notes || ''}\n[IA] ${obsText}` : lead.notes,
           last_contacted_at: new Date()
-        }
+        },
+        include: { funnel: true }
       });
     } else {
       lead = await prisma.lead.create({
         data: {
-          name: nome,
-          phone: telefone,
-          source: origem || 'WhatsApp - Agente IA',
+          name: leadName,
+          phone: clean || leadPhone,
+          source: origem || source || 'WhatsApp - Agente IA',
           pipeline_status,
-          notes: observacao ? `[IA] Observação: ${observacao}` : null,
+          funnel_id: targetFunnelId,
+          notes: obsText ? `[IA] ${obsText}` : null,
           last_contacted_at: new Date()
-        }
+        },
+        include: { funnel: true }
       });
     }
 
@@ -279,7 +371,7 @@ const updateN8nStatus = async (req, res) => {
 
     let pipeline_status = 'Início de Atendimento';
     if (etapa === 'qualificando') pipeline_status = 'Conversando';
-    else if (etapa === 'qualificado') pipeline_status = 'Conversando'; // Pode criar uma coluna separada se quiser
+    else if (etapa === 'qualificado') pipeline_status = 'Conversando';
     else if (etapa === 'sessao_agendada') pipeline_status = 'Agendamento';
     else if (etapa === 'perdido') pipeline_status = 'Perdidos';
 
@@ -289,7 +381,8 @@ const updateN8nStatus = async (req, res) => {
         pipeline_status,
         last_contacted_at: new Date(),
         notes: motivo ? `[IA] Mudança para ${etapa}: ${motivo}` : undefined
-      }
+      },
+      include: { funnel: true }
     });
 
     res.status(200).json({ success: true, lead });
@@ -304,7 +397,7 @@ const updateN8nStatus = async (req, res) => {
  */
 const updateStatusByPhone = async (req, res) => {
   try {
-    const { phone, kanban_stage, stage, status, notes } = req.body;
+    const { phone, kanban_stage, stage, status, notes, funnel_id, funnel_name, funil } = req.body;
     if (!phone) {
       return res.status(400).json({ success: false, error: 'Phone is required' });
     }
@@ -345,25 +438,33 @@ const updateStatusByPhone = async (req, res) => {
       newStatus = mapped;
     }
 
+    const targetFunnelId = (funnel_id || funnel_name || funil) 
+      ? await resolveFunnelId(funnel_id, funnel_name || funil, 'Whatsapp')
+      : undefined;
+
     if (!lead) {
       lead = await prisma.lead.create({
         data: {
           name: 'Lead WhatsApp',
-          phone: clean,
+          phone: clean || String(phone),
           source: 'WhatsApp - Agente IA',
           pipeline_status: newStatus,
+          funnel_id: targetFunnelId,
           notes: notes ? `[IA] ${notes}` : null,
           last_contacted_at: new Date()
-        }
+        },
+        include: { funnel: true }
       });
     } else {
       lead = await prisma.lead.update({
         where: { id: lead.id },
         data: {
           pipeline_status: newStatus,
+          ...(targetFunnelId && { funnel_id: targetFunnelId }),
           notes: notes ? `${lead.notes || ''}\n[IA] ${notes}` : lead.notes,
           last_contacted_at: new Date()
-        }
+        },
+        include: { funnel: true }
       });
     }
 
@@ -373,6 +474,7 @@ const updateStatusByPhone = async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 };
+
 
 /**
  * Registra uma nota no lead (Usado pelo n8n crm_registrar_nota)
