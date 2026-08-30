@@ -11,7 +11,8 @@ router.post('/creatives', authenticate, canEdit, catalogController.createCreativ
 router.patch('/creatives/:id', authenticate, canEdit, catalogController.updateCreative);
 router.delete('/creatives/:id', authenticate, canEdit, catalogController.deleteCreative);
 
-// Produtos
+// Produtos (Público e Privado)
+router.get('/public-products', catalogController.getProducts); // Rota pública para o catálogo
 router.get('/products', authenticate, catalogController.getProducts);
 router.post('/products', authenticate, canEdit, catalogController.createProduct);
 router.patch('/products/:id', authenticate, canEdit, catalogController.updateProduct);

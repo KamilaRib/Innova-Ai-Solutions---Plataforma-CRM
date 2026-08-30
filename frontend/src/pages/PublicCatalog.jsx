@@ -4,19 +4,22 @@ import { SettingsContext } from '../context/SettingsContext';
 import { Search, Filter, MessageCircle, X } from 'lucide-react';
 import { apiFetch } from '../utils/api';
 
-// --- MOCK PRODUCTS ---
+// --- MOCK PRODUCTS (Fallback) ---
 const mockProducts = [
-  { id: 1, name: 'Camiseta Básica Premium', price: 89.90, category: 'VAREJO', subcategory: 'ROUPAS', image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80' },
-  { id: 2, name: 'Tênis Esportivo Runner', price: 299.90, category: 'VAREJO', subcategory: 'CALÇADOS', image_url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80' },
-  { id: 3, name: 'Smartwatch Série 8', price: 1499.00, category: 'VAREJO', subcategory: 'ELETRÔNICOS', image_url: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&q=80' },
-  { id: 4, name: 'Lote Camisetas Atacado (50 un)', price: 1500.00, category: 'ATACADO', subcategory: 'FARDOS', image_url: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&q=80' },
-  { id: 5, name: 'Palete Acessórios Mistos', price: 3500.00, category: 'ATACADO', subcategory: 'PALETES', image_url: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=400&q=80' },
+  { id: 1, name: 'INNOVA AI Knowledge Intelligence', price: 0, category: 'SERVIÇOS', subcategory: 'IA', image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=80' },
+  { id: 2, name: 'Marketing & Aquisição Digital', price: 0, category: 'SERVIÇOS', subcategory: 'MARKETING', image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80' },
+  { id: 3, name: 'Dados & Inteligência', price: 0, category: 'SERVIÇOS', subcategory: 'DADOS', image_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80' },
+  { id: 4, name: 'Software & Integrações', price: 0, category: 'SERVIÇOS', subcategory: 'SOFTWARE', image_url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80' },
+  { id: 5, name: 'CRM & Atendimento', price: 0, category: 'SERVIÇOS', subcategory: 'CRM', image_url: 'https://images.unsplash.com/photo-1552581234-26160f608093?w=400&q=80' },
+  { id: 6, name: 'IA & Automação', price: 0, category: 'SERVIÇOS', subcategory: 'IA', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80' },
+  { id: 7, name: 'Agente CRM Innova IA (Funil Automático)', price: 0, category: 'SERVIÇOS', subcategory: 'IA', image_url: 'https://images.unsplash.com/photo-1531297172868-9441504a32e1?w=400&q=80' }
 ];
 
 export default function PublicCatalog() {
   const { storeSlug } = useParams();
   const { settings } = useContext(SettingsContext);
   
+  const [products, setProducts] = useState(mockProducts); // State for real products
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('TODOS');
   const [subcategory, setSubcategory] = useState('TODAS');
@@ -28,8 +31,25 @@ export default function PublicCatalog() {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 
+  // Fetch real products from backend
+  React.useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch('/api/catalog/public-products');
+        const data = await response.json();
+        if (data.success && data.data && data.data.length > 0) {
+          setProducts(data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch public products:', err);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   // Hardcoded subcategories for demonstration
   const subcategoriesMap = {
+    'SERVIÇOS': ['IA', 'Marketing', 'Dados', 'Software', 'CRM'],
     'VAREJO': ['Roupas', 'Calçados', 'Acessórios', 'Eletrônicos'],
     'ATACADO': ['Fardos', 'Caixas Fechadas', 'Paletes', 'Lotes'],
   };
@@ -37,7 +57,7 @@ export default function PublicCatalog() {
   const currentSubcategories = category !== 'TODOS' ? subcategoriesMap[category] || [] : [];
 
   // Filter Logic
-  let filteredProducts = mockProducts.filter(p => {
+  let filteredProducts = products.filter(p => {
     if (category !== 'TODOS' && p.category !== category) return false;
     if (subcategory !== 'TODAS' && p.subcategory !== subcategory) return false;
     if (searchTerm && !p.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;

@@ -534,7 +534,16 @@ const getLeadMessages = async (req, res) => {
               try { parsed = JSON.parse(parsed); } catch(e) {}
             }
             const isHuman = parsed?.type === 'human' || parsed?.id?.includes?.('human');
-            const content = parsed?.data?.content || parsed?.content || (typeof parsed === 'string' ? parsed : '');
+            let content = parsed?.data?.content || parsed?.content || (typeof parsed === 'string' ? parsed : '');
+            
+            // Se o conteúdo for um JSON (ex: resposta estruturada do Gemini), extrai a mensagem principal
+            if (typeof content === 'string' && content.trim().startsWith('{')) {
+              try {
+                const jsonContent = JSON.parse(content);
+                content = jsonContent.mensagem_resposta || jsonContent.resposta || jsonContent.text || jsonContent.mensagem || content;
+              } catch(e) {}
+            }
+
             return {
               id: `n8n_${row.id}`,
               lead_id: id,
