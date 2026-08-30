@@ -68,28 +68,33 @@ export default function ClientLayout() {
   };
 
   const handleSaveEditFunnel = async (funnelId) => {
-    if (!editingFunnelName.trim() || savingFunnel) {
+    const newName = editingFunnelName.trim();
+    if (!newName) {
       setEditingFunnelId(null);
       return;
     }
+    // Atualização otimista imediata na UI
+    setFunnels(prev => prev.map(f => f.id === funnelId ? { ...f, name: newName } : f));
+    setEditingFunnelId(null);
     setSavingFunnel(true);
     try {
       const res = await apiFetch(`/api/funnels/${funnelId}`, {
         method: 'PUT',
-        body: JSON.stringify({ name: editingFunnelName.trim() })
+        body: JSON.stringify({ name: newName })
       });
       const data = await res.json();
-      if (data.success) {
-        setFunnels(prev => prev.map(f => f.id === funnelId ? { ...f, name: editingFunnelName.trim() } : f));
-        window.dispatchEvent(new CustomEvent('funnelUpdated', { detail: { id: funnelId, name: editingFunnelName.trim() } }));
+      if (data.success && data.data) {
+        setFunnels(prev => prev.map(f => (f.id === funnelId || f.id === 'default') ? data.data : f));
+        window.dispatchEvent(new CustomEvent('funnelUpdated', { detail: data.data }));
       }
     } catch (error) {
       console.error('Erro ao salvar novo nome do funil:', error);
+      fetchFunnels();
     } finally {
       setSavingFunnel(false);
-      setEditingFunnelId(null);
     }
   };
+
 
   const handleCancelEditFunnel = () => {
     setEditingFunnelId(null);

@@ -92,30 +92,40 @@ const Kanban = () => {
   };
 
   const handleSaveCurrentFunnel = async () => {
-    if (!editingFunnelName.trim() || savingFunnel || !selectedFunnel) {
+    const newName = editingFunnelName.trim();
+    if (!newName || !selectedFunnel) {
       setIsEditingFunnel(false);
       return;
     }
+    // Atualização otimista
+    setFunnels(prev => prev.map(f => f.id === selectedFunnel ? { ...f, name: newName } : f));
+    setIsEditingFunnel(false);
     setSavingFunnel(true);
     try {
       const res = await apiFetch(`/api/funnels/${selectedFunnel}`, {
         method: 'PUT',
-        body: JSON.stringify({ name: editingFunnelName.trim() })
+        body: JSON.stringify({ name: newName })
       });
       const data = await res.json();
-      if (data.success) {
-        setFunnels(prev => prev.map(f => f.id === selectedFunnel ? { ...f, name: editingFunnelName.trim() } : f));
-        window.dispatchEvent(new CustomEvent('funnelUpdated', { detail: { id: selectedFunnel, name: editingFunnelName.trim() } }));
-        setIsEditingFunnel(false);
+      if (data.success && data.data) {
+        setFunnels(prev => prev.map(f => (f.id === selectedFunnel || f.id === 'default') ? data.data : f));
+        if (data.data.id && data.data.id !== selectedFunnel) {
+          setSelectedFunnel(data.data.id);
+          setSearchParams({ funnel_id: data.data.id });
+        }
+        window.dispatchEvent(new CustomEvent('funnelUpdated', { detail: data.data }));
       } else {
         alert(data.error || 'Erro ao renomear funil');
+        fetchFunnels();
       }
     } catch (err) {
       console.error('Erro ao salvar funil:', err);
+      fetchFunnels();
     } finally {
       setSavingFunnel(false);
     }
   };
+
 
 
   const fetchLeads = async () => {
