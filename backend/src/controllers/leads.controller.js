@@ -553,6 +553,7 @@ module.exports = {
   getAll,
   getLeadContextByPhone,
   updateLeadStatus,
+  updateStatusByPhone,
   createPublicLead,
   upsertN8nLead,
   updateN8nStatus,
@@ -561,3 +562,4 @@ module.exports = {
   sendLeadMessage,
   syncIncomingMessage
 };
+
